@@ -204,6 +204,24 @@ abstract class DefaultDungeon extends DungeonState {
       // move the camera(matrix) so that every element drawn in the "current world" will be placed at the screen in the correct position
       camera.alterMatrix();
 
+      // draw the tiles
+      drawTiles();
+
+      // get all of the enemies to draw themselves
+      for (Enemy e : enemies)
+        e.render();
+      // draw the player
+      player.render();
+      // get all of the projectiles to draw themselves
+      for (Projectile p : projectiles)
+        p.render();
+
+      // since the world has been drawn, anything else that must be drawn won't be in the world, and so won't need to be affected by the camera
+      popMatrix();
+    }
+
+    // draws the tiles of the map
+    void drawTiles() {
       // for each row and column, see what the current element is and draw it in its position
       for (int r = 0; r < tileMap.length; ++r) {
         for (int c = 0; c < tileMap[r].length; ++c) {
@@ -218,18 +236,6 @@ abstract class DefaultDungeon extends DungeonState {
           }
         }
       }
-
-      // get all of the enemies to draw themselves
-      for (Enemy e : enemies)
-        e.render();
-      // draw the player
-      player.render();
-      // get all of the projectiles to draw themselves
-      for (Projectile p : projectiles)
-        p.render();
-
-      // since the world has been drawn, anything else that must be drawn won't be in the world, and so won't need to be affected by the camera
-      popMatrix();
     }
 
     // add an enemy to this world
@@ -832,6 +838,74 @@ abstract class DefaultDungeon extends DungeonState {
     abstract void render();
   }
 
+  // A "normal" enemy which maintains a specific distance from the player, and attacks when in range 
+  abstract class RangedEnemy extends Enemy {
+    float range, framesPerAttack; // range of the attack, the frame interval of attacking
+    float optimalDist; // the optimal distance this should try to maintain
+    float speed; // the speed of this enemy
+    float lastAttackFrame; // the last frame in which it attacked
+    Direction playerSide; // the side of the player compared to this enemy
+    PImage right, left; // the sprites for when the player is to the right and to the left
+
+    RangedEnemy(float x, float y, int w, int h, int framesPerAttack, float range, float speed, float startingHealth, PImage right, PImage left) {
+      // initialize variables
+      super(x, y, w, h, startingHealth);
+      this.framesPerAttack = framesPerAttack;
+      this.range = range;
+      this.speed = speed;
+      optimalDist = range / 2;
+      lastAttackFrame = -1000;
+      this.playerSide = Direction.right;
+
+      this.right = right;
+      this.left = left;
+    }
+
+    // function for updating the logic for the enemy
+    void tick() {
+      // if the player is within this enemy's range
+      if (curPlayer.distance(this) < range) {
+        // information for the "vector" to the current player's center
+        float xDiff = curPlayer.centerX() - this.centerX();
+        float yDiff = curPlayer.centerY() - this.centerY();
+        float mag = magnitude(xDiff, yDiff);
+        
+        // if the player is to the right/left, update the direction that this entity is looking in
+        if (xDiff > 0) {
+          playerSide = Direction.right;
+        } else {
+          playerSide = Direction.left;
+        }
+        
+        // if the player is further than we would like, move towards the player
+        if (curPlayer.distance(this) > optimalDist) {
+          curWorld.moveEntity(this, speed * xDiff / mag, speed * yDiff / mag);
+        }
+        
+        // a timer for attacking
+        if (curFrame - lastAttackFrame >= framesPerAttack) {
+          lastAttackFrame = curFrame;
+          attack();
+        }
+      }
+    }
+    
+    // draw the enemy
+    void render() {
+      // draw it facing the player
+      if (playerSide == Direction.right) {
+        image(right, x, y);
+      } else {
+        image(left, x, y);
+      }
+      // draws the health bar
+      this.drawHealthBar(x, y - 7, w, 5);
+    }
+
+    // the function for attacking
+    abstract void attack();
+  }
+
   // A "normal" enemy which just attacks the player once its in range
   class MeleeEnemy extends Enemy {
     int framesPerAttack; // the frames per attack
@@ -991,7 +1065,7 @@ abstract class DefaultDungeon extends DungeonState {
 
     // return the dungeon world
     return new DungeonWorld(elements, walkable, player);
-  }
+  } 
 
   // get a player based on the character we want and the type of player
   DungeonPlayer getPlayerOf(float x, float y, PlayerInfo characterOf) {

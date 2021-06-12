@@ -60,8 +60,8 @@ class LoadingState extends State {
   }
   void tick() {
     if (currentMessage.equals("completed")) {
-      PlayerInfo samplePlayer = new PlayerInfo(1000, 20, 15, 5, 10, 7, 0, PlayerClass.Knight);
-      curEnvironment = new DragonBossDungeon(null, samplePlayer);
+      PlayerInfo samplePlayer = new PlayerInfo(9999, 20, 100, 5, 10, 5, 0, PlayerClass.Wizard);
+      curEnvironment = new SerpantBossDungeon(null, samplePlayer);
       curState = new DefaultState();
     }
   }

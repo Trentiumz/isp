@@ -275,7 +275,7 @@ class L3RoomDungeon extends DefaultDungeon {
 class DragonBossDungeon extends DefaultDungeon {
   final int fireFrames = 60; // the frames a fire lasts for
   final int fireInterval = 15; // the interval of the fire
-  final float fireDamage = 5; // the damage of the fire
+  final float fireDamage = 10; // the damage of the fire
   int lastLitFrame; // the last frame in which the fire was lit 
   int fireTimer; // a timer variable for when to check to see if the fire was lit
 
@@ -402,54 +402,26 @@ class DragonBossDungeon extends DefaultDungeon {
     }
   }
 
-  class RangedGuard extends Enemy {
-    float range, damage, framesPerAttack;
-    float optimalDist;
-    float speed;
-    float lastAttackFrame;
+  class RangedGuard extends RangedEnemy {
+    float damage;
     float bulletSpeed;
-    Direction playerSide;
 
     RangedGuard(float x, float y, int w, int h, int framesPerAttack, float range, float attack, float speed, float startingHealth, float bulletSpeed) {
-      super(x, y, w, h, startingHealth);
-      this.framesPerAttack = framesPerAttack;
-      this.range = range;
+      super(x, y, w, h, framesPerAttack, range, speed, startingHealth, rangedRight, rangedLeft);
       this.damage = attack;
-      this.speed = speed;
-      optimalDist = range / 2;
-      lastAttackFrame = -1000;
       this.bulletSpeed = bulletSpeed;
-      this.playerSide = Direction.right;
     }
     RangedGuard(float x, float y) {
       this(x, y, rangedWidth, rangedHeight, rangedGuardFPA, rangedAttackRange, rangedDamage, rangedSpeed, rangedStartingHealth, rangedProjectileSpeed);
     }
-    void tick() {
-      if (curPlayer.distance(this) < range) {
-        float xDiff = curPlayer.centerX() - this.centerX();
-        float yDiff = curPlayer.centerY() - this.centerY();
-        float mag = magnitude(xDiff, yDiff);
-        if (xDiff > 0) {
-          playerSide = Direction.right;
-        } else {
-          playerSide = Direction.left;
-        }
-        if (curPlayer.distance(this) > optimalDist) {
-          curWorld.moveEntity(this, speed * xDiff / mag, speed * yDiff / mag);
-        }
-        if (curFrame - lastAttackFrame >= framesPerAttack) {
-          lastAttackFrame = curFrame;
-          curWorld.addProjectile(new FireProjectile(centerX(), centerY(), bulletSpeed * xDiff / mag, bulletSpeed * yDiff / mag, range, this.damage));
-        }
-      }
-    }
-    void render() {
-      if (playerSide == Direction.right) {
-        image(rangedRight, x, y);
-      } else {
-        image(rangedLeft, x, y);
-      }
-      this.drawHealthBar(x, y - 7, w, 5);
+    void attack() {
+      // get the vector to the player's center
+      float xDiff = curPlayer.centerX() - this.centerX();
+      float yDiff = curPlayer.centerY() - this.centerY();
+      float mag = magnitude(xDiff, yDiff);
+
+      // add a fire projectile
+      curWorld.addProjectile(new FireProjectile(centerX(), centerY(), bulletSpeed * xDiff / mag, bulletSpeed * yDiff / mag, range, this.damage));
     }
   }
 
@@ -569,7 +541,7 @@ class DragonBossDungeon extends DefaultDungeon {
     void render() {
       image(dragon, x, y);
       this.drawHealthBar(this.x, this.y - 10, w, 10);
-      
+
       // draw text for the attack number
       textFont(createFont("Arial", 16));
       textSize(14);
@@ -641,23 +613,425 @@ class DragonBossDungeon extends DefaultDungeon {
   }
 
   class DragonSlash implements Projectile {
-    final int animationFrames=4;
-    int curFrame;
+    final int animationFrames = 5;
+    int slashFrame;
     DragonSlash(float damage) {
-      curFrame = 0;
+      slashFrame = 0;
       curPlayer.takeDamage(damage);
     }
     void tick() {
-      if (curFrame > animationFrames) {
+      if (slashFrame > animationFrames) {
         curWorld.removeProjectile(this);
-      }else{
-       curFrame += 1; 
+      } else {
+        slashFrame += 1;
       }
     }
     void render() {
-      float lx = 30 / animationFrames * curFrame;
-      float ly = 30 / animationFrames * curFrame;
+      float lx = 30 / animationFrames * slashFrame;
+      float ly = 30 / animationFrames * slashFrame;
+
+      float sideX = 20 / animationFrames * slashFrame;
+      float sideY = 20 / animationFrames * slashFrame;
       line(curPlayer.centerX() - 15, curPlayer.centerY() - 15, curPlayer.centerX() - 15 + lx, curPlayer.centerY() - 15 + ly);
+      line(curPlayer.centerX() - 10, curPlayer.centerY() - 20, curPlayer.centerX() - 10 + sideX, curPlayer.centerY() - 20 + sideY);
+      line(curPlayer.centerX() - 10, curPlayer.centerY(), curPlayer.centerX() - 10 + sideX, curPlayer.centerY() + sideY);
     }
+  }
+}
+
+class SerpantBossDungeon extends DefaultDungeon {
+  final int waterEffectFrames = 30;
+  float waterSpeedRatio = 0.5;
+  int waterSlowTimer;
+
+  final int poisonFrames = 360;
+  float poisonDamage = 0.5;
+  int lastPoisonFrame;
+
+  PImage waterSprite;
+
+  WaterWorld curWaterWorld;
+
+  PImage rangedRight, rangedLeft;
+  final float rangedHealth=40, rangedBulletDamage=10, rangedBulletSpeed=15, rangedRange=900, rangedSpeed=4;
+  final int rangedWidth=15, rangedHeight=30, rangedFPA=20;
+  float rangedOnWaterDamageReduction = 0.7;
+
+  int curDungeonState; // 0 for round 1, 1 for round 2, 2 for if we wait for player to go to next room, 3 for boss fight
+
+  PImage snakeUp, snakeDown;
+  final int snakeWidth=50, snakeHeight=150, snakeVenomFPA=10, snakeSmashFPA=25, snakeSummonFPA=60;
+  final float snakeHealth=700, snakeVenomSpeed=15, snakeSmashSpeed=50, snakeSmashDamage=60;
+
+  ArrayList<Enemy> enemiesToAdd;
+
+  SerpantBossDungeon(EnvironmentState previous, PlayerInfo character) {
+    super(previous, character);
+  }
+  void setup() {
+    curPlayer = getPlayerOf(50, 8*50, info);
+    curWaterWorld = getWaterWorldOf("dungeon_maps/serpant.txt", curPlayer);
+    curWorld = curWaterWorld;
+
+    waterSprite = loadImage("sprites/dungeon/water.jpg");
+    waterSprite.resize((int) World.gridSize, (int) World.gridSize);
+
+    rangedRight = loadImage("sprites/dungeon/serpantGuard_right.png");
+    rangedLeft = loadImage("sprites/dungeon/serpantGuard_left.png");
+    rangedRight.resize(rangedWidth, rangedHeight);
+    rangedLeft.resize(rangedWidth, rangedHeight);
+
+    snakeUp = loadImage("sprites/dungeon/serpant_up.png");
+    snakeDown = loadImage("sprites/dungeon/serpant_down.png");
+    snakeUp.resize(snakeWidth, snakeHeight);
+    snakeDown.resize(snakeWidth, snakeHeight);
+
+    enemiesToAdd = new ArrayList<Enemy>();
+
+    spawnGuardianRoom1();
+    curDungeonState = 0;
+    
+    playBackgroundMusic();
+  }
+  void tick() {
+    super.tick();
+    waterSlowTimer--;
+    if (curWaterWorld.touchingWater(curPlayer)) {
+      waterSlowTimer = waterEffectFrames;
+    }
+    if (curWorld.enemies.size() == 0) {
+      if (curDungeonState == 0) {
+        spawnGuardianRoom2();
+        curDungeonState = 1;
+      } else if (curDungeonState == 1) {
+        curWorld.changeElement(23, 7, DungeonElement.Ground);
+        curWorld.changeElement(23, 8, DungeonElement.Ground);
+        curWorld.changeElement(23, 9, DungeonElement.Ground);
+        curDungeonState = 2;
+      } else if (curDungeonState == 3) {
+        dungeonCompleted();
+      }
+    }
+    if (curDungeonState == 2 && curPlayer.x > 27*50) {
+      curWorld.addEnemy(new SerpantBoss(random(27*50, 49*50 - snakeWidth), random(2*50, 18*50 - snakeHeight)));
+      curWorld.changeElement(26, 7, DungeonElement.Wall);
+      curWorld.changeElement(26, 8, DungeonElement.Wall);
+      curWorld.changeElement(26, 9, DungeonElement.Wall);
+      curDungeonState = 3;
+    }
+    if (curFrame - lastPoisonFrame <= poisonFrames) {
+      curPlayer.takeDamage(poisonDamage);
+    }
+
+    for (Enemy enemy : enemiesToAdd) {
+      curWorld.addEnemy(enemy);
+    }
+    enemiesToAdd.clear();
+  }
+
+  void spawnRangedGuardInRange(int fx, int fy, int sx, int sy, float xIncrement, float yIncrement, float probability) {
+    for (float x = fx; x <= sx; x += xIncrement)
+      for (float y = fy; y <= sy; y += yIncrement) {
+        float num = random(1);
+        if (num > 1 - probability) {
+          curWorld.addEnemy(new RangedGuard(x, y));
+        }
+      }
+  }
+
+  void spawnGuardianRoom1() {
+    spawnRangedGuardInRange(2*50, 2 * 50, 13*50, 3*50, 100, 100, 0.7);
+    spawnRangedGuardInRange(2*50, 14*50, 13*50, 15*50, 100, 100, 0.7);
+    spawnRangedGuardInRange(20*50, 3 * 50, 22*50, 15*50, 100, 100, 0.4);
+    spawnRangedGuardInRange(9*50, 8 * 50, 13*50, 12*50, 50, 50, 0.4);
+  }
+
+  void spawnGuardianRoom2() {
+    spawnRangedGuardInRange(2*50, 2 * 50, 13*50, 3*50, 100, 100, 1);
+    spawnRangedGuardInRange(2*50, 14*50, 13*50, 15*50, 100, 100, 1);
+    spawnRangedGuardInRange(20*50, 3 * 50, 22*50, 15*50, 100, 100, 1);
+    spawnRangedGuardInRange(9*50, 8 * 50, 13*50, 12*50, 50, 50, 1);
+  }
+
+  class SerpantBoss extends Enemy {
+    int venomFPA, smashFPA, summonFPA;
+    int lastVenomFrame, lastSmashFrame, lastSummonFrame;
+    float venomSpeed, smashSpeed;
+    float smashDamage;
+
+    boolean damagedPlayer;
+    Direction direction;
+
+    PImage up, down;
+
+    int curState; // 0 for invisible, 1 for in middle of smash
+
+    SerpantBoss(float x, float y, int w, int h, float health, int venomFPA, int smashFPA, int summonFPA, float venomSpeed, float smashSpeed, float smashDamage) {
+      super(x, y, w, h, health);
+
+      this.venomFPA = venomFPA;
+      this.smashFPA = smashFPA;
+      this.lastVenomFrame = curFrame;
+      this.lastSmashFrame = curFrame;
+      this.venomSpeed = venomSpeed;
+      this.smashSpeed = smashSpeed;
+      this.smashDamage = smashDamage;
+      this.summonFPA = summonFPA;
+
+      this.damagedPlayer = false;
+      this.direction = Direction.up;
+      this.curState = 0;
+
+      this.lastVenomFrame = 0;
+      this.lastSmashFrame = 0;
+      this.lastSummonFrame = 0;
+
+      this.up = snakeUp;
+      this.down = snakeDown;
+    }
+
+    SerpantBoss(float x, float y) {
+      this(x, y, snakeWidth, snakeHeight, snakeHealth, snakeVenomFPA,snakeSmashFPA, snakeSummonFPA, snakeVenomSpeed, snakeSmashSpeed, snakeSmashDamage);
+    }
+    void tick() {
+      if (curFrame - lastSummonFrame >= summonFPA) {
+        summon();
+        lastSummonFrame = curFrame;
+      }
+
+      if (curFrame - lastVenomFrame >= venomFPA) {
+        shootProjectile();
+      }
+      if (curState == 1) {
+        if (direction == Direction.down) {
+          y += smashSpeed;
+        } else if (direction == Direction.up) {
+          y -= smashSpeed;
+        } else {
+          println("direction is not down or up for snake boss");
+        }
+
+        if (this.collided(curPlayer) && !damagedPlayer) {
+          curPlayer.takeDamage(smashDamage);
+          this.damagedPlayer = true;
+        }
+      }
+
+      setState();
+    }
+    void summon() {
+      for (int x = 35*50; x <= 37*50; x += 50) {
+        for (int y = 7*50; y <= 9*50; y += 50) {
+          Skeleton toAdd = new Skeleton(x, y, skeletonWidth, skeletonHeight);
+          toAdd.seesPlayer = true;
+          enemiesToAdd.add(toAdd);
+        }
+      }
+    }
+
+    void setState() {
+      if (curState == 0) {
+        if (curFrame - lastSmashFrame >= smashFPA) {
+          curState = 1;
+          if (direction == Direction.down)
+            direction = Direction.up;
+          else
+            direction = Direction.down;
+
+          this.x = min(49*50 - this.w, max(27*50, curPlayer.centerX() - this.w / 2));
+          if (direction == Direction.up) {
+            this.y = 18*50 - this.h;
+          } else {
+            this.y = 2*50;
+          }
+
+          damagedPlayer = false;
+        }
+      } else if (curState == 1) {
+        if (direction == Direction.up && this.y < 2 * 50 || direction == Direction.down && this.y > 18*50 - this.h) {
+          curState = 0;
+        }
+
+        lastSmashFrame = curFrame;
+      }
+    }
+    void shootProjectile() {
+      float xDiff = curPlayer.centerX() - this.centerX();
+      float yDiff = curPlayer.centerY() - this.centerY();
+      float mag = magnitude(xDiff, yDiff);
+      curWorld.addProjectile(new Venom(centerX(), centerY(), xDiff / mag * venomSpeed, yDiff / mag * venomSpeed));
+      lastVenomFrame = curFrame;
+    }
+    void render() {
+      if (direction == Direction.up) {
+        image(up, x, y);
+      } else if (direction == Direction.down) {
+        image(down, x, y);
+      }
+
+      drawHealthBar(this.x, this.y - 11, this.w, 10);
+    }
+  }
+
+  class Venom implements Projectile {
+    float x, y;
+    float xDiff, yDiff;
+
+    Venom(float x, float y, float xDiff, float yDiff) {
+      this.x = x;
+      this.y = y;
+      this.xDiff = xDiff;
+      this.yDiff = yDiff;
+    }
+    void tick() {
+      this.x += xDiff;
+      this.y += yDiff;
+      if (curPlayer.inRange(x, y)) {
+        lastPoisonFrame = curFrame;
+        curWorld.removeProjectile(this);
+      }
+    }
+    void render() {
+      fill(#0EFF03);
+      noStroke();
+      ellipse(x, y, 10, 10);
+    }
+  }
+
+  class WaterWorld extends DungeonWorld {
+    boolean[][] water;
+    WaterWorld(DungeonElement[][] elements, boolean[][] walkable, boolean[][] water, DungeonPlayer player) {
+      super(elements, walkable, player);
+      this.water = water;
+    }
+    void moveEntitySoft(Entity toMove, float xDiff, float yDiff) {
+      if (toMove == curPlayer && waterSlowTimer > 0) {
+        xDiff *= waterSpeedRatio;
+        yDiff *= waterSpeedRatio;
+      }
+      super.moveEntitySoft(toMove, xDiff, yDiff);
+    }
+
+    boolean touchingWater(Entity query) {
+      int startX = (int) (query.x / gridSize);
+      int startY = (int) (query.y / gridSize);
+      int endX = (int) (query.x / gridSize);
+      int endY = (int) (query.y / gridSize);
+
+      for (int x = startX; x <= endX; ++x) {
+        for (int y = startY; y <= endY; ++y) {
+          if (water[y][x] && query.hitsBox(gridSize * x, gridSize * y, gridSize, gridSize)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
+    void drawTiles() {
+      super.drawTiles();
+      for (int r = 0; r < water.length; ++r) {
+        for (int c = 0; c < water[r].length; ++c) {
+          if (water[r][c]) {
+            image(waterSprite, gridSize * c, gridSize * r);
+          }
+        }
+      }
+    }
+  }
+
+  class RangedGuard extends RangedEnemy {
+    float bulletSpeed, bulletDamage;
+
+    RangedGuard(float x, float y, int w, int h, int framesPerAttack, float range, float speed, float startingHealth, float bulletSpeed, float bulletDamage) {
+      super(x, y, w, h, framesPerAttack, range, speed, startingHealth, rangedRight, rangedLeft);
+      this.bulletSpeed = bulletSpeed;
+      this.bulletDamage = bulletDamage;
+    }
+
+    RangedGuard(float x, float y) {
+      this(x, y, rangedWidth, rangedHeight, rangedFPA, rangedRange, rangedSpeed, rangedHealth, rangedBulletSpeed, rangedBulletDamage);
+    }
+
+    void attack() {
+      // get the vector to the player's center
+      float xDiff = curPlayer.centerX() - this.centerX();
+      float yDiff = curPlayer.centerY() - this.centerY();
+      float mag = magnitude(xDiff, yDiff);
+
+      curWorld.addProjectile(new WaterBullet(centerX(), centerY(), bulletSpeed * xDiff / mag, bulletSpeed * yDiff / mag, bulletDamage));
+    }
+
+    void takeDamage(float amount) {
+      if (curWaterWorld.touchingWater(this))
+        amount *= rangedOnWaterDamageReduction;
+      super.takeDamage(amount);
+    }
+  }
+
+  class WaterBullet implements Projectile {
+    float x, y;
+    float xDiff, yDiff;
+    float damage;
+    WaterBullet(float x, float y, float xDiff, float yDiff, float damage) {
+      this.x = x;
+      this.y = y;
+      this.xDiff = xDiff;
+      this.yDiff = yDiff;
+      this.damage = damage;
+    }
+
+    void tick() {
+      x += xDiff;
+      y += yDiff;
+
+      if (curPlayer.inRange(x, y)) {
+        curPlayer.takeDamage(damage);
+        waterSlowTimer = waterEffectFrames;
+        curWorld.removeProjectile(this);
+      }
+    }
+    void render() {
+      pushMatrix();
+      translate(x, y);
+      rotate(angleOf(xDiff, yDiff));
+
+      fill(#03FCF6);
+      noStroke();
+      ellipse(0, 0, 7, 7);
+
+      stroke(#03FCF6);
+      strokeWeight(3);
+      line(-10, 0, 0, 0);
+
+      popMatrix();
+    }
+  }
+
+  WaterWorld getWaterWorldOf(String filePath, DungeonPlayer curPlayer) {
+    String[] lines = loadStrings(filePath);
+    int rows = Integer.parseInt(lines[0].split(" ")[0]);
+    int cols = Integer.parseInt(lines[0].split(" ")[1]);
+
+    DungeonElement[][] elements = new DungeonElement[rows][cols];
+    boolean[][] walkable = new boolean[rows][cols];
+    boolean[][] water = new boolean[rows][cols];
+    for (int r = 0; r < rows; ++r) {
+      for (int c = 0; c < cols; ++c) {
+        char cur = lines[r + 1].charAt(c);
+        water[r][c] = (cur == 'L');
+        walkable[r][c] = (cur == 'G' || cur == 'L');
+
+        if (cur == 'E') {
+          elements[r][c] = DungeonElement.Empty;
+        } else if (cur == 'W') {
+          elements[r][c] = DungeonElement.Wall;
+        } else {
+          elements[r][c] = DungeonElement.Ground;
+        }
+      }
+    }
+
+    return new WaterWorld(elements, walkable, water, curPlayer);
   }
 }
