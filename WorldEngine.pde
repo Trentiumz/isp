@@ -67,6 +67,11 @@ class Entity {
   float centerY() {
     return y + h / 2;
   }
+  
+  // returns whether or not the entity "hits" the box with coordinates (x1, y1) and dimensions (w, h)
+  boolean hitsBox(float bx, float by, float bw, float bh){
+    return boxCollided(x, y, w, h, bx, by, bw, bh);
+  }
 }
 
 class World {

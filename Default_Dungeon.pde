@@ -279,14 +279,14 @@ abstract class DefaultDungeon extends DungeonState {
       // otherwise, return null (nothing)
       return null;
     }
-    
-    void changeElement(int c, int r, DungeonElement newElement){
-     tileMap[r][c] = newElement; 
-     if(tileMap[r][c] == DungeonElement.Ground){
-      walkable[r][c] = true;
-     }else{
-      walkable[r][c] = false; 
-     }
+
+    void changeElement(int c, int r, DungeonElement newElement) {
+      tileMap[r][c] = newElement; 
+      if (tileMap[r][c] == DungeonElement.Ground) {
+        walkable[r][c] = true;
+      } else {
+        walkable[r][c] = false;
+      }
     }
   }
 
@@ -817,6 +817,15 @@ abstract class DefaultDungeon extends DungeonState {
         curPlayer.character.coins += 1;
       }
     }
+    void drawHealthBar(float x, float y, float w, float h) {
+      float barWidth = w * health / maxHealth;
+      fill(0, 0, 0, 0);
+      stroke(255);
+      strokeWeight(1);
+      rect(x, y, w, h);
+      fill(255, 0, 0);
+      rect(x, y, barWidth, h);
+    }
 
     // required methods for updating and rendering
     abstract void tick();
@@ -883,7 +892,7 @@ abstract class DefaultDungeon extends DungeonState {
       // get the vector to the player
       float xDiff = curPlayer.x - x;
       float yDiff = curPlayer.y - y;
-      
+
       // get the magnitude of our movement
       float mag = sqrt(pow(xDiff, 2) + pow(yDiff, 2));
       // get the x and y components that we'll be moving
@@ -910,18 +919,7 @@ abstract class DefaultDungeon extends DungeonState {
         image(this.left, x, y);
       }
 
-      // draw the health bar above the goblin
-      // get the width of the filled portion of the bar
-      float barWidth = w * this.health / this.maxHealth;
-      // draw the empty box
-      fill(0, 0, 0, 0);
-      stroke(255);
-      strokeWeight(0.5);
-      rect(x, y - 7, w, 5);
-
-      // fill in part of the box
-      fill(255, 0, 0);
-      rect(x, y - 7, barWidth, 5);
+      this.drawHealthBar(x, y - 7, w, 5);
     }
   }
 
@@ -940,12 +938,16 @@ abstract class DefaultDungeon extends DungeonState {
   }
 
   class Skeleton extends MeleeEnemy {
+    Skeleton(float x, float y, int w, int h, float sightRange, float targettedRange) {
+      super(x, y, w, h, framesPerSkeletonAttack, 5, sightRange, targettedRange, skeletonAttack, skeletonSpeed, skeletonHealth, skeletonRight, skeletonLeft);
+    }
+
     Skeleton(float x, float y, int w, int h) {
       super(x, y, w, h, framesPerSkeletonAttack, 5, 200, 700, skeletonAttack, skeletonSpeed, skeletonHealth, skeletonRight, skeletonLeft);
     }
-    void takeDamage(float amount){
-     super.takeDamage(amount);
-     this.seesPlayer = true;
+    void takeDamage(float amount) {
+      super.takeDamage(amount);
+      this.seesPlayer = true;
     }
   }
 
