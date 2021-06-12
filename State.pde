@@ -60,7 +60,7 @@ class LoadingState extends State {
   }
   void tick() {
     if (currentMessage.equals("completed")) {
-      PlayerInfo samplePlayer = new PlayerInfo(9999, 20, 5000, 5, 10, 7, 0, PlayerClass.Knight);
+      PlayerInfo samplePlayer = new PlayerInfo(1000, 20, 15, 5, 10, 7, 0, PlayerClass.Knight);
       curEnvironment = new DragonBossDungeon(null, samplePlayer);
       curState = new DefaultState();
     }
