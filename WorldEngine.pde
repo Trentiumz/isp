@@ -43,6 +43,31 @@ class Entity {
     return magnitude(horizontalDist, verticalDist);
   }
   
+  // returns the distance from this entity to a point
+  float distance(float ox, float oy){
+   // the minimum horizontal distance
+   float horizontalDist;
+   // if the point is "inside" the entity, then there is 0 distance
+   if(x <= ox && ox <= x + w)
+     horizontalDist = 0;
+   else
+     // get the minimum of its distance from the right and left side
+     horizontalDist = min(abs(ox - x), abs(ox - (x + w)));
+     
+   // vertical distance
+   float verticalDist;
+   
+   if(y <= oy && oy <= y + h)
+     // if point is "inside" the box 
+     verticalDist = 0;
+   else
+     // minimum of the right and left sides
+     verticalDist = min(abs(oy - y), abs(oy - (y + h)));
+     
+   // return the magnitude of the horizontal and vertical distances
+   return magnitude(horizontalDist, verticalDist);
+  }
+  
   // returns whether or not the line will intersect this current entity
   boolean lineHits(float sx, float sy, float ex, float ey) {
     // check for whether or not the line hits any one the "edges" of the entity

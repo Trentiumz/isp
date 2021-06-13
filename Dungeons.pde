@@ -690,7 +690,7 @@ class SerpantBossDungeon extends DefaultDungeon {
 
     spawnGuardianRoom1();
     curDungeonState = 0;
-    
+
     playBackgroundMusic();
   }
   void tick() {
@@ -791,7 +791,7 @@ class SerpantBossDungeon extends DefaultDungeon {
     }
 
     SerpantBoss(float x, float y) {
-      this(x, y, snakeWidth, snakeHeight, snakeHealth, snakeVenomFPA,snakeSmashFPA, snakeSummonFPA, snakeVenomSpeed, snakeSmashSpeed, snakeSmashDamage);
+      this(x, y, snakeWidth, snakeHeight, snakeHealth, snakeVenomFPA, snakeSmashFPA, snakeSummonFPA, snakeVenomSpeed, snakeSmashSpeed, snakeSmashDamage);
     }
     void tick() {
       if (curFrame - lastSummonFrame >= summonFPA) {
@@ -1033,5 +1033,295 @@ class SerpantBossDungeon extends DefaultDungeon {
     }
 
     return new WaterWorld(elements, walkable, water, curPlayer);
+  }
+}
+
+class GiantBossDungeon extends DefaultDungeon {
+  PImage guardRight, guardLeft;
+
+  final int giantGuardWidth=45, giantGuardHeight=50, giantGuardFPA=30;
+  final float giantGuardRange=5, giantGuardSightRange=300, giantGuardPlayerTargettedRange=600, giantGuardDamage=40, giantGuardSpeed=3, giantGuardHealth=400;
+
+  PImage giant;
+  final int giantFPA=30, giantKnockbackFrames=15, giantWidth=123, giantHeight=100, giantNumDaggers=10, giantBoulderDamageInterval=15, giantBoulderEF=120, giantDaggerEF=20;
+  final float giantBoulderDamage=30, giantDaggerDamage=10, giantSmashDamage=60, giantKnockbackSpeed=15, giantHealth=1000, giantSpeed=3, giantSmashRange=125, giantBoulderSpeed=5, giantDaggerSpeed=18, giantBoulderRadius=40, giantDaggerAngleVariation=PI/10;
+
+  int curState; // 0 for guards, 1 for guards completed (still moving to the next room), 2 for boss fight
+
+  GiantBossDungeon(EnvironmentState previous, PlayerInfo character) {
+    super(previous, character);
+  }
+  void setup() {
+    curPlayer = getPlayerOf(60, 8*50, info);
+    curWorld = getWorldOf("dungeon_maps/giant.txt", curPlayer);
+
+    guardRight = loadImage("sprites/dungeon/giantGuardMelee_right.png");
+    guardLeft = loadImage("sprites/dungeon/giantGuardMelee_left.png");
+    guardRight.resize(giantGuardWidth, giantGuardHeight);
+    guardLeft.resize(giantGuardWidth, giantGuardHeight);
+
+    giant = loadImage("sprites/dungeon/giant.png");
+    giant.resize(giantWidth, giantHeight);
+
+    curState = 0;
+    guardRoom();
+    
+    playBackgroundMusic();
+  }
+  void tick() {
+    super.tick();
+
+    println(curWorld.entities.size());
+
+    if (curState == 0 && curWorld.enemies.size() == 0) {
+      curState = 1;
+      curWorld.changeElement(23, 7, DungeonElement.Ground);
+      curWorld.changeElement(23, 8, DungeonElement.Ground);
+      curWorld.changeElement(23, 9, DungeonElement.Ground);
+    }
+    if (curState == 1 && curPlayer.x > 27*50) {
+      curState = 2;
+      curWorld.changeElement(26, 7, DungeonElement.Wall);
+      curWorld.changeElement(26, 8, DungeonElement.Wall);
+      curWorld.changeElement(26, 9, DungeonElement.Wall);
+
+      curWorld.addEnemy(new Giant(38*50, 6*50));
+    }
+    if (curState == 2 && curWorld.enemies.size() == 0) {
+      dungeonCompleted();
+    }
+  }
+
+  class Giant extends Enemy {
+    int framesPerAttack;
+    int knockbackFrames;
+    float knockbackSpeed;
+    float boulderDamage, daggerDamage, smashDamage;
+    float speed;
+    int numDaggers;
+    float smashRange;
+
+    int boulderExistFrames;
+    int boulderDamageInterval;
+    float boulderSpeed;
+    float boulderRadius;
+
+    float daggerSpeed;
+    int daggerExistFrames;
+    float daggerAngleVariation;
+
+    int attackTimer;
+    int curAttack; // 0 for smash, 1 for boulder, 2 for dagger
+    Giant(float x, float y, int w, int h, float health, int framesPerAttack, int knockbackFrames, float knockbackSpeed, float boulderDamage, float daggerDamage, float smashDamage, 
+      float speed, int numDaggers, float smashRange, int boulderDamageInterval, int boulderExistFrames, float boulderRadius, float boulderSpeed, float daggerSpeed, int daggerExistFrames, float daggerAngleVar) {
+      super(x, y, w, h, health);
+      this.framesPerAttack = framesPerAttack;
+      this.knockbackFrames = knockbackFrames;
+      this.knockbackSpeed = knockbackSpeed;
+      this.boulderDamage = boulderDamage;
+      this.daggerDamage = daggerDamage;
+      this.smashDamage = smashDamage;
+      this.speed = speed;
+      this.numDaggers = numDaggers;
+      this.smashRange = smashRange;
+
+      this.boulderExistFrames = boulderExistFrames;
+      this.boulderDamageInterval = boulderDamageInterval;
+      this.boulderSpeed = boulderSpeed;
+      this.boulderRadius = boulderRadius;
+
+      this.daggerSpeed = daggerSpeed;
+      this.daggerExistFrames = daggerExistFrames;
+      this.daggerAngleVariation = daggerAngleVar;
+
+      this.attackTimer = framesPerAttack;
+      this.curAttack = 0;
+    }
+    Giant(float x, float y) {
+      this(x, y, giantWidth, giantHeight, giantHealth, giantFPA, giantKnockbackFrames, giantKnockbackSpeed, giantBoulderDamage, giantDaggerDamage, giantSmashDamage, giantSpeed, giantNumDaggers, giantSmashRange, giantBoulderDamageInterval, 
+        giantBoulderEF, giantBoulderRadius, giantBoulderSpeed, giantDaggerSpeed, giantDaggerEF, giantDaggerAngleVariation);
+    }
+    void tick() {
+      float xDiff = curPlayer.centerX() - this.centerX();
+      float yDiff = curPlayer.centerY() - this.centerY();
+      float mag = magnitude(xDiff, yDiff);
+
+      curWorld.moveEntitySoft(this, xDiff / mag * speed, yDiff / mag * speed);
+
+      attackTimer -= 1;
+      if (attackTimer <= 0) {
+        if (curAttack == 0) {
+          curWorld.addProjectile(new Smash(this.centerX(), this.centerY(), this.knockbackFrames, this.knockbackSpeed, this.boulderDamage, this.smashRange));
+          curAttack = 1;
+        } else if (curAttack == 1) {
+          curWorld.addProjectile(new Boulder(this.centerX(), this.centerY(), xDiff / mag * boulderSpeed, yDiff / mag * boulderSpeed, boulderRadius, boulderExistFrames, boulderDamage, boulderDamageInterval));
+          curAttack = 2;
+        } else if (curAttack == 2) {
+          for (int i = 0; i < numDaggers; ++i) {
+            float toPlayer = angleOf(xDiff, yDiff);
+            float daggerAngle = toPlayer + random(-daggerAngleVariation, daggerAngleVariation);
+            curWorld.addProjectile(new Dagger(centerX(), centerY(), daggerSpeed * cos(daggerAngle), daggerSpeed * sin(daggerAngle), daggerDamage));
+          }
+          curAttack = 0;
+        }
+
+        attackTimer = framesPerAttack;
+      }
+    }
+    void render() {
+      image(giant, x, y);
+      drawHealthBar(x, y - 11, w, 10);
+    }
+  }
+
+  class Dagger implements Projectile {
+    float x, y;
+    float xDiff, yDiff;
+    float damage;
+    Dagger(float x, float y, float xDiff, float yDiff, float damage) {
+      this.x = x;
+      this.y = y;
+      this.xDiff = xDiff;
+      this.yDiff = yDiff;
+      this.damage = damage;
+    }
+    void tick() {
+      x += xDiff;
+      y += yDiff;
+      if (curPlayer.inRange(x, y)) {
+        curPlayer.takeDamage(damage); 
+        curWorld.removeProjectile(this);
+      }
+    }
+    void render() {
+      pushMatrix();
+      translate(x, y);
+      rotate(angleOf(xDiff, yDiff));
+      fill(0, 255, 0);
+      noStroke();
+      triangle(-10, -5, 0, 0, -10, 5);
+      stroke(#835600);
+      strokeWeight(3);
+      line(-20, 0, -10, 0);
+      popMatrix();
+    }
+  }
+
+  class Smash implements Projectile {
+    final int animationFrames = 10;
+    int curAnimFrame;
+
+    float xDiff, yDiff;
+    int knockbackTimer;
+
+    float finalRadius;
+
+    float cx, cy;
+    Smash(float cx, float cy, int backFrames, float backSpeed, float damage, float radius) {
+      this.finalRadius = radius;
+      curAnimFrame = 0;
+
+      if (curPlayer.distance(cx, cy) <= finalRadius) {
+        curPlayer.takeDamage(damage);
+
+        float xDiff = curPlayer.centerX() - cx;
+        float yDiff = curPlayer.centerY() - cy;
+        float mag = magnitude(xDiff, yDiff);
+
+        this.xDiff = xDiff / mag * backSpeed;
+        this.yDiff = yDiff / mag * backSpeed;
+
+        knockbackTimer = backFrames;
+      } else {
+        knockbackTimer = -1;
+      }
+
+      this.cx = cx;
+      this.cy = cy;
+    }
+    void tick() {
+      curAnimFrame++;
+      knockbackTimer--;
+
+      if (curAnimFrame > animationFrames && knockbackTimer <= 0) {
+        curWorld.removeProjectile(this);
+      }
+      if (knockbackTimer > 0) {
+        curWorld.moveEntity(curPlayer, xDiff, yDiff);
+      }
+    }
+    void render() {
+      if (curAnimFrame <= animationFrames) {
+        float curRad = finalRadius * curAnimFrame / animationFrames;
+        fill(0, 0, 0, 0);
+        stroke(255);
+        strokeWeight(3);
+
+        ellipse(cx, cy, 2 * curRad, 2 * curRad);
+      }
+    }
+  }
+
+  class Boulder implements Projectile {
+    float cx, cy;
+    int existTimer;
+    float xDiff, yDiff;
+    float radius;
+
+    float damage;
+    int damageInterval;
+    int damageTimer;
+    Boulder(float cx, float cy, float xDiff, float yDiff, float radius, int framesExist, float damage, int damageInterval) {
+      this.cx = cx;
+      this.cy = cy;
+      this.xDiff = xDiff;
+      this.yDiff = yDiff;
+      this.radius = radius;
+      this.existTimer = framesExist;
+
+      this.damage = damage;
+      this.damageInterval = damageInterval;
+      this.damageTimer = 0;
+    }
+    void tick() {
+      damageTimer -= 1;
+      existTimer -= 1;
+
+      if (!curWorld.touchingWall(cx - radius, cy - radius, cx + radius, cy + radius)) {
+        cx += xDiff;
+        cy += yDiff;
+      }
+      if (existTimer <= 0) {
+        curWorld.removeProjectile(this);
+      }
+      if (curPlayer.distance(cx, cy) <= radius) {
+        if (damageTimer <= 0) {
+          curPlayer.takeDamage(damage);
+          damageTimer = damageInterval;
+        }
+      }
+    }
+    void render() {
+      fill(100);
+      stroke(0);
+      strokeWeight(2);
+      ellipse(cx, cy, 2 * radius, 2 * radius);
+    }
+  }
+
+  void guardRoom() {
+    for (int x = 7*50; x <= 20*50; x += 200)
+      for (int y = 2 * 50; y <= 14*50; y += 200) {
+        curWorld.addEnemy(new GiantGuard(x, y));
+      }
+  }
+
+  class GiantGuard extends MeleeEnemy {
+    GiantGuard(float x, float y, int w, int h, int framesPerAttack, float range, float sightRange, float playerTargettedRange, float attack, float speed, float startingHealth) {
+      super(x, y, w, h, framesPerAttack, range, sightRange, playerTargettedRange, attack, speed, startingHealth, guardRight, guardLeft);
+    }
+    GiantGuard(float x, float y) {
+      this(x, y, giantGuardWidth, giantGuardHeight, giantGuardFPA, giantGuardRange, giantGuardSightRange, giantGuardPlayerTargettedRange, giantGuardDamage, giantGuardSpeed, giantGuardHealth);
+    }
   }
 }

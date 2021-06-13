@@ -60,7 +60,7 @@ class LoadingState extends State {
   }
   void tick() {
     if (currentMessage.equals("completed")) {
-      PlayerInfo samplePlayer = new PlayerInfo(9999, 20, 100, 5, 10, 5, 0, PlayerClass.Wizard);
+      PlayerInfo samplePlayer = new PlayerInfo(9999, 100, 20, 5, 10, 5, 0, PlayerClass.Knight);
       curEnvironment = new SerpantBossDungeon(null, samplePlayer);
       curState = new DefaultState();
     }

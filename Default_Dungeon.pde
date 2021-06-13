@@ -154,6 +154,7 @@ abstract class DefaultDungeon extends DungeonState {
       super(walkable);
       // initialize the players, tilemap, and lists
       this.player = player;
+      addEntity(this.player);
       this.tileMap = elements;
       this.enemies = new ArrayList<Enemy>();
       this.projectiles = new ArrayList<Projectile>();
@@ -232,7 +233,7 @@ abstract class DefaultDungeon extends DungeonState {
           } else if (tileMap[r][c] == DungeonElement.Wall) {
             image(wall, gridSize * c, gridSize * r);
           } else {
-            println("Somehow the current dungeon element isn't the ground, empty, or a wall!");
+            println("Somehow the current dungeon element isn't the ground, empty, or a wall!"); //<>//
           }
         }
       }
@@ -272,6 +273,23 @@ abstract class DefaultDungeon extends DungeonState {
         for (int x = max(0, startX - 1); x <= min(walkable[y].length - 1, endX + 1); ++x)
           if (!walkable[y][x] &&  
             boxCollided(query.x, query.y, query.w, query.h, x * gridSize, y * gridSize, gridSize, gridSize))
+            return true;
+      return false;
+    }
+    
+    // A boolean for whether or not a box is touching the wall
+    boolean touchingWall(float x, float y, float w, float h) {
+      // get which "path squares" are within the range of the box
+      int startX = (int) (x / gridSize);
+      int startY = (int) (y / gridSize);
+      int endX = (int) ((x + w) / gridSize);
+      int endY = (int) ((y + h) / gridSize);
+
+      // for each tile in its range, if it's a "wall" and the entity is currently collided with it, return true.
+      for (int sy = max(0, startY - 1); sy <= min(walkable.length - 1, endY + 1); ++sy)
+        for (int sx = max(0, startX - 1); sx <= min(walkable[sy].length - 1, endX + 1); ++sx)
+          if (!walkable[sy][sx] &&  
+            boxCollided(x, y, w, h, x * gridSize, y * gridSize, gridSize, gridSize))
             return true;
       return false;
     }
@@ -1058,7 +1076,7 @@ abstract class DefaultDungeon extends DungeonState {
           walkable[r][c] = false;
         } else {
           // error trapping for unrecognized characters
-          println("Unrecognized character in dungeon text mapping: " + lines[r].charAt(c));
+          println("Unrecognized character in dungeon text mapping: " + lines[r].charAt(c)); //<>//
         }
       }
     }
