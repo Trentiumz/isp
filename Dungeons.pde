@@ -1065,8 +1065,6 @@ class GiantBossDungeon extends DefaultDungeon {
   void tick() {
     super.tick();
 
-    println(curWorld.entities.size());
-
     if (curState == 0 && curWorld.enemies.size() == 0) {
       curState = 1;
       curWorld.changeElement(23, 7, DungeonElement.Ground);
@@ -1321,23 +1319,79 @@ class GiantBossDungeon extends DefaultDungeon {
 }
 
 class WarriorDungeon extends DefaultDungeon {
-  
-  
+  final static int warriorWidth=40, warriorHeight=60;
+  final int warriorMovementChangeInterval=15, warriorAttackInterval=7;
+  final float warriorSpeed=15, warriorHealth=400, warriorDamage=20, warriorAttackAngleDiff=PI/6, warriorLongRadius=130, warriorShortRadius=50;
+  PImage warrior;
+
   WarriorDungeon(EnvironmentState previous, PlayerInfo character) {
     super(previous, character);
   }
   void setup() {
+    curPlayer = getPlayerOf(9*50, 17*50, info);
+    curWorld = getWorldOf("dungeon_maps/warrior.txt", curPlayer);
+    playBackgroundMusic();
+
+    curWorld.addEnemy(new Warrior(9*50, 2*50));
+    warrior = dungeonWarrior;
   }
-  void tick() {
-    super.tick();
-  }
+  
   class Warrior extends Enemy {
-    Warrior(float x, float y, int w, int h, float health) {
+    int moveChangeInterval, atkInterval;
+    float speed, damage;
+    float attackPadding, longRadius, shortRadius;
+
+    int moveChangeTimer, atkTimer;
+    boolean towardsPlayer;
+    Warrior(float x, float y, int w, int h, float health, float speed, float damage, int moveChangeInterval, int attackInterval, float attackPadding, float longRad, float shortRad) {
       super(x, y, w, h, health);
+      this.speed = speed;
+      this.damage = damage;
+      this.moveChangeInterval = moveChangeInterval;
+      this.atkInterval = attackInterval;
+      this.attackPadding = attackPadding;
+      this.longRadius = longRad;
+      this.shortRadius = shortRad;
+
+      moveChangeTimer = moveChangeInterval;
+      towardsPlayer = true;
+      atkTimer = attackInterval;
+    }
+    Warrior(float x, float y) {
+      this(x, y, warriorWidth, warriorHeight, warriorHealth, warriorSpeed, warriorDamage, warriorMovementChangeInterval, warriorAttackInterval, warriorAttackAngleDiff, warriorLongRadius, warriorShortRadius);
     }
     void tick() {
+      --moveChangeTimer;
+      --atkTimer;
+      if (moveChangeTimer <= 0) {
+        moveChangeTimer = moveChangeInterval;
+        if(random(1) < 0.5)
+          towardsPlayer = !towardsPlayer;
+      }
+      if (atkTimer <= 0) {
+        float angle = random(0, 2 * PI);
+        if (random(1) < 0.5) {
+          // do short attack 
+          curWorld.addProjectile(new WarriorShortSlash(angle - attackPadding, angle + attackPadding, shortRadius, damage, centerX(), centerY()));
+        } else {
+          // do long attack 
+          curWorld.addProjectile(new WarriorLongSlash(angle - attackPadding, angle + attackPadding, longRadius, damage, centerX(), centerY()));
+        }
+        atkTimer = atkInterval;
+      }
+
+      float xDiff = curPlayer.centerX() - centerX();
+      float yDiff = curPlayer.centerY() - centerY();
+      float mag = magnitude(xDiff, yDiff);
+      if (towardsPlayer) {
+        curWorld.moveEntitySoft(this, xDiff / mag * speed, yDiff / mag * speed);
+      } else {
+        curWorld.moveEntitySoft(this, -xDiff / mag * speed, -yDiff / mag * speed);
+      }
     }
     void render() {
+      image(warrior, x, y);
+      drawHealthBar(x, y - 7, w, 7);
     }
   }
 

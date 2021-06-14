@@ -31,6 +31,7 @@ PImage skeletonRight, skeletonLeft;
 PImage knightRight, knightLeft;
 PImage wizardRight, wizardLeft;
 PImage archerRight, archerLeft;
+PImage dungeonWarrior;
 PImage[] loadingAnimation;
 PImage[] splashAnimation;
 

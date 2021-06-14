@@ -37,8 +37,8 @@ class MainMenuState extends State {
   String button = "homePage";
 
   void startGame() {
-    PlayerInfo samplePlayer = new PlayerInfo(9999, 100, 20, 5, 10, 5, 0, PlayerClass.Wizard);
-    curEnvironment = new DragonBossDungeon(null, samplePlayer);
+    PlayerInfo samplePlayer = new PlayerInfo(9999, 100, 20, 5, 10, 5, 0, PlayerClass.Knight);
+    curEnvironment = new WarriorDungeon(null, samplePlayer);
     curState = new DefaultState();
     titleBGM.stop();
   }

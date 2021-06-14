@@ -108,7 +108,9 @@ void loadFiles() {
   goblinLeft = loadImage("sprites/dungeon/goblin_left.png");
   skeletonRight = loadImage("sprites/dungeon/skeleton_right.png");
   skeletonLeft = loadImage("sprites/dungeon/skeleton_left.png");
-
+  dungeonWarrior = loadImage("sprites/dungeon/cursedWarrior.png");
+  
+  dungeonWarrior.resize(WarriorDungeon.warriorWidth, WarriorDungeon.warriorHeight);
   goblinRight.resize(DefaultDungeon.goblinWidth, DefaultDungeon.goblinHeight);
   goblinLeft.resize(DefaultDungeon.goblinWidth, DefaultDungeon.goblinHeight);
   zombieRight.resize(DefaultDungeon.zombieWidth, DefaultDungeon.zombieHeight);
