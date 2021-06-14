@@ -1321,6 +1321,8 @@ class GiantBossDungeon extends DefaultDungeon {
 }
 
 class WarriorDungeon extends DefaultDungeon {
+  
+  
   WarriorDungeon(EnvironmentState previous, PlayerInfo character) {
     super(previous, character);
   }

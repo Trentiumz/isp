@@ -181,12 +181,12 @@ void loadFiles() {
 
   // loading main menu elements
   currentMessage = "Loading menu...";
-  mainMenuImage1 = loadImage("forestDungeonBackground.png");
-  mainMenuImage2 = loadImage("buttonsBackground.jpg");
-  mainMenuFont1 = loadFont("Algerian-48.vlw");
-  mainMenuFont2 = loadFont("Broadway-48.vlw");
-  mainMenuFont3 = loadFont("CourierNewPS-BoldMT-48.vlw");
-  mainMenuFont4 = loadFont("KristenITC-Regular-48.vlw");
+  mainMenuImage1 = loadImage("mainMenu/forestDungeonBackground.png");
+  mainMenuImage2 = loadImage("mainMenu/buttonsBackground.jpg");
+  mainMenuFont1 = loadFont("mainMenu/Algerian-48.vlw");
+  mainMenuFont2 = loadFont("mainMenu/Broadway-48.vlw");
+  mainMenuFont3 = loadFont("mainMenu/CourierNewPS-BoldMT-48.vlw");
+  mainMenuFont4 = loadFont("mainMenu/KristenITC-Regular-48.vlw");
 
   // load in the splash screen
   currentMessage = "Loading splash screen...";
