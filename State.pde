@@ -37,7 +37,7 @@ class MainMenuState extends State {
   String button = "homePage";
 
   void startGame() {
-    PlayerInfo samplePlayer = new PlayerInfo(9999, 100, 20, 5, 10, 5, 0, PlayerClass.Knight);
+    PlayerInfo samplePlayer = new PlayerInfo(10, 100, 20, 5, 10, 5, 0, PlayerClass.Knight);
     curEnvironment = new WarriorDungeon(null, samplePlayer);
     curState = new DefaultState();
     titleBGM.stop();
@@ -237,7 +237,6 @@ class LoadingState extends State {
 }
 
 class SplashState extends State {
-  int numFrames = 51;
   int curAnimationFrame;
 
   SplashState() {
@@ -245,11 +244,18 @@ class SplashState extends State {
   }
   void tick() {
     if (curAnimationFrame >= splashAnimation.length) {
-      curState = new MainMenuState();
+      nextState();
     }
   }
+  void mouseClicked() {
+    nextState();
+  }
+  void nextState() {
+    curState = new MainMenuState();
+  }
+
   void render() {
-    int index = curAnimationFrame % numFrames;
+    int index = curAnimationFrame % splashAnimation.length;
     image(splashAnimation[index], 0, 0);
     curAnimationFrame += 1;
   }
@@ -277,4 +283,27 @@ class DefaultState extends State {
   void mouseClicked() {
     curEnvironment.mouseClicked();
   }
+}
+
+class DeadScreen extends State{
+ PImage[] curAnimation;
+ int curFrame;
+ 
+ DeadScreen(PlayerClass died){
+   if(died == PlayerClass.Knight){
+    curAnimation = knightDeadAnimation;
+   }
+   curFrame = 0;
+ }
+ void tick(){
+   curFrame++;
+   if(curFrame >= curAnimation.length * 2)
+     curFrame = 0;
+ }
+ void mousePressed(){
+  curState = new DefaultState(); 
+ }
+ void render(){
+   image(curAnimation[(curFrame / 2) % curAnimation.length], 0, 0);
+ }
 }

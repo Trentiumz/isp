@@ -13,7 +13,8 @@ class CoinsDungeon extends DefaultDungeon {
 
   void dungeonCompleted() {
     curStory.coinDungeonCompleted();
-    dungeonExited();
+    dungeonCompletedAnimation();
+    stopBackgroundMusic();
   }
 
   CoinsDungeon(EnvironmentState previous, PlayerInfo character) {
@@ -1320,8 +1321,8 @@ class GiantBossDungeon extends DefaultDungeon {
 
 class WarriorDungeon extends DefaultDungeon {
   final static int warriorWidth=40, warriorHeight=60;
-  final int warriorMovementChangeInterval=15, warriorAttackInterval=7;
-  final float warriorSpeed=15, warriorHealth=400, warriorDamage=20, warriorAttackAngleDiff=PI/6, warriorLongRadius=130, warriorShortRadius=50;
+  final int warriorMovementChangeInterval=15, warriorAttackInterval=5;
+  final float warriorSpeed=15, warriorHealth=400, warriorDamage=20, warriorAttackAngleDiff=PI/2, warriorLongRadius=130, warriorShortRadius=50;
   PImage warrior;
 
   WarriorDungeon(EnvironmentState previous, PlayerInfo character) {
@@ -1335,7 +1336,14 @@ class WarriorDungeon extends DefaultDungeon {
     curWorld.addEnemy(new Warrior(9*50, 2*50));
     warrior = dungeonWarrior;
   }
-  
+
+  void tick() {
+    super.tick();
+    if (curWorld.enemies.size() == 0) {
+      dungeonCompleted();
+    }
+  }
+
   class Warrior extends Enemy {
     int moveChangeInterval, atkInterval;
     float speed, damage;
@@ -1365,7 +1373,7 @@ class WarriorDungeon extends DefaultDungeon {
       --atkTimer;
       if (moveChangeTimer <= 0) {
         moveChangeTimer = moveChangeInterval;
-        if(random(1) < 0.5)
+        if (random(1) < 0.5)
           towardsPlayer = !towardsPlayer;
       }
       if (atkTimer <= 0) {
@@ -1375,7 +1383,7 @@ class WarriorDungeon extends DefaultDungeon {
           curWorld.addProjectile(new WarriorShortSlash(angle - attackPadding, angle + attackPadding, shortRadius, damage, centerX(), centerY()));
         } else {
           // do long attack 
-          curWorld.addProjectile(new WarriorLongSlash(angle - attackPadding, angle + attackPadding, longRadius, damage, centerX(), centerY()));
+          curWorld.addProjectile(new WarriorLongSlash(angle - attackPadding, angle + attackPadding, longRadius, damage, this));
         }
         atkTimer = atkInterval;
       }
@@ -1457,21 +1465,22 @@ class WarriorDungeon extends DefaultDungeon {
     boolean hitPlayer;
 
     // center coordinate of circle defining slash
-    float cx, cy;
+    Entity toFollow;
 
-    WarriorLongSlash(float startAngle, float endAngle, float radius, float damage, float cx, float cy) {
+    WarriorLongSlash(float startAngle, float endAngle, float radius, float damage, Entity toFollow) {
       // initialize properties
       this.curAngle = startAngle;
       this.endAngle = endAngle;
       this.radius = radius;
       this.damage = damage;
 
-      this.cx = cx;
-      this.cy = cy;
+      this.toFollow = toFollow;
 
       hitPlayer = false;
     }
     void tick() {
+      float cx = toFollow.centerX();
+      float cy = toFollow.centerY();
       // if the slash is finished, then remove the projectile
       if (curAngle > endAngle)
         curWorld.removeProjectile(this);
@@ -1486,6 +1495,8 @@ class WarriorDungeon extends DefaultDungeon {
       curAngle += angleIncrease;
     }
     void render() {
+      float cx = toFollow.centerX();
+      float cy = toFollow.centerY();
       stroke(#CE03FC);
       strokeWeight(4);
       // draw a line to the current end of the sword

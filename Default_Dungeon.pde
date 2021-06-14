@@ -49,20 +49,33 @@ abstract class DefaultDungeon extends DungeonState {
   // function for when the dungeon is completed
   void dungeonCompleted() {
     curStory.storyDungeonCompleted();
-    dungeonExited();
+    dungeonCompletedAnimation();
+    stopBackgroundMusic();
   }
 
-  // function for when the dungeon is exited (e.g player died, user exited)
+  // the dungeon exited
   void dungeonExited() {
     curEnvironment = previous;
     stopBackgroundMusic();
+  }
+
+  // the dungeon completed animation
+  void dungeonCompletedAnimation() {
+    curEnvironment = previous;
+  }
+
+  // the player died animation
+  void playerDiedAnimation() {
+    curEnvironment = previous;
+    curState = new DeadScreen(info.playerClass);
   }
 
   // Player death mechanics
   void playerDied() {
     // revive the player slightly, giving them a few health buffs
     curWorld.player.character.health = min(curWorld.player.character.maxHealth, 10);
-    dungeonExited();
+    stopBackgroundMusic();
+    playerDiedAnimation();
   }
 
   void playBackgroundMusic() {

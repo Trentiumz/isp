@@ -34,6 +34,7 @@ PImage archerRight, archerLeft;
 PImage dungeonWarrior;
 PImage[] loadingAnimation;
 PImage[] splashAnimation;
+PImage[] knightDeadAnimation;
 
 PImage dungeonDragonBoss;
 PImage dungeonSnakeBossUp, dungeonSnakeBossDown;

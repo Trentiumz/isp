@@ -109,7 +109,7 @@ void loadFiles() {
   skeletonRight = loadImage("sprites/dungeon/skeleton_right.png");
   skeletonLeft = loadImage("sprites/dungeon/skeleton_left.png");
   dungeonWarrior = loadImage("sprites/dungeon/cursedWarrior.png");
-  
+
   dungeonWarrior.resize(WarriorDungeon.warriorWidth, WarriorDungeon.warriorHeight);
   goblinRight.resize(DefaultDungeon.goblinWidth, DefaultDungeon.goblinHeight);
   goblinLeft.resize(DefaultDungeon.goblinWidth, DefaultDungeon.goblinHeight);
@@ -192,19 +192,46 @@ void loadFiles() {
 
   // load in the splash screen
   currentMessage = "Loading splash screen...";
-  int numSplashFrames = 51;
+  int numSplashFrames = 101;
   splashAnimation = new PImage[numSplashFrames];
   for (int i = 0; i < numSplashFrames; ++i) {
-    String sNum = "" + (i + 1);
-    if (sNum.length() == 1) {
-      sNum = "00" + sNum;
-    } else if (sNum.length() == 2) {
-      sNum = "0" + sNum;
-    }
+    String sNum = numTo3Characters(i + 1);
     splashAnimation[i] = loadImage("animations/splash/ezgif-frame-" + sNum + ".png");
     splashAnimation[i].resize(width, height);
   }
 
+  // load in death animations
+  currentMessage = "loading death animations..";
+  loadDeathAnimations();
+
   // it is completed... this is also used for the loading state to know that we can progress to progress
   currentMessage = "completed";
+}
+
+void loadDeathAnimations(){
+  int numKnightFrames = 56;
+  knightDeadAnimation = new PImage[numKnightFrames];
+  for(int i = 0; i < numKnightFrames; ++i){
+   String sNum = numTo2Characters(i);
+   knightDeadAnimation[i] = loadImage("animations/dead/knight/frame_" + sNum + "_delay-0.1s.gif");
+   knightDeadAnimation[i].resize(width, height);
+  }
+}
+
+String numTo2Characters(int num){
+ if(num < 10){
+  return "0" + num; 
+ }else{
+  return "" + num; 
+ }
+}
+
+String numTo3Characters(int num) {
+  String sNum = "" + num;
+  if (sNum.length() == 1) {
+    sNum = "00" + sNum;
+  } else if (sNum.length() == 2) {
+    sNum = "0" + sNum;
+  }
+  return sNum;
 }
