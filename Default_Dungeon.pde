@@ -724,7 +724,7 @@ abstract class DefaultDungeon extends DungeonState {
 
     Wizard(float x, float y, int w, int h, PlayerInfo character) {
       // set boundaries, load in images
-      super(x, y, w, h, w * 0.2, w * 0.45, h * 0.2, h * 0.2, character, knightRight, knightLeft);
+      super(x, y, w, h, w * 0.2, w * 0.45, h * 0.2, h * 0.2, character, wizardRight, wizardLeft);
       lastAttackFrame1 = -1000;
       lastAttackFrame2 = -1000;
     }

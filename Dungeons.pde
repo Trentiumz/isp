@@ -95,8 +95,8 @@ class CoinsDungeon extends DefaultDungeon {
       this.coins = coins;
       chest = coinsDungeonChest;
     }
-    Chest(float x, float y, int coins){
-     this(x, y, chestWidth, chestHeight, coins); 
+    Chest(float x, float y, int coins) {
+      this(x, y, chestWidth, chestHeight, coins);
     }
     void pressed() {
       curWorld.removeEntity(this);
@@ -1316,6 +1316,124 @@ class GiantBossDungeon extends DefaultDungeon {
     }
     GiantGuard(float x, float y) {
       this(x, y, giantGuardWidth, giantGuardHeight, giantGuardFPA, giantGuardRange, giantGuardSightRange, giantGuardPlayerTargettedRange, giantGuardDamage, giantGuardSpeed, giantGuardHealth);
+    }
+  }
+}
+
+class WarriorDungeon extends DefaultDungeon {
+  WarriorDungeon(EnvironmentState previous, PlayerInfo character) {
+    super(previous, character);
+  }
+  void setup() {
+  }
+  void tick() {
+    super.tick();
+  }
+  class Warrior extends Enemy {
+    Warrior(float x, float y, int w, int h, float health) {
+      super(x, y, w, h, health);
+    }
+    void tick() {
+    }
+    void render() {
+    }
+  }
+
+  class WarriorShortSlash implements Projectile {
+    // The slash starts at startAngle and ends at curAngle. The slash moves in a circle with radius [radius], and when hit, does [damage] damage
+    // curAngle is used to keep track of the current angle of the drawn arc
+    float startAngle, curAngle, endAngle, radius, damage;
+
+    // the intervals at which to check for enemies
+    final float angIncrease = PI / 64;
+    // The speed at which the angle should be animated
+    final float animateAngleSpeed = PI / 4;
+
+    // center coordinate for the circle defining the slash
+    float cx, cy;
+    WarriorShortSlash(float startAngle, float endAngle, float radius, float damage, float cx, float cy) {
+      // initialize the values
+      this.startAngle = startAngle;
+      this.curAngle = startAngle;
+      this.endAngle = endAngle;
+      this.radius = radius;
+      this.damage = damage;
+      this.cx = cx;
+      this.cy = cy;
+
+      boolean playerDamaged = false; // tracks if the enemy has been damaged. If it has, then we don't "damage it again"
+      for (float angle = startAngle; angle <= endAngle && !playerDamaged; angle += angIncrease) {
+        float x = cx + cos(angle) * radius;
+        float y = cy + sin(angle) * radius;
+        // if the sword hits, then damage the enemy
+        if (curPlayer.lineHits(cx, cy, x, y)) {
+          curPlayer.takeDamage(this.damage);
+          playerDamaged = true;
+        }
+      }
+    }
+    void tick() {
+      // this is purely for animating
+      // increase the angle at which to draw the arc
+      this.curAngle += animateAngleSpeed;
+      // if we reach the end angle, then we remove the projectile
+      if (this.curAngle > endAngle) {
+        curWorld.removeProjectile(this);
+      }
+    }
+    void render() {
+      // set a white, moderately thick stroke
+      stroke(#CE03FC);
+      strokeWeight(3);
+      fill(0, 0, 0, 0);
+      // draw an arc from startAngle to curAngle
+      arc(cx, cy, radius * 2, radius * 2, startAngle, curAngle, OPEN);
+    }
+  }
+
+  // The second knight attack: a long, slow slash
+  class WarriorLongSlash implements Projectile {
+    // the current angle, the angle to end on, the size of the sword, the damage of the sword
+    float curAngle, endAngle, radius, damage;
+    // the speed at which to swing the sword
+    float angleIncrease = PI / 16;
+    // Since we only want to attack each enemy once, we keep a list of the enemies that have been attacked
+    boolean hitPlayer;
+
+    // center coordinate of circle defining slash
+    float cx, cy;
+
+    WarriorLongSlash(float startAngle, float endAngle, float radius, float damage, float cx, float cy) {
+      // initialize properties
+      this.curAngle = startAngle;
+      this.endAngle = endAngle;
+      this.radius = radius;
+      this.damage = damage;
+
+      this.cx = cx;
+      this.cy = cy;
+
+      hitPlayer = false;
+    }
+    void tick() {
+      // if the slash is finished, then remove the projectile
+      if (curAngle > endAngle)
+        curWorld.removeProjectile(this);
+
+      // for each enemy, if the line defining the sword hits any of them and they haven't been attacked before by this attack, then damage them
+      if (curPlayer.lineHits(cx, cy, cx + cos(curAngle) * radius, cy + sin(curAngle) * radius) && !hitPlayer) {
+        curPlayer.takeDamage(damage);
+        hitPlayer = true;
+      }
+
+      // move the sword (go to the next angle)
+      curAngle += angleIncrease;
+    }
+    void render() {
+      stroke(#CE03FC);
+      strokeWeight(4);
+      // draw a line to the current end of the sword
+      line(cx, cy, cx + cos(curAngle) * radius, cy + sin(curAngle) * radius);
     }
   }
 }

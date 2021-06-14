@@ -50,6 +50,9 @@ PImage dungeonWaterSprite;
 
 PFont dungeonDragonAttackFont;
 
+PFont mainMenuFont1, mainMenuFont2, mainMenuFont3, mainMenuFont4;
+PImage mainMenuImage1, mainMenuImage2;
+
 void setup() {
   size(1000, 800);
   currentMessage = "";
