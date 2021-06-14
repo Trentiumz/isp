@@ -20,11 +20,7 @@ abstract class StoryModule {
   void mouseClicked() {
     curState.mouseClicked();
   }
-  void coinDungeonStarted() {
-  }
   void storyDungeonStarted() {
-  }
-  void coinDungeonCompleted() {
   }
   void storyDungeonCompleted() {
   }

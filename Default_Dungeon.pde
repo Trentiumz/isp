@@ -35,14 +35,15 @@ abstract class DefaultDungeon extends DungeonState {
   final float skeletonAttack = 15;
   final float skeletonSpeed = 4;
 
+  // default dimensions for the different players
   final static int knightWidth=38, knightHeight=50;
   final static int archerWidth=38, archerHeight=50;
   final static int wizardWidth=50, wizardHeight=50;
 
-  DungeonWorld curWorld;
-  DungeonPlayer curPlayer;
-  PlayerInfo info;
-  int curFrame;
+  DungeonWorld curWorld; // the current world
+  DungeonPlayer curPlayer; // the current player
+  PlayerInfo info; // the information on the player
+  int curFrame; // a common variable for the current frame
 
   abstract void setup();
 
@@ -50,7 +51,7 @@ abstract class DefaultDungeon extends DungeonState {
   void dungeonCompleted() {
     curStory.storyDungeonCompleted();
     dungeonCompletedAnimation();
-    stopBackgroundMusic();
+    dungeonExited();
   }
 
   // the dungeon exited
@@ -66,7 +67,6 @@ abstract class DefaultDungeon extends DungeonState {
 
   // the player died animation
   void playerDiedAnimation() {
-    curEnvironment = previous;
     curState = new DeadScreen(info.playerClass);
   }
 
@@ -74,8 +74,8 @@ abstract class DefaultDungeon extends DungeonState {
   void playerDied() {
     // revive the player slightly, giving them a few health buffs
     curWorld.player.character.health = min(curWorld.player.character.maxHealth, 10);
-    stopBackgroundMusic();
     playerDiedAnimation();
+    dungeonExited();
   }
 
   void playBackgroundMusic() {

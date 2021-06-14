@@ -38,7 +38,7 @@ class MainMenuState extends State {
 
   void startGame() {
     PlayerInfo samplePlayer = new PlayerInfo(10, 100, 20, 5, 10, 5, 0, PlayerClass.Knight);
-    curEnvironment = new WarriorDungeon(null, samplePlayer);
+    curEnvironment = new L3RoomDungeon(null, samplePlayer);
     curState = new DefaultState();
     titleBGM.stop();
   }

@@ -208,22 +208,22 @@ void loadFiles() {
   currentMessage = "completed";
 }
 
-void loadDeathAnimations(){
+void loadDeathAnimations() {
   int numKnightFrames = 56;
   knightDeadAnimation = new PImage[numKnightFrames];
-  for(int i = 0; i < numKnightFrames; ++i){
-   String sNum = numTo2Characters(i);
-   knightDeadAnimation[i] = loadImage("animations/dead/knight/frame_" + sNum + "_delay-0.1s.gif");
-   knightDeadAnimation[i].resize(width, height);
+  for (int i = 0; i < numKnightFrames; ++i) {
+    String sNum = numTo2Characters(i);
+    knightDeadAnimation[i] = loadImage("animations/dead/knight/frame_" + sNum + "_delay-0.1s.gif");
+    knightDeadAnimation[i].resize(width, height);
   }
 }
 
-String numTo2Characters(int num){
- if(num < 10){
-  return "0" + num; 
- }else{
-  return "" + num; 
- }
+String numTo2Characters(int num) {
+  if (num < 10) {
+    return "0" + num;
+  } else {
+    return "" + num;
+  }
 }
 
 String numTo3Characters(int num) {
@@ -234,4 +234,17 @@ String numTo3Characters(int num) {
     sNum = "0" + sNum;
   }
   return sNum;
+}
+
+PlayerInfo getStartingStats(PlayerClass chosen) {
+  if (chosen == PlayerClass.Knight) {
+    return new PlayerInfo(100, 7, 4, 10, 30, 3, 0, PlayerClass.Knight);
+  } else if (chosen == PlayerClass.Wizard) {
+    return new PlayerInfo(70, 4, 7, 60, 30, 3, 0, PlayerClass.Wizard);
+  } else if (chosen == PlayerClass.Archer) {
+    return new PlayerInfo(70, 7, 7, 20, 30, 5, 0, PlayerClass.Archer);
+  } else {
+    println("somehow the chosen class isn't a class!");
+    return null;
+  }
 }
