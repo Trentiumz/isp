@@ -1,4 +1,4 @@
-enum DungeonElement {
+enum DungeonElement { //<>// //<>//
   Wall, Ground, Empty
 };
 
@@ -15,31 +15,29 @@ interface Projectile {
 
 abstract class DefaultDungeon extends DungeonState {
   // defaults for goblins
-  final int goblinWidth = 30;
-  final int goblinHeight = 30;
-
+  final static int goblinWidth = 30, goblinHeight = 30;
   final int goblinHealth = 15;
   final int framesPerGoblinAttack = 30;
   final int goblinAttack = 2;
   final int goblinSpeed = 6;
 
   // defaults for zombies
-  final int zombieWidth = 30;
-  final int zombieHeight = 30;
-
+  final static int zombieWidth = 30, zombieHeight = 30;
   final int zombieHealth = 20;
   final int framesPerZombieAttack = 60;
   final float zombieAttack = 10;
   final float zombieSpeed = 1;
 
   // defaults for skeletons
-  final int skeletonWidth = 30;
-  final int skeletonHeight = 30;
-
+  final static int skeletonWidth = 30, skeletonHeight = 30;
   final int skeletonHealth = 30;
   final int framesPerSkeletonAttack = 45;
   final float skeletonAttack = 15;
   final float skeletonSpeed = 4;
+
+  final static int knightWidth=38, knightHeight=50;
+  final static int archerWidth=38, archerHeight=50;
+  final static int wizardWidth=50, wizardHeight=50;
 
   DungeonWorld curWorld;
   DungeonPlayer curPlayer;
@@ -90,7 +88,6 @@ abstract class DefaultDungeon extends DungeonState {
     this.curFrame = 0;
     this.info = character;
 
-    this.loadImages();
     this.setup();
   }
 
@@ -119,21 +116,11 @@ abstract class DefaultDungeon extends DungeonState {
   // render function - drawing onto the screen
   void render() {
     curWorld.render();
+    drawOverlays();
   }
 
-  // loading in the needed images
-  void loadImages() {
-    // resize goblins to proper size
-    goblinRight.resize(goblinWidth, goblinHeight);
-    goblinLeft.resize(goblinWidth, goblinHeight);
-
-    // resize zombies to proper size
-    zombieRight.resize(zombieWidth, zombieHeight);
-    zombieLeft.resize(zombieWidth, zombieHeight);
-
-    // resize skeletons to proper size
-    skeletonRight.resize(skeletonWidth, skeletonHeight);
-    skeletonLeft.resize(skeletonWidth, skeletonHeight);
+  // draws the overlays and adds more info on 
+  void drawOverlays() {
   }
 
   // DUNGEON WORLD CODE - MORE OR LESS FOCUSING ON THE WORLD ITSELF ----------------------------------------------------------------------------
@@ -162,14 +149,9 @@ abstract class DefaultDungeon extends DungeonState {
       this.removedProjectiles = new ArrayList<Projectile>();
 
       // load in the assets for the ground and wall
-      this.ground = loadImage("sprites/dungeon/ground.png");
-      this.wall = loadImage("sprites/dungeon/wall.png");
-      this.empty = loadImage("sprites/dungeon/empty.png");
-
-      // resize them to the size of each tile
-      this.ground.resize(ceil(gridSize), ceil(gridSize));
-      this.wall.resize(ceil(gridSize), ceil(gridSize));
-      this.empty.resize(ceil(gridSize), ceil(gridSize));
+      this.ground = dungeonGroundSprite;
+      this.wall = dungeonWallSprite;
+      this.empty = dungeonEmptySprite;
     }
     // Called at the start of each frame. This is the "logic" part of each frame
     void tick() {
@@ -233,7 +215,7 @@ abstract class DefaultDungeon extends DungeonState {
           } else if (tileMap[r][c] == DungeonElement.Wall) {
             image(wall, gridSize * c, gridSize * r);
           } else {
-            println("Somehow the current dungeon element isn't the ground, empty, or a wall!"); //<>//
+            println("Somehow the current dungeon element isn't the ground, empty, or a wall!");
           }
         }
       }
@@ -276,7 +258,7 @@ abstract class DefaultDungeon extends DungeonState {
             return true;
       return false;
     }
-    
+
     // A boolean for whether or not a box is touching the wall
     boolean touchingWall(float x, float y, float w, float h) {
       // get which "path squares" are within the range of the box
@@ -610,11 +592,9 @@ abstract class DefaultDungeon extends DungeonState {
       lastHorizontal = Direction.right;
       this.character = character;
 
-      // set the images and resize them
+      // set the images
       this.right = right;
       this.left = left;
-      this.right.resize(w, h);
-      this.left.resize(w, h);
     }
     // moving in the four directions; horizontal movement will update lastHorizontal
     void moveRight() {
@@ -690,7 +670,7 @@ abstract class DefaultDungeon extends DungeonState {
 
     // draw the bounding areas of the knight, and load in the images
     Knight(float x, float y, int w, int h, PlayerInfo character) {
-      super(x, y, w, h, w * 0.55, w * 0.15, h * 0.3, h * 0.2, character, loadImage("sprites/knight_right.png"), loadImage("sprites/knight_left.png"));
+      super(x, y, w, h, w * 0.55, w * 0.15, h * 0.3, h * 0.2, character, knightRight, knightLeft);
 
       // iniitialize variables
       this.range1 = 50;
@@ -744,7 +724,7 @@ abstract class DefaultDungeon extends DungeonState {
 
     Wizard(float x, float y, int w, int h, PlayerInfo character) {
       // set boundaries, load in images
-      super(x, y, w, h, w * 0.2, w * 0.45, h * 0.2, h * 0.2, character, loadImage("sprites/wizard_right.png"), loadImage("sprites/wizard_left.png"));
+      super(x, y, w, h, w * 0.2, w * 0.45, h * 0.2, h * 0.2, character, knightRight, knightLeft);
       lastAttackFrame1 = -1000;
       lastAttackFrame2 = -1000;
     }
@@ -771,7 +751,7 @@ abstract class DefaultDungeon extends DungeonState {
     int lastAttackFrame1; // the last frame in which the archer attacked
     int lastAttackFrame2; // the last frame in which the archer attacked
     Archer(float x, float y, int w, int h, PlayerInfo character) {
-      super(x, y, w, h, w * 0.15, w * 0.2, h * 0.2, h * 0.2, character, loadImage("sprites/archer_right.png"), loadImage("sprites/archer_left.png"));
+      super(x, y, w, h, w * 0.15, w * 0.2, h * 0.2, h * 0.2, character, archerRight, archerLeft);
       this.lastAttackFrame1 = -1000;
     }
     void attack1() {
@@ -887,19 +867,19 @@ abstract class DefaultDungeon extends DungeonState {
         float xDiff = curPlayer.centerX() - this.centerX();
         float yDiff = curPlayer.centerY() - this.centerY();
         float mag = magnitude(xDiff, yDiff);
-        
+
         // if the player is to the right/left, update the direction that this entity is looking in
         if (xDiff > 0) {
           playerSide = Direction.right;
         } else {
           playerSide = Direction.left;
         }
-        
+
         // if the player is further than we would like, move towards the player
         if (curPlayer.distance(this) > optimalDist) {
           curWorld.moveEntity(this, speed * xDiff / mag, speed * yDiff / mag);
         }
-        
+
         // a timer for attacking
         if (curFrame - lastAttackFrame >= framesPerAttack) {
           lastAttackFrame = curFrame;
@@ -907,7 +887,7 @@ abstract class DefaultDungeon extends DungeonState {
         }
       }
     }
-    
+
     // draw the enemy
     void render() {
       // draw it facing the player
@@ -1029,6 +1009,7 @@ abstract class DefaultDungeon extends DungeonState {
     }
   }
 
+  // a skeleton
   class Skeleton extends MeleeEnemy {
     Skeleton(float x, float y, int w, int h, float sightRange, float targettedRange) {
       super(x, y, w, h, framesPerSkeletonAttack, 5, sightRange, targettedRange, skeletonAttack, skeletonSpeed, skeletonHealth, skeletonRight, skeletonLeft);
@@ -1037,6 +1018,7 @@ abstract class DefaultDungeon extends DungeonState {
     Skeleton(float x, float y, int w, int h) {
       super(x, y, w, h, framesPerSkeletonAttack, 5, 200, 700, skeletonAttack, skeletonSpeed, skeletonHealth, skeletonRight, skeletonLeft);
     }
+    // is "smarter", will target the player when it's attacked
     void takeDamage(float amount) {
       super.takeDamage(amount);
       this.seesPlayer = true;
@@ -1076,7 +1058,7 @@ abstract class DefaultDungeon extends DungeonState {
           walkable[r][c] = false;
         } else {
           // error trapping for unrecognized characters
-          println("Unrecognized character in dungeon text mapping: " + lines[r].charAt(c)); //<>//
+          println("Unrecognized character in dungeon text mapping: " + lines[r].charAt(c));
         }
       }
     }
@@ -1089,11 +1071,11 @@ abstract class DefaultDungeon extends DungeonState {
   DungeonPlayer getPlayerOf(float x, float y, PlayerInfo characterOf) {
     // we take into account the current player class, as well as the type of attack (which should be chosen in the dungeon start screen)
     if (characterOf.playerClass == PlayerClass.Knight) {
-      return new Knight(x, y, 38, 50, characterOf);
+      return new Knight(x, y, knightWidth, knightHeight, characterOf);
     } else if (characterOf.playerClass == PlayerClass.Archer) {
-      return new Archer(x, y, 38, 50, characterOf);
+      return new Archer(x, y, archerWidth, archerHeight, characterOf);
     } else if (characterOf.playerClass == PlayerClass.Wizard) {
-      return new Wizard(x, y, 50, 50, characterOf);
+      return new Wizard(x, y, wizardWidth, wizardHeight, characterOf);
     } else {
       // error trapping for invalid inputs
       println("didn't get proper parameters for character creation! Function getPlayerOf");

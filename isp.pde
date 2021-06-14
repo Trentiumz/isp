@@ -34,57 +34,21 @@ PImage archerRight, archerLeft;
 PImage[] loadingAnimation;
 PImage[] splashAnimation;
 
-void loadFiles() {
-  currentMessage = "Loading dungeon.wav...";
-  dungeonBGM = getTrack("music/dungeon.wav");
+PImage dungeonDragonBoss;
+PImage dungeonSnakeBossUp, dungeonSnakeBossDown;
+PImage dungeonGiantBoss;
+PImage dungeonDragonBossGuardMeleeRight, dungeonDragonBossGuardMeleeLeft;
+PImage dungeonDragonBossGuardRangedRight, dungeonDragonBossGuardRangedLeft;
+PImage dungeonSnakeBossGuardRangedRight, dungeonSnakeBossGuardRangedLeft;
+PImage dungeonGiantBossGuardMeleeRight, dungeonGiantBossGuardMeleeLeft;
 
-  currentMessage = "Loading outdoors.wav...";
-  outdoorsBGM = getTrack("music/outdoors.wav");
+PImage coinsDungeonChest;
+PImage dungeonGroundSprite;
+PImage dungeonWallSprite;
+PImage dungeonEmptySprite;
+PImage dungeonWaterSprite;
 
-  currentMessage = "Loading hospital.wav...";
-  hospitalBGM = getTrack("music/hospital.wav");
-
-  currentMessage = "Loading guild_hq.wav...";
-  guildHQBGM = getTrack("music/guild_hq.wav");
-
-  currentMessage = "Loading castle.wav...";
-  castleBGM = getTrack("music/castle.wav");
-
-  currentMessage = "Loading title.wav...";
-  titleBGM = getTrack("music/title.wav");
-
-  currentMessage = "Loading dungeon enemy sprites...";
-  zombieRight = loadImage("sprites/dungeon/zombie_right.png");
-  zombieLeft = loadImage("sprites/dungeon/zombie_left.png");
-  goblinRight = loadImage("sprites/dungeon/goblin_right.png");
-  goblinLeft = loadImage("sprites/dungeon/goblin_left.png");
-  skeletonRight = loadImage("sprites/dungeon/skeleton_right.png");
-  skeletonLeft = loadImage("sprites/dungeon/skeleton_left.png");
-
-  currentMessage = "Loading player sprites...";
-  knightRight = loadImage("sprites/knight_right.png");
-  knightLeft = loadImage("sprites/knight_left.png");
-  wizardRight = loadImage("sprites/wizard_right.png");
-  wizardLeft = loadImage("sprites/wizard_left.png");
-  archerRight = loadImage("sprites/archer_right.png");
-  archerLeft = loadImage("sprites/archer_left.png");
-
-  currentMessage = "Loading splash screen...";
-  int numSplashFrames = 51;
-  splashAnimation = new PImage[numSplashFrames];
-  for (int i = 0; i < numSplashFrames; ++i) {
-    String sNum = "" + (i + 1);
-    if (sNum.length() == 1) {
-      sNum = "00" + sNum;
-    } else if (sNum.length() == 2) {
-      sNum = "0" + sNum;
-    }
-    splashAnimation[i] = loadImage("animations/splash/ezgif-frame-" + sNum + ".png");
-    splashAnimation[i].resize(width, height);
-  }
-
-  currentMessage = "completed";
-}
+PFont dungeonDragonAttackFont;
 
 void setup() {
   size(1000, 800);

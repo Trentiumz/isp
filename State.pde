@@ -108,14 +108,14 @@ class SplashState extends State {
     curAnimationFrame = 0;
   }
   void tick() {
-    if (curAnimationFrame >= splashAnimation.length * 3) {
+    if (curAnimationFrame >= splashAnimation.length) {
       PlayerInfo samplePlayer = new PlayerInfo(9999, 100, 20, 5, 10, 5, 0, PlayerClass.Knight);
-      curEnvironment = new SerpantBossDungeon(null, samplePlayer);
+      curEnvironment = new DragonBossDungeon(null, samplePlayer);
       curState = new DefaultState();
     }
   }
   void render() {
-    int index = (curAnimationFrame / 3) % numFrames;
+    int index = curAnimationFrame % numFrames;
     image(splashAnimation[index], 0, 0);
     curAnimationFrame += 1;
   }

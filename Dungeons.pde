@@ -9,6 +9,7 @@ abstract class DungeonState extends EnvironmentState {
 
 class CoinsDungeon extends DefaultDungeon {
   Chest curChest = null;
+  final static int chestWidth=80, chestHeight=50;
 
   void dungeonCompleted() {
     curStory.coinDungeonCompleted();
@@ -22,7 +23,7 @@ class CoinsDungeon extends DefaultDungeon {
   void tick() {
     super.tick();
     if (curWorld.enemies.size() == 0) {
-      curChest = new Chest(78*50, 8 * 50, 80, 50, (int) random(300, 400));
+      curChest = new Chest(78*50, 8 * 50, (int) random(300, 400));
       curWorld.addEntity(curChest);
     }
   }
@@ -92,8 +93,10 @@ class CoinsDungeon extends DefaultDungeon {
     Chest(float x, float y, int w, int h, int coins) {
       super(x, y, w, h);
       this.coins = coins;
-      chest = loadImage("sprites/dungeon/chest.png");
-      chest.resize(w, h);
+      chest = coinsDungeonChest;
+    }
+    Chest(float x, float y, int coins){
+     this(x, y, chestWidth, chestHeight, coins); 
     }
     void pressed() {
       curWorld.removeEntity(this);
@@ -281,7 +284,7 @@ class DragonBossDungeon extends DefaultDungeon {
 
   final float dragonHealth = 700;
   final float dragonSlashDamage = 30;
-  final int dragonWidth=100, dragonHeight=50;
+  final static int dragonWidth=100, dragonHeight=50;
   final int dragonFPA=30;
   PImage dragon;
 
@@ -295,11 +298,13 @@ class DragonBossDungeon extends DefaultDungeon {
   final float blowBackFrames = 30;
   float blowBackTimer;
 
-  final int meleeGuardFPA=45, meleeWidth=45, meleeHeight=50;
+  final int meleeGuardFPA=45;
+  final static int meleeWidth=45, meleeHeight=50;
   final float meleeDamage=20, meleeAttackRange=5, meleeSightRange=300, meleeTargettedRange=550, meleeSpeed=2, meleeStartingHealth=70;
   PImage meleeRight, meleeLeft;
 
-  final int rangedGuardFPA=30, rangedWidth=20, rangedHeight=30;
+  final int rangedGuardFPA=30;
+  final static int rangedWidth=20, rangedHeight=30;
   final float rangedDamage=10, rangedAttackRange=700, rangedSpeed=4, rangedStartingHealth=25, rangedProjectileSpeed=5;
   PImage rangedRight, rangedLeft;
 
@@ -312,20 +317,14 @@ class DragonBossDungeon extends DefaultDungeon {
   }
   void setup() {
     lastLitFrame = -1000;
-    dragon = loadImage("sprites/dungeon/dragon.png");
-    dragon.resize(dragonWidth, dragonHeight);
+    dragon = dungeonDragonBoss;
     blowBackTimer = 0;
 
-    meleeLeft = loadImage("sprites/dungeon/dragonGuardMelee_left.png");
-    meleeRight = loadImage("sprites/dungeon/dragonGuardMelee_right.png");
+    meleeLeft = dungeonDragonBossGuardMeleeLeft;
+    meleeRight = dungeonDragonBossGuardMeleeRight;
 
-    rangedLeft = loadImage("sprites/dungeon/dragonGuardRanged_left.png");
-    rangedRight = loadImage("sprites/dungeon/dragonGuardRanged_right.png");
-
-    meleeLeft.resize(meleeWidth, meleeHeight);
-    meleeRight.resize(meleeWidth, meleeHeight);
-    rangedLeft.resize(rangedWidth, rangedHeight);
-    rangedRight.resize(rangedWidth, rangedHeight);
+    rangedLeft = dungeonDragonBossGuardRangedLeft;
+    rangedRight = dungeonDragonBossGuardRangedRight;
 
     curStage = 0;
     curPlayer = getPlayerOf(60, 8 * 50, info);
@@ -543,8 +542,7 @@ class DragonBossDungeon extends DefaultDungeon {
       this.drawHealthBar(this.x, this.y - 10, w, 10);
 
       // draw text for the attack number
-      textFont(createFont("Arial", 16));
-      textSize(14);
+      textFont(dungeonDragonAttackFont);
       fill(255);
       textAlign(CENTER);
       text((curAttack + 1), centerX(), y + h + 6);
@@ -654,13 +652,15 @@ class SerpantBossDungeon extends DefaultDungeon {
 
   PImage rangedRight, rangedLeft;
   final float rangedHealth=40, rangedBulletDamage=10, rangedBulletSpeed=15, rangedRange=900, rangedSpeed=4;
-  final int rangedWidth=15, rangedHeight=30, rangedFPA=20;
+  final static int rangedWidth=15, rangedHeight=30;
+  final int rangedFPA=20;
   float rangedOnWaterDamageReduction = 0.7;
 
   int curDungeonState; // 0 for round 1, 1 for round 2, 2 for if we wait for player to go to next room, 3 for boss fight
 
   PImage snakeUp, snakeDown;
-  final int snakeWidth=50, snakeHeight=150, snakeVenomFPA=10, snakeSmashFPA=25, snakeSummonFPA=60;
+  final static int snakeWidth=50, snakeHeight=150;
+  final int snakeVenomFPA=10, snakeSmashFPA=25, snakeSummonFPA=60;
   final float snakeHealth=700, snakeVenomSpeed=15, snakeSmashSpeed=50, snakeSmashDamage=60;
 
   ArrayList<Enemy> enemiesToAdd;
@@ -673,18 +673,13 @@ class SerpantBossDungeon extends DefaultDungeon {
     curWaterWorld = getWaterWorldOf("dungeon_maps/serpant.txt", curPlayer);
     curWorld = curWaterWorld;
 
-    waterSprite = loadImage("sprites/dungeon/water.jpg");
-    waterSprite.resize((int) World.gridSize, (int) World.gridSize);
+    waterSprite = dungeonWaterSprite;
 
-    rangedRight = loadImage("sprites/dungeon/serpantGuard_right.png");
-    rangedLeft = loadImage("sprites/dungeon/serpantGuard_left.png");
-    rangedRight.resize(rangedWidth, rangedHeight);
-    rangedLeft.resize(rangedWidth, rangedHeight);
+    rangedRight = dungeonSnakeBossGuardRangedRight;
+    rangedLeft = dungeonSnakeBossGuardRangedLeft;
 
-    snakeUp = loadImage("sprites/dungeon/serpant_up.png");
-    snakeDown = loadImage("sprites/dungeon/serpant_down.png");
-    snakeUp.resize(snakeWidth, snakeHeight);
-    snakeDown.resize(snakeWidth, snakeHeight);
+    snakeUp = dungeonSnakeBossUp;
+    snakeDown = dungeonSnakeBossDown;
 
     enemiesToAdd = new ArrayList<Enemy>();
 
@@ -1039,11 +1034,13 @@ class SerpantBossDungeon extends DefaultDungeon {
 class GiantBossDungeon extends DefaultDungeon {
   PImage guardRight, guardLeft;
 
-  final int giantGuardWidth=45, giantGuardHeight=50, giantGuardFPA=30;
+  final static int giantGuardWidth=45, giantGuardHeight=50;
+  final int giantGuardFPA=30;
   final float giantGuardRange=5, giantGuardSightRange=300, giantGuardPlayerTargettedRange=600, giantGuardDamage=40, giantGuardSpeed=3, giantGuardHealth=400;
 
   PImage giant;
-  final int giantFPA=30, giantKnockbackFrames=15, giantWidth=123, giantHeight=100, giantNumDaggers=10, giantBoulderDamageInterval=15, giantBoulderEF=120, giantDaggerEF=20;
+  final static int giantWidth=123, giantHeight=100;
+  final int giantFPA=30, giantKnockbackFrames=15, giantNumDaggers=10, giantBoulderDamageInterval=15, giantBoulderEF=120, giantDaggerEF=20;
   final float giantBoulderDamage=30, giantDaggerDamage=10, giantSmashDamage=60, giantKnockbackSpeed=15, giantHealth=1000, giantSpeed=3, giantSmashRange=125, giantBoulderSpeed=5, giantDaggerSpeed=18, giantBoulderRadius=40, giantDaggerAngleVariation=PI/10;
 
   int curState; // 0 for guards, 1 for guards completed (still moving to the next room), 2 for boss fight
@@ -1055,17 +1052,14 @@ class GiantBossDungeon extends DefaultDungeon {
     curPlayer = getPlayerOf(60, 8*50, info);
     curWorld = getWorldOf("dungeon_maps/giant.txt", curPlayer);
 
-    guardRight = loadImage("sprites/dungeon/giantGuardMelee_right.png");
-    guardLeft = loadImage("sprites/dungeon/giantGuardMelee_left.png");
-    guardRight.resize(giantGuardWidth, giantGuardHeight);
-    guardLeft.resize(giantGuardWidth, giantGuardHeight);
+    guardRight = dungeonGiantBossGuardMeleeRight;
+    guardLeft = dungeonGiantBossGuardMeleeLeft;
 
-    giant = loadImage("sprites/dungeon/giant.png");
-    giant.resize(giantWidth, giantHeight);
+    giant = dungeonGiantBoss;
 
     curState = 0;
     guardRoom();
-    
+
     playBackgroundMusic();
   }
   void tick() {

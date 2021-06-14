@@ -103,7 +103,7 @@ class World {
   // the entities in this world
   ArrayList<Entity> entities;
   Camera camera; // the camera (used to follow the player)
-  final static float gridSize = 50; // a variable for the grid size of this world (should be constant)
+  final static int gridSize = 50; // a variable for the grid size of this world (should be constant)
   float worldWidth; // the width of this world
   float worldHeight; // the height of this world
   boolean walkable[][]; // tilemapping for whether or not each "tile" is walkable
