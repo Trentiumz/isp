@@ -1,7 +1,7 @@
 /*
   Authors: Daniel Ye
-  NEEDED LIBRARIES: processing.sound
-*/
+ NEEDED LIBRARIES: processing.sound
+ */
 
 // Usage of State Pattern - each class represents a different state & different conditions change these global variables to other states
 //   The State Pattern uses inheritance (I used abstract classes and/or interfaces)
@@ -31,26 +31,28 @@ PImage skeletonRight, skeletonLeft;
 PImage knightRight, knightLeft;
 PImage wizardRight, wizardLeft;
 PImage archerRight, archerLeft;
+PImage[] loadingAnimation;
+PImage[] splashAnimation;
 
-void loadFiles(){
+void loadFiles() {
   currentMessage = "Loading dungeon.wav...";
   dungeonBGM = getTrack("music/dungeon.wav");
-  
+
   currentMessage = "Loading outdoors.wav...";
   outdoorsBGM = getTrack("music/outdoors.wav");
-  
+
   currentMessage = "Loading hospital.wav...";
   hospitalBGM = getTrack("music/hospital.wav");
-  
+
   currentMessage = "Loading guild_hq.wav...";
   guildHQBGM = getTrack("music/guild_hq.wav");
-  
+
   currentMessage = "Loading castle.wav...";
   castleBGM = getTrack("music/castle.wav");
-  
+
   currentMessage = "Loading title.wav...";
   titleBGM = getTrack("music/title.wav");
-  
+
   currentMessage = "Loading dungeon enemy sprites...";
   zombieRight = loadImage("sprites/dungeon/zombie_right.png");
   zombieLeft = loadImage("sprites/dungeon/zombie_left.png");
@@ -58,7 +60,7 @@ void loadFiles(){
   goblinLeft = loadImage("sprites/dungeon/goblin_left.png");
   skeletonRight = loadImage("sprites/dungeon/skeleton_right.png");
   skeletonLeft = loadImage("sprites/dungeon/skeleton_left.png");
-  
+
   currentMessage = "Loading player sprites...";
   knightRight = loadImage("sprites/knight_right.png");
   knightLeft = loadImage("sprites/knight_left.png");
@@ -66,16 +68,30 @@ void loadFiles(){
   wizardLeft = loadImage("sprites/wizard_left.png");
   archerRight = loadImage("sprites/archer_right.png");
   archerLeft = loadImage("sprites/archer_left.png");
-  
+
+  currentMessage = "Loading splash screen...";
+  int numSplashFrames = 51;
+  splashAnimation = new PImage[numSplashFrames];
+  for (int i = 0; i < numSplashFrames; ++i) {
+    String sNum = "" + (i + 1);
+    if (sNum.length() == 1) {
+      sNum = "00" + sNum;
+    } else if (sNum.length() == 2) {
+      sNum = "0" + sNum;
+    }
+    splashAnimation[i] = loadImage("animations/splash/ezgif-frame-" + sNum + ".png");
+    splashAnimation[i].resize(width, height);
+  }
+
   currentMessage = "completed";
 }
 
 void setup() {
-  size(800, 600);
+  size(1000, 800);
+  currentMessage = "";
   curStory = new NoStory();
   curState = new LoadingState();
-  currentMessage = "";
-  
+
   frameRate(30);
 }
 

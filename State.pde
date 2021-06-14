@@ -55,19 +55,69 @@ class InventoryState extends State {
 }
 
 class LoadingState extends State {
-  LoadingState(){
+  final int numFrames = 30;
+  int curLoadingFrame;
+  final int ringWidth=180, ringHeight=180;
+
+  LoadingState() {
     thread("loadFiles");
+    if (!currentMessage.equals("completed")) {
+      loadingAnimation = new PImage[numFrames];
+      loadFrames();
+    }
+    curLoadingFrame = 0;
+  }
+
+  void loadFrames() {
+    for (int i = 0; i < numFrames; ++i) {
+      loadingAnimation[i] = loadImage("animations/loading/frame_" + formatAnimationNum(i) + "_delay-0.03s.gif");
+    }
+    for (int i = 0; i < numFrames; ++i) {
+      loadingAnimation[i].resize(ringWidth, ringHeight);
+    }
+  }
+
+  String formatAnimationNum(int frame) {
+    if (frame == 0) {
+      return "00";
+    } else if (frame < 10) {
+      return "0" + frame;
+    } else {
+      return "" + frame;
+    }
   }
   void tick() {
     if (currentMessage.equals("completed")) {
+      curState = new SplashState();
+    }
+  }
+  void render() {
+    image(loadingAnimation[curLoadingFrame], width / 2 - ringWidth / 2, height / 2 - ringHeight / 2);
+    curLoadingFrame = (curLoadingFrame + 1) % numFrames;
+    fill(#7C4400);
+    textAlign(CENTER);
+    text(currentMessage, width / 2, height / 2 + 100);
+  }
+}
+
+class SplashState extends State {
+  int numFrames = 51;
+  int curAnimationFrame;
+
+  SplashState() {
+    curAnimationFrame = 0;
+  }
+  void tick() {
+    if (curAnimationFrame >= splashAnimation.length * 3) {
       PlayerInfo samplePlayer = new PlayerInfo(9999, 100, 20, 5, 10, 5, 0, PlayerClass.Knight);
       curEnvironment = new SerpantBossDungeon(null, samplePlayer);
       curState = new DefaultState();
     }
   }
   void render() {
-    fill(#7C4400);
-    text(currentMessage, width / 2 - 100, height / 2 - 100);
+    int index = (curAnimationFrame / 3) % numFrames;
+    image(splashAnimation[index], 0, 0);
+    curAnimationFrame += 1;
   }
 }
 
