@@ -37,7 +37,7 @@ class MainMenuState extends State {
   String button = "homePage";
 
   void startGame() {
-    PlayerInfo samplePlayer = new PlayerInfo(10, 100, 20, 5, 10, 5, 0, PlayerClass.Knight);
+    PlayerInfo samplePlayer = getStartingStats(PlayerClass.Knight);
     curEnvironment = new L3RoomDungeon(null, samplePlayer);
     curState = new DefaultState();
     titleBGM.stop();
@@ -155,13 +155,6 @@ class MainMenuState extends State {
       text("Commencing the Game", 122, 112);
       startGame();
     }
-  }
-}
-
-class InstructionsState extends State {
-  void tick() {
-  }
-  void render() {
   }
 }
 

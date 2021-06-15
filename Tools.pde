@@ -218,6 +218,7 @@ void loadDeathAnimations() {
   }
 }
 
+// converts a number and "buffs" it up to 2 characters - returning a string
 String numTo2Characters(int num) {
   if (num < 10) {
     return "0" + num;
@@ -226,6 +227,7 @@ String numTo2Characters(int num) {
   }
 }
 
+// converts a number and "buffs" it up to 3 characters - returning the string
 String numTo3Characters(int num) {
   String sNum = "" + num;
   if (sNum.length() == 1) {
@@ -236,6 +238,7 @@ String numTo3Characters(int num) {
   return sNum;
 }
 
+// gets the starting statistics for a player of some class
 PlayerInfo getStartingStats(PlayerClass chosen) {
   if (chosen == PlayerClass.Knight) {
     return new PlayerInfo(100, 7, 4, 10, 30, 3, 0, PlayerClass.Knight);

@@ -134,6 +134,17 @@ abstract class DefaultDungeon extends DungeonState {
 
   // draws the overlays and adds more info on 
   void drawOverlays() {
+    // draw a health bar
+    float barWidth = 200;
+    float filledWidth = barWidth * curPlayer.character.health / curPlayer.character.maxHealth;
+    fill(0, 0, 0, 0);
+    stroke(255);
+    strokeWeight(2);
+    rect(10, 10, barWidth, 20);
+    fill(255, 0, 0);
+    rect(10, 10, filledWidth, 20);
+    
+    
   }
 
   // DUNGEON WORLD CODE - MORE OR LESS FOCUSING ON THE WORLD ITSELF ----------------------------------------------------------------------------
