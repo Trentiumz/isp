@@ -144,7 +144,22 @@ abstract class DefaultDungeon extends DungeonState {
     fill(255, 0, 0);
     rect(10, 10, filledWidth, 20);
     
-    
+    // draw cooldowns for the two attacks
+    //   variables for the size of the indicator circles
+    float attackIndicatorRadius = 50;
+    float center1 = 10+barWidth+40;
+    float center2 = 10+barWidth+100;
+    //   draw indicator circles 
+    fill(#00C4C9);
+    noStroke();
+    ellipse(center1, 30, attackIndicatorRadius, attackIndicatorRadius);
+    ellipse(center2, 30, attackIndicatorRadius, attackIndicatorRadius);
+    //   fill in circles based on cooldown
+    fill(255, 255, 255, 100);
+    float firstAngle = 2 * PI * (curFrame - curPlayer.lastAttackFrame1) / curPlayer.character.framesBetweenA1;
+    float secondAngle = 2 * PI * (curFrame - curPlayer.lastAttackFrame2) / curPlayer.character.framesBetweenA2;
+    arc(center1, 30, attackIndicatorRadius, attackIndicatorRadius, 0, firstAngle);
+    arc(center2, 30, attackIndicatorRadius, attackIndicatorRadius, 0, secondAngle);
   }
 
   // DUNGEON WORLD CODE - MORE OR LESS FOCUSING ON THE WORLD ITSELF ----------------------------------------------------------------------------
@@ -603,6 +618,10 @@ abstract class DefaultDungeon extends DungeonState {
     PImage right, left;
     // the "margins" between the collision box and actual sprite to the back, front, top and bottom
     float backMargin, frontMargin, topMargin, botMargin;
+    
+    // the last frames in which each player did attack 1 and attack 2
+    int lastAttackFrame1;
+    int lastAttackFrame2;
 
     DungeonPlayer(float x, float y, int w, int h, float backMargin, float frontMargin, float topMargin, float botMargin, PlayerInfo character, PImage right, PImage left) {
       // Initialize entity to the collision box
@@ -687,10 +706,8 @@ abstract class DefaultDungeon extends DungeonState {
   //     KNIGHT PLAYERS
   class Knight extends DungeonPlayer {
     float range1; // range of its attack
-    int lastAttackFrame1; // storing the last frame in which the Knight attacked
 
     float range2; // range of second attack
-    int lastAttackFrame2; // last frame in which the player attacked
 
     // draw the bounding areas of the knight, and load in the images
     Knight(float x, float y, int w, int h, PlayerInfo character) {
@@ -742,10 +759,6 @@ abstract class DefaultDungeon extends DungeonState {
 
   //     WIZARD PLAYERS
   class Wizard extends DungeonPlayer {
-    int lastAttackFrame1; // the last frame of when the wizard attacked
-
-    int lastAttackFrame2; // the last frame of when the wizard attacked
-
     Wizard(float x, float y, int w, int h, PlayerInfo character) {
       // set boundaries, load in images
       super(x, y, w, h, w * 0.2, w * 0.45, h * 0.2, h * 0.2, character, wizardRight, wizardLeft);
@@ -772,8 +785,6 @@ abstract class DefaultDungeon extends DungeonState {
 
   //     ARCHER PLAYERS
   class Archer extends DungeonPlayer {
-    int lastAttackFrame1; // the last frame in which the archer attacked
-    int lastAttackFrame2; // the last frame in which the archer attacked
     Archer(float x, float y, int w, int h, PlayerInfo character) {
       super(x, y, w, h, w * 0.15, w * 0.2, h * 0.2, h * 0.2, character, archerRight, archerLeft);
       this.lastAttackFrame1 = -1000;
