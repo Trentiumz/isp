@@ -255,5 +255,5 @@ PlayerInfo getStartingStats(PlayerClass chosen) {
 
 // returns if a point is inside a box
 boolean pointInBox(float px, float py, float bx, float by, float bw, float bh){
- return bx < px && px < bx + by && by < py && py < by + bh; 
+ return bx < px && px < bx + bw && by < py && py < by + bh; 
 }
