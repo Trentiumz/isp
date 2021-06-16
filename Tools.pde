@@ -180,6 +180,7 @@ void loadFiles() {
   // load fonts
   currentMessage = "Loading fonts...";
   dungeonDragonAttackFont = loadFont("LucidaBright-Demi-16.vlw");
+  upgradingDescription = loadFont("BookAntiqua-BoldItalic-14.vlw");
 
   // loading main menu elements
   currentMessage = "Loading menu...";
@@ -250,4 +251,9 @@ PlayerInfo getStartingStats(PlayerClass chosen) {
     println("somehow the chosen class isn't a class!");
     return null;
   }
+}
+
+// returns if a point is inside a box
+boolean pointInBox(float px, float py, float bx, float by, float bw, float bh){
+ return bx < px && px < bx + by && by < py && py < by + bh; 
 }

@@ -278,25 +278,107 @@ class DefaultState extends State {
   }
 }
 
-class DeadScreen extends State{
- PImage[] curAnimation;
- int curFrame;
- 
- DeadScreen(PlayerClass died){
-   if(died == PlayerClass.Knight){
-    curAnimation = knightDeadAnimation;
-   }
-   curFrame = 0;
- }
- void tick(){
-   curFrame++;
-   if(curFrame >= curAnimation.length * 2)
-     curFrame = 0;
- }
- void mousePressed(){
-  curState = new DefaultState(); 
- }
- void render(){
-   image(curAnimation[(curFrame / 2) % curAnimation.length], 0, 0);
- }
+class DeadScreen extends State {
+  PImage[] curAnimation;
+  int curFrame;
+
+  DeadScreen(PlayerClass died) {
+    if (died == PlayerClass.Knight) {
+      curAnimation = knightDeadAnimation;
+    }
+    curFrame = 0;
+  }
+  void tick() {
+    curFrame++;
+    if (curFrame >= curAnimation.length * 2)
+      curFrame = 0;
+  }
+  void mousePressed() {
+    curState = new DefaultState();
+  }
+  void render() {
+    image(curAnimation[(curFrame / 2) % curAnimation.length], 0, 0);
+  }
+}
+
+class UpgradingState extends State {
+  PlayerInfo character;
+
+  float backX=100, backY=100, backW=800, backH=600;
+  float healthX=450, healthY=600, healthW=100, healthH=50;
+  float a1AtkX=160, a1AtkY=130, a1AtkW=100, a1AtkH=50;
+  float a2AtkX=740, a2AtkY=130, a2AtkW=100, a2AtkH=50;
+  float a1SpeedX=160, a1SpeedY=400, a1SpeedW=100, a1SpeedH=50;
+  float a2SpeedX=740, a2SpeedY=400, a2SpeedW=100, a2SpeedH=50;
+
+  int upgradeCoins = 30;
+
+  UpgradingState(PlayerInfo character) {
+    this.character = character;
+  }
+  void tick() {
+  }
+  void mousePressed() {
+    if (pointDistance(mouseX, mouseY, backX + backW, backY) < 50) {
+      curState = new DefaultState();
+    } else if (pointInBox(mouseX, mouseY, healthX, healthY, healthW, healthH)) {
+      if (character.coins >= upgradeCoins) {
+        character.health *= 1.3;
+        character.coins -= upgradeCoins;
+      }
+    } else if (pointInBox(mouseX, mouseY, a1AtkX, a1AtkY, a1AtkW, a1AtkH)) {
+      if (character.coins >= upgradeCoins) {
+        character.baseA1Attack *= 1.5;
+        character.coins -= upgradeCoins;
+      }
+    } else if (pointInBox(mouseX, mouseY, a2AtkX, a2AtkY, a2AtkW, a2AtkH)) {
+      if (character.coins >= upgradeCoins) {
+        character.baseA2Attack *= 1.5;
+        character.coins -= upgradeCoins;
+      }
+    } else if (pointInBox(mouseX, mouseY, a1SpeedX, a1SpeedY, a1SpeedW, a1SpeedH)) {
+      if (character.coins >= upgradeCoins && character.framesBetweenA1 > 0) {
+        character.framesBetweenA1 = max(0, min(character.framesBetweenA1 - 1, (int) (character.framesBetweenA1 * 0.8)));
+        character.coins -= upgradeCoins;
+      }
+    } else if (pointInBox(mouseX, mouseY, a2SpeedX, a2SpeedY, a2SpeedW, a2SpeedH)) {
+      if (character.coins >= upgradeCoins && character.framesBetweenA2 > 0) {
+        character.framesBetweenA2 = max(0, min(character.framesBetweenA2 - 1, (int) (character.framesBetweenA2 * 0.8)));
+        character.coins -= upgradeCoins;
+      }
+    }
+  }
+  void render() {
+    curEnvironment.render();
+    fill(#FFBC03);
+    noStroke();
+    rect(backX, backY, backW, backH, 10, 10, 10, 10);
+
+    fill(0, 0, 255);
+    stroke(255);
+    strokeWeight(3);
+    rect(healthX, healthY, healthW, healthH, 10, 10, 10, 10);
+    rect(a1AtkX, a1AtkY, a1AtkW, a1AtkH, 10, 10, 10, 10);
+    rect(a2AtkX, a2AtkY, a2AtkW, a2AtkH, 10, 10, 10, 10);
+    rect(a1SpeedX, a1SpeedY, a1SpeedW, a1SpeedH, 10, 10, 10, 10);
+    rect(a2SpeedX, a2SpeedY, a2SpeedW, a2SpeedH, 10, 10, 10, 10);
+
+    fill(0);
+    textFont(upgradingDescription);
+    textSize(12);
+    textAlign(CENTER);
+    text("Health: " + character.health, healthX + healthW / 2, healthY + healthH + 14);
+    text("Attack 1 Damage: " + (int) character.baseA1Attack, a1AtkX + a1AtkW / 2, a1AtkY + a1AtkH + 14);
+    text("Attack 2 Damage: " + (int) character.baseA2Attack, a2AtkX + a2AtkW / 2, a2AtkY + a2AtkH + 14);
+    text("Attack 1 Interval: " + (int) character.framesBetweenA1, a1SpeedX + a2SpeedW / 2, a1SpeedY + a1SpeedH + 14);
+    text("Attack 2 Interval: " + (int) character.framesBetweenA2, a2SpeedX + a2SpeedW / 2, a2SpeedY + a2SpeedH + 14);
+
+    text("Coins: " + character.coins, 800, 650);
+
+    fill(255, 0, 0);
+    ellipse(backX + backW, backY, 50, 50);
+    textSize(20);
+    fill(255);
+    text("X", backX + backW, backY + 10);
+  }
 }

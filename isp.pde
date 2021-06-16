@@ -70,6 +70,8 @@ PFont dungeonDragonAttackFont;
 PFont mainMenuFont1, mainMenuFont2, mainMenuFont3, mainMenuFont4;
 PImage mainMenuImage1, mainMenuImage2;
 
+PFont upgradingDescription;
+
 void setup() {
   // set the size
   size(1000, 800);
