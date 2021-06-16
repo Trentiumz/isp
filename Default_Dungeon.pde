@@ -766,19 +766,19 @@ abstract class DefaultDungeon extends DungeonState {
       lastAttackFrame2 = -1000;
     }
     void attack1() {
-      // if the frames from now to the last frame is more than the frames per attack
+      // if it's been more frames than the cooldown for attack 2
       if (curFrame - lastAttackFrame1 >= character.framesBetweenA1) {
-        // then add a fireball projectile
-        curWorld.addProjectile(new WizardFireball(curWorld.camera.getRealX(mouseX), curWorld.camera.getRealY(mouseY), 100, character.baseA1Attack, 30, 5));
+        // then add a "zap" projectile
         lastAttackFrame1 = curFrame;
+        curWorld.addProjectile(new WizardZap(curWorld.camera.getRealX(mouseX), curWorld.camera.getRealY(mouseY), character.baseA1Attack));
       }
     }
     void attack2() {
-      // if it's been more frames than the cooldown for attack 2
+      // if the frames from now to the last frame is more than the frames per attack
       if (curFrame - lastAttackFrame2 >= character.framesBetweenA2) {
-        // then add a "zap" projectile
+        // then add a fireball projectile
+        curWorld.addProjectile(new WizardFireball(curWorld.camera.getRealX(mouseX), curWorld.camera.getRealY(mouseY), 100, character.baseA2Attack, 30, 5));
         lastAttackFrame2 = curFrame;
-        curWorld.addProjectile(new WizardZap(curWorld.camera.getRealX(mouseX), curWorld.camera.getRealY(mouseY), character.baseA2Attack));
       }
     }
   }

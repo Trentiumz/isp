@@ -242,11 +242,11 @@ String numTo3Characters(int num) {
 // gets the starting statistics for a player of some class
 PlayerInfo getStartingStats(PlayerClass chosen) {
   if (chosen == PlayerClass.Knight) {
-    return new PlayerInfo(100, 7, 4, 10, 30, 3, 0, PlayerClass.Knight);
+    return new PlayerInfo(100, 7, 4, 7, 30, 3, 100, PlayerClass.Knight);
   } else if (chosen == PlayerClass.Wizard) {
-    return new PlayerInfo(70, 4, 7, 60, 30, 3, 0, PlayerClass.Wizard);
+    return new PlayerInfo(70, 7, 4, 30, 60, 3, 100, PlayerClass.Wizard);
   } else if (chosen == PlayerClass.Archer) {
-    return new PlayerInfo(70, 7, 7, 20, 30, 5, 0, PlayerClass.Archer);
+    return new PlayerInfo(70, 7, 7, 16, 30, 5, 100, PlayerClass.Archer);
   } else {
     println("somehow the chosen class isn't a class!");
     return null;

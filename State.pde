@@ -37,9 +37,10 @@ class MainMenuState extends State {
   String button = "homePage";
 
   void startGame() {
-    PlayerInfo samplePlayer = getStartingStats(PlayerClass.Knight);
+    PlayerInfo samplePlayer = getStartingStats(PlayerClass.Wizard);
     curEnvironment = new CoinsDungeon(null, samplePlayer);
-    curState = new DefaultState();
+    //curState = new DefaultState();
+    curState = new UpgradingState(this, samplePlayer);
     titleBGM.stop();
   }
 
@@ -155,31 +156,6 @@ class MainMenuState extends State {
       text("Commencing the Game", 122, 112);
       startGame();
     }
-  }
-}
-
-class EndGameState extends State {
-  void tick() {
-  }
-  void render() {
-  }
-}
-
-class CreditsState extends State {
-  void tick() {
-  }
-  void render() {
-  }
-}
-
-class InventoryState extends State {
-  State previous;
-  void tick() {
-  }
-  void render() {
-  }
-  void exitInventory() {
-    curState = previous;
   }
 }
 
@@ -301,52 +277,82 @@ class DeadScreen extends State {
   }
 }
 
+enum UpgradingButton {
+  noButton, health, a1, a2, speed
+};
+
 class UpgradingState extends State {
   PlayerInfo character;
 
   float backX=100, backY=100, backW=800, backH=600;
-  float healthX=450, healthY=600, healthW=100, healthH=50;
-  float a1AtkX=160, a1AtkY=130, a1AtkW=100, a1AtkH=50;
-  float a2AtkX=740, a2AtkY=130, a2AtkW=100, a2AtkH=50;
-  float a1SpeedX=160, a1SpeedY=400, a1SpeedW=100, a1SpeedH=50;
-  float a2SpeedX=740, a2SpeedY=400, a2SpeedW=100, a2SpeedH=50;
+  float healthX=600, healthY=600, healthW=100, healthH=50;
+  float a1AtkX=160, a1AtkY=200, a1AtkW=100, a1AtkH=50;
+  float a2AtkX=740, a2AtkY=200, a2AtkW=100, a2AtkH=50;
+  float speedX=300, speedY=600, speedW=100, speedH=50;
 
-  int upgradeCoins = 30;
+  color defaultColor = #03FFFD;
+  color hoverColor = #00B4B3;
 
-  UpgradingState(PlayerInfo character) {
+  UpgradingButton mouseOn;
+
+  State previous;
+
+  int upgradeCoins;
+
+  final int maxLevel = 6;
+
+  UpgradingState(State previous, PlayerInfo character) {
     this.character = character;
+    this.previous = previous;
+    mouseOn = UpgradingButton.noButton;
+    updateCost();
   }
   void tick() {
+    mouseOn = UpgradingButton.noButton;
+    if (pointInBox(mouseX, mouseY, healthX, healthY, healthW, healthH)) {
+      mouseOn = UpgradingButton.health;
+    } else if (pointInBox(mouseX, mouseY, a1AtkX, a1AtkY, a1AtkW, a1AtkH)) {
+      mouseOn = UpgradingButton.a1;
+    } else if (pointInBox(mouseX, mouseY, a2AtkX, a2AtkY, a2AtkW, a2AtkH)) {
+      mouseOn = UpgradingButton.a2;
+    } else if (pointInBox(mouseX, mouseY, speedX, speedY, speedW, speedH)) {
+      mouseOn = UpgradingButton.speed;
+    }
+  }
+  void updateCost() {
+    upgradeCoins = 10 + 20 * max(0, (character.healthLevel + character.a1AtkLevel + character.a2AtkLevel + character.speedLevel - 4));
   }
   void mousePressed() {
+    updateCost();
     if (pointDistance(mouseX, mouseY, backX + backW, backY) < 50) {
-      curState = new DefaultState();
-    } else if (pointInBox(mouseX, mouseY, healthX, healthY, healthW, healthH)) {
-      if (character.coins >= upgradeCoins) {
-        character.health *= 1.3;
+      curState = previous;
+    } else if (mouseOn == UpgradingButton.health) {
+      if (character.coins >= upgradeCoins && character.healthLevel < maxLevel) {
+        character.maxHealth *= 1.9;
+        character.health = character.maxHealth;
         character.coins -= upgradeCoins;
+        character.healthLevel++;
       }
-    } else if (pointInBox(mouseX, mouseY, a1AtkX, a1AtkY, a1AtkW, a1AtkH)) {
-      if (character.coins >= upgradeCoins) {
-        character.baseA1Attack *= 1.5;
+    } else if (mouseOn == UpgradingButton.a1) {
+      if (character.coins >= upgradeCoins && character.a1AtkLevel < maxLevel) {
+        character.baseA1Attack *= 1.8;
         character.coins -= upgradeCoins;
+        character.a1AtkLevel++;
       }
-    } else if (pointInBox(mouseX, mouseY, a2AtkX, a2AtkY, a2AtkW, a2AtkH)) {
-      if (character.coins >= upgradeCoins) {
-        character.baseA2Attack *= 1.5;
+    } else if (mouseOn == UpgradingButton.a2) {
+      if (character.coins >= upgradeCoins && character.a2AtkLevel < maxLevel) {
+        character.baseA2Attack *= 1.6;
         character.coins -= upgradeCoins;
+        character.a2AtkLevel++;
       }
-    } else if (pointInBox(mouseX, mouseY, a1SpeedX, a1SpeedY, a1SpeedW, a1SpeedH)) {
-      if (character.coins >= upgradeCoins && character.framesBetweenA1 > 0) {
-        character.framesBetweenA1 = max(0, min(character.framesBetweenA1 - 1, (int) (character.framesBetweenA1 * 0.8)));
+    } else if (mouseOn == UpgradingButton.speed) {
+      if (character.coins >= upgradeCoins && character.speedLevel < maxLevel) {
+        character.speed *= 1.3;
         character.coins -= upgradeCoins;
-      }
-    } else if (pointInBox(mouseX, mouseY, a2SpeedX, a2SpeedY, a2SpeedW, a2SpeedH)) {
-      if (character.coins >= upgradeCoins && character.framesBetweenA2 > 0) {
-        character.framesBetweenA2 = max(0, min(character.framesBetweenA2 - 1, (int) (character.framesBetweenA2 * 0.8)));
-        character.coins -= upgradeCoins;
+        character.speedLevel++;
       }
     }
+    updateCost();
   }
   void render() {
     curEnvironment.render();
@@ -354,31 +360,62 @@ class UpgradingState extends State {
     noStroke();
     rect(backX, backY, backW, backH, 10, 10, 10, 10);
 
-    fill(0, 0, 255);
-    stroke(255);
+    fill(defaultColor);
+    stroke(0, 0, 255);
     strokeWeight(3);
+    
+    if(mouseOn == UpgradingButton.health){
+      fill(hoverColor);
+    }
     rect(healthX, healthY, healthW, healthH, 10, 10, 10, 10);
+    
+    fill(defaultColor);
+    if(mouseOn == UpgradingButton.a1){
+      fill(hoverColor);
+    }
     rect(a1AtkX, a1AtkY, a1AtkW, a1AtkH, 10, 10, 10, 10);
+    
+    fill(defaultColor);
+    if(mouseOn == UpgradingButton.a2){
+      fill(hoverColor);
+    }
     rect(a2AtkX, a2AtkY, a2AtkW, a2AtkH, 10, 10, 10, 10);
-    rect(a1SpeedX, a1SpeedY, a1SpeedW, a1SpeedH, 10, 10, 10, 10);
-    rect(a2SpeedX, a2SpeedY, a2SpeedW, a2SpeedH, 10, 10, 10, 10);
+    
+    fill(defaultColor);
+    if(mouseOn == UpgradingButton.speed){
+      fill(hoverColor);
+    }
+    rect(speedX, speedY, speedW, speedH, 10, 10, 10, 10);
 
     fill(0);
     textFont(upgradingDescription);
     textSize(12);
     textAlign(CENTER);
-    text("Health: " + character.health, healthX + healthW / 2, healthY + healthH + 14);
-    text("Attack 1 Damage: " + (int) character.baseA1Attack, a1AtkX + a1AtkW / 2, a1AtkY + a1AtkH + 14);
-    text("Attack 2 Damage: " + (int) character.baseA2Attack, a2AtkX + a2AtkW / 2, a2AtkY + a2AtkH + 14);
-    text("Attack 1 Interval: " + (int) character.framesBetweenA1, a1SpeedX + a2SpeedW / 2, a1SpeedY + a1SpeedH + 14);
-    text("Attack 2 Interval: " + (int) character.framesBetweenA2, a2SpeedX + a2SpeedW / 2, a2SpeedY + a2SpeedH + 14);
+    text("Health: L" + character.healthLevel, healthX + healthW / 2, healthY + healthH + 14);
+    text("Attack 1 Damage: L" + character.a1AtkLevel, a1AtkX + a1AtkW / 2, a1AtkY + a1AtkH + 14);
+    text("Attack 2 Damage: L" + character.a2AtkLevel, a2AtkX + a2AtkW / 2, a2AtkY + a2AtkH + 14);
+    text("Speed: L" + character.speedLevel, speedX + speedW / 2, speedY + speedH + 14);
 
     text("Coins: " + character.coins, 800, 650);
+    text("Cost: " + upgradeCoins, 500, 125);
 
     fill(255, 0, 0);
+    stroke(255);
     ellipse(backX + backW, backY, 50, 50);
     textSize(20);
     fill(255);
     text("X", backX + backW, backY + 10);
+  }
+}
+
+class IngameMenuState extends State {
+  State previous;
+
+  IngameMenuState(State previous) {
+    this.previous = previous;
+  }
+  void tick() {
+  }
+  void render() {
   }
 }
