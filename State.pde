@@ -37,7 +37,7 @@ class MainMenuState extends State {
   String button = "homePage";
 
   void startGame() {
-    PlayerInfo samplePlayer = getStartingStats(PlayerClass.Wizard);
+    PlayerInfo samplePlayer = getStartingStats(PlayerClass.Knight);
     curEnvironment = new CoinsDungeon(null, samplePlayer);
     curState = new DefaultState();
     titleBGM.stop();
@@ -438,6 +438,8 @@ class OverworldMenuState extends State {
     }
   }
   void render() {
+    previous.render();
+
     fill(#FFBC03);
     noStroke();
     rect(backX, backY, backW, backH, 10, 10, 10, 10);
@@ -473,6 +475,9 @@ class OverworldMenuState extends State {
     fill(255);
     text("X", backX + backW, backY + 10);
   }
+}
+
+class DungeonIngameMenu {
 }
 
 class ExitState extends State {

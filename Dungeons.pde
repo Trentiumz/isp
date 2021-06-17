@@ -69,7 +69,7 @@ class CoinsDungeon extends DefaultDungeon {
       for (int c = 210; c < 700; c += 100) {
         float r = random(1);
         if (r > 0.7) {
-          curWorld.addEnemy(new Goblin(i, c, 30, 30));
+          curWorld.addEnemy(new Goblin(i, c));
         }
       }
     }
@@ -79,7 +79,13 @@ class CoinsDungeon extends DefaultDungeon {
       for (int c = 4*50; c < 12*50; c += 100) {
         float r = random(1);
         if (r > 0.4) {
-          curWorld.addEnemy(new Goblin(i, c, 30, 30));
+          // a randomizer for what enemy to add
+          float enemyRandom = random(1);
+          if (enemyRandom < 0.5) {
+            curWorld.addEnemy(new Goblin(i, c));
+          } else {
+            curWorld.addEnemy(new Zombie(i, c));
+          }
         }
       }
     }
@@ -89,7 +95,14 @@ class CoinsDungeon extends DefaultDungeon {
       for (int c = 2*50; c < 15*50; c += 50) {
         float r = random(1);
         if (r > 0.6) {
-          curWorld.addEnemy(new Goblin(i, c, 30, 30));
+          float enemyRandom = random(1);
+          if (enemyRandom < 0.33) {
+            curWorld.addEnemy(new Goblin(i, c));
+          } else if (enemyRandom < 0.66) {
+            curWorld.addEnemy(new Zombie(i, c));
+          } else {
+            curWorld.addEnemy(new Skeleton(i, c));
+          }
         }
       }
     }

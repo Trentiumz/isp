@@ -264,7 +264,7 @@ PlayerInfo getStartingStats(PlayerClass chosen) {
   } else if (chosen == PlayerClass.Wizard) {
     return new PlayerInfo(70, 7, 4, 30, 60, 3, 100, PlayerClass.Wizard);
   } else if (chosen == PlayerClass.Archer) {
-    return new PlayerInfo(70, 7, 7, 16, 30, 5, 100, PlayerClass.Archer);
+    return new PlayerInfo(70, 18, 10, 16, 30, 5, 100, PlayerClass.Archer);
   } else {
     println("somehow the chosen class isn't a class!");
     return null;

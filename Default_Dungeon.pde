@@ -1088,12 +1088,18 @@ abstract class DefaultDungeon extends DungeonState {
     Zombie(float x, float y, int w, int h) {
       super(x, y, w, h, framesPerZombieAttack, 5, 300, 700, zombieAttack, zombieSpeed, zombieHealth, zombieRight, zombieLeft);
     }
+    Zombie(float x, float y) {
+      this(x, y, zombieWidth, zombieHeight);
+    }
   }
 
   // A goblin
   class Goblin extends MeleeEnemy {
     Goblin(float x, float y, int w, int h) {
       super(x, y, w, h, framesPerGoblinAttack, 5, 300, 700, goblinAttack, goblinSpeed, goblinHealth, goblinRight, goblinLeft);
+    }
+    Goblin(float x, float y) {
+      this(x, y, goblinWidth, goblinHeight);
     }
   }
 
@@ -1105,6 +1111,10 @@ abstract class DefaultDungeon extends DungeonState {
 
     Skeleton(float x, float y, int w, int h) {
       super(x, y, w, h, framesPerSkeletonAttack, 5, 200, 700, skeletonAttack, skeletonSpeed, skeletonHealth, skeletonRight, skeletonLeft);
+    }
+
+    Skeleton(float x, float y) {
+      this(x, y, skeletonWidth, skeletonHeight);
     }
     // is "smarter", will target the player when it's attacked
     void takeDamage(float amount) {
