@@ -37,9 +37,10 @@ String currentMessage;
 PImage zombieRight, zombieLeft;
 PImage goblinRight, goblinLeft;
 PImage skeletonRight, skeletonLeft;
-PImage knightRight, knightLeft;
-PImage wizardRight, wizardLeft;
-PImage archerRight, archerLeft;
+
+PImage knightIdle, knightWalk1, knightWalk2, knightAttack;
+PImage wizardIdle, wizardWalk1, wizardWalk2, wizardAttack;
+PImage archerIdle, archerWalk1, archerWalk2, archerAttack;
 PImage dungeonWarrior;
 
 // animations

@@ -36,8 +36,8 @@ abstract class DefaultDungeon extends DungeonState {
   final float skeletonSpeed = 4;
 
   // default dimensions for the different players
-  final static int knightWidth=38, knightHeight=50;
-  final static int archerWidth=38, archerHeight=50;
+  final static int knightWidth=50, knightHeight=50;
+  final static int archerWidth=50, archerHeight=50;
   final static int wizardWidth=50, wizardHeight=50;
 
   DungeonWorld curWorld; // the current world
@@ -89,9 +89,11 @@ abstract class DefaultDungeon extends DungeonState {
   // called when the mouse is pressed
   void mousePressed() {
     if (mouseButton == LEFT) {
-      curWorld.player.attack1();
+      curPlayer.attack1();
+      curPlayer.attackSpriteUpdate();
     } else if (mouseButton == RIGHT) {
-      curWorld.player.attack2();
+      curPlayer.attack2();
+      curPlayer.attackSpriteUpdate();
     }
   }
 
@@ -143,7 +145,7 @@ abstract class DefaultDungeon extends DungeonState {
     rect(10, 10, barWidth, 20);
     fill(255, 0, 0);
     rect(10, 10, filledWidth, 20);
-    
+
     // draw cooldowns for the two attacks
     //   variables for the size of the indicator circles
     float attackIndicatorRadius = 50;
@@ -614,16 +616,24 @@ abstract class DefaultDungeon extends DungeonState {
     // The current character and player info
     PlayerInfo character;
 
-    // The sprites for moving right and left
-    PImage right, left;
+    // The sprites for idling, walking and attacking (they're all "facing left")
+    PImage idle, walk1, walk2, attack;
+    PImage curSprite; // the current sprite to display
+    int changeTimer; // we display each sprite for some timer; this is the timer
+    int lastWalkFrame; // the last frame in which we walked
+
+    // the number of frames each animation should last for
+    final int walkFrames = 10;
+    final int attackFrames = 10;
+
     // the "margins" between the collision box and actual sprite to the back, front, top and bottom
     float backMargin, frontMargin, topMargin, botMargin;
-    
+
     // the last frames in which each player did attack 1 and attack 2
     int lastAttackFrame1;
     int lastAttackFrame2;
 
-    DungeonPlayer(float x, float y, int w, int h, float backMargin, float frontMargin, float topMargin, float botMargin, PlayerInfo character, PImage right, PImage left) {
+    DungeonPlayer(float x, float y, int w, int h, float backMargin, float frontMargin, float topMargin, float botMargin, PlayerInfo character, PImage idle, PImage walk1, PImage walk2, PImage attack) {
       // Initialize entity to the collision box
       super(x + backMargin, y + topMargin, w - backMargin - frontMargin, h - topMargin - botMargin);
       // set the margins & initialize variables
@@ -634,25 +644,43 @@ abstract class DefaultDungeon extends DungeonState {
 
       lastHorizontal = Direction.right;
       this.character = character;
+      lastWalkFrame = -1000;
 
       // set the images
-      this.right = right;
-      this.left = left;
+      this.idle = idle;
+      this.walk1 = walk1;
+      this.walk2 = walk2;
+      this.attack = attack;
+      curSprite = idle;
     }
+
+    // function for updating variables for when this player has moved
+    void moved() {
+      lastWalkFrame = curFrame;
+      if (curSprite != walk1 && curSprite != walk2 && curSprite != attack) {
+        curSprite = walk1;
+        changeTimer = walkFrames;
+      }
+    }
+
     // moving in the four directions; horizontal movement will update lastHorizontal
     void moveRight() {
       curWorld.moveEntitySoft(this, character.speed, 0);
       lastHorizontal = Direction.right;
+      moved();
     }
     void moveLeft() {
       curWorld.moveEntitySoft(this, -character.speed, 0);
       lastHorizontal = Direction.left;
+      moved();
     }
     void moveUp() {
       curWorld.moveEntitySoft(this, 0, -character.speed);
+      moved();
     }
     void moveDown() {
       curWorld.moveEntitySoft(this, 0, character.speed);
+      moved();
     }
 
     // Take damage; reduce the health left and call playerDied if this player is dead
@@ -667,16 +695,22 @@ abstract class DefaultDungeon extends DungeonState {
     void drawBoundingRect() {
       fill(0, 0, 0, 0);
       stroke(255);
-      strokeWeight(2);
+      strokeWeight(1);
       rect(x, y, w, h);
     }
 
     void render() {
       // Draw the player moving right or left depending on lastHorizontal
-      if (lastHorizontal == Direction.right) {
-        image(this.right, x - backMargin, y - topMargin);
+      if (lastHorizontal == Direction.left) {
+        image(curSprite, x - frontMargin, y - topMargin);
       } else {
-        image(this.left, x - frontMargin, y - topMargin);
+        // draw in the "flipped direction" by using a pushmatrix and flipping the x axis
+        pushMatrix();
+        translate(x + w + frontMargin, y - topMargin);
+        scale(-1, 1);
+
+        image(curSprite, 0, 0);
+        popMatrix();
       }
       if (lastHorizontal != Direction.right && lastHorizontal != Direction.left) {
         // error trapping for if lastHorizontal isn't horizontal
@@ -689,17 +723,36 @@ abstract class DefaultDungeon extends DungeonState {
       fill(0, 0, 0, 0);
       stroke(255);
       strokeWeight(0.5);
-      rect(barLeft, y - 7, barWidth, 5);
+      rect(barLeft, y - topMargin - 7, barWidth, 5);
       fill(255, 0, 0);
-      rect(barLeft, y - 7, barWidth * character.health / character.maxHealth, 5);
+      rect(barLeft, y - topMargin - 7, barWidth * character.health / character.maxHealth, 5);
     }
 
     // the command for when the user attacks
+    void attackSpriteUpdate() {
+      curSprite = attack;
+      changeTimer = attackFrames;
+    }
     abstract void attack1();
     abstract void attack2();
 
     // the needed "logic updates" for each frame
     void tick() {
+      if (curFrame - lastWalkFrame > 3 && (curSprite == walk1 || curSprite == walk2)) {
+        curSprite = idle;
+      }
+      if ((curSprite == walk1 || curSprite == walk2) && changeTimer <= 0) {
+        if (curSprite == walk1) {
+          curSprite = walk2;
+        } else {
+          curSprite = walk1;
+        }
+        changeTimer = walkFrames;
+      }
+      if(curSprite == attack && changeTimer <= 0){
+       curSprite = idle; 
+      }
+      changeTimer--;
     }
   }
 
@@ -711,7 +764,7 @@ abstract class DefaultDungeon extends DungeonState {
 
     // draw the bounding areas of the knight, and load in the images
     Knight(float x, float y, int w, int h, PlayerInfo character) {
-      super(x, y, w, h, w * 0.55, w * 0.15, h * 0.3, h * 0.2, character, knightRight, knightLeft);
+      super(x, y, w, h, w * 0.35, w * 0.4, h * 0.2, h * 0.2, character, knightIdle, knightWalk1, knightWalk2, knightAttack);
 
       // iniitialize variables
       this.range1 = 50;
@@ -761,7 +814,7 @@ abstract class DefaultDungeon extends DungeonState {
   class Wizard extends DungeonPlayer {
     Wizard(float x, float y, int w, int h, PlayerInfo character) {
       // set boundaries, load in images
-      super(x, y, w, h, w * 0.2, w * 0.45, h * 0.2, h * 0.2, character, wizardRight, wizardLeft);
+      super(x, y, w, h, w * 0.4, w * 0.35, h * 0.25, h * 0.2, character, wizardIdle, wizardWalk1, wizardWalk2, wizardAttack);
       lastAttackFrame1 = -1000;
       lastAttackFrame2 = -1000;
     }
@@ -786,7 +839,7 @@ abstract class DefaultDungeon extends DungeonState {
   //     ARCHER PLAYERS
   class Archer extends DungeonPlayer {
     Archer(float x, float y, int w, int h, PlayerInfo character) {
-      super(x, y, w, h, w * 0.15, w * 0.2, h * 0.2, h * 0.2, character, archerRight, archerLeft);
+      super(x, y, w, h, w * 0.35, w * 0.3, h * 0.2, h * 0.2, character, archerIdle, archerWalk1, archerWalk2, archerAttack);
       this.lastAttackFrame1 = -1000;
     }
     void attack1() {

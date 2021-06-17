@@ -8,17 +8,17 @@ class Entity {
     this.w = w;
     this.h = h;
   }
-  
+
   // return if a point is inside this entity
   boolean inRange(float x, float y) {
     return this.x < x && x < this.x + this.w && this.y < y && y < this.y + this.h;
   }
-  
+
   // returns if this entity is "touching" the Entity other
   boolean collided(Entity other) {
     return boxCollided(x, y, w, h, other.x, other.y, other.w, other.h);
   }
-  
+
   // returns the distance from this entity to the Entity other (note that the entity is a rectangle, so it's slightly different)
   float distance(Entity other) {
     // the minimum horizontal distance to the other entity
@@ -38,36 +38,36 @@ class Entity {
     else
       // otherwise, take the minimum of when the entity is to the top vs when the entity is to the bottom of the current one
       verticalDist = min(abs(other.y + other.h - this.y), abs(this.y + this.h - other.y));
-      
+
     // return the magnitude of the horizontal and vertical components
     return magnitude(horizontalDist, verticalDist);
   }
-  
+
   // returns the distance from this entity to a point
-  float distance(float ox, float oy){
-   // the minimum horizontal distance
-   float horizontalDist;
-   // if the point is "inside" the entity, then there is 0 distance
-   if(x <= ox && ox <= x + w)
-     horizontalDist = 0;
-   else
-     // get the minimum of its distance from the right and left side
-     horizontalDist = min(abs(ox - x), abs(ox - (x + w)));
-     
-   // vertical distance
-   float verticalDist;
-   
-   if(y <= oy && oy <= y + h)
-     // if point is "inside" the box 
-     verticalDist = 0;
-   else
-     // minimum of the right and left sides
-     verticalDist = min(abs(oy - y), abs(oy - (y + h)));
-     
-   // return the magnitude of the horizontal and vertical distances
-   return magnitude(horizontalDist, verticalDist);
+  float distance(float ox, float oy) {
+    // the minimum horizontal distance
+    float horizontalDist;
+    // if the point is "inside" the entity, then there is 0 distance
+    if (x <= ox && ox <= x + w)
+      horizontalDist = 0;
+    else
+      // get the minimum of its distance from the right and left side
+      horizontalDist = min(abs(ox - x), abs(ox - (x + w)));
+
+    // vertical distance
+    float verticalDist;
+
+    if (y <= oy && oy <= y + h)
+      // if point is "inside" the box 
+      verticalDist = 0;
+    else
+      // minimum of the right and left sides
+      verticalDist = min(abs(oy - y), abs(oy - (y + h)));
+
+    // return the magnitude of the horizontal and vertical distances
+    return magnitude(horizontalDist, verticalDist);
   }
-  
+
   // returns whether or not the line will intersect this current entity
   boolean lineHits(float sx, float sy, float ex, float ey) {
     // check for whether or not the line hits any one the "edges" of the entity
@@ -75,27 +75,31 @@ class Entity {
     boolean hitsLeft = lineIntersects(x, y, x, y + h, sx, sy, ex, ey);
     boolean hitsRight = lineIntersects(x + w, y, x + w, y + h, sx, sy, ex, ey);
     boolean hitsBot = lineIntersects(x, y + h, x + w, y + h, sx, sy, ex, ey);
-    
+
     // if the line doesn't intersect, it might be because the entire line is inside the entity
     boolean lineInside = x <= sx && sx <= x + w && y <= sy && sy <= y + h;
 
     // return if there is any intersection, or if the line is inside the entity
     return hitsTop || hitsLeft || hitsRight || hitsBot || lineInside;
   }
-  
+
   // returns the x component of the center of this entity
   float centerX() {
     return x + w / 2;
   }
-  
+
   // returns the y component of the center of this entity
   float centerY() {
     return y + h / 2;
   }
-  
+
   // returns whether or not the entity "hits" the box with coordinates (x1, y1) and dimensions (w, h)
-  boolean hitsBox(float bx, float by, float bw, float bh){
+  boolean hitsBox(float bx, float by, float bw, float bh) {
     return boxCollided(x, y, w, h, bx, by, bw, bh);
+  }
+
+  // empty function for drawing onto the screen - should be overwritten
+  void render() {
   }
 }
 
@@ -120,7 +124,7 @@ class World {
   boolean clicked(Entity wanted, float screenX, float screenY) {
     return wanted.inRange(camera.getRealX(screenX), camera.getRealY(screenY));
   }
-  
+
   // adds an entity to the world
   void addEntity(Entity toAdd) {
     this.entities.add(toAdd);
@@ -189,23 +193,23 @@ class Camera {
     this.x = x;
     this.y = y;
   }
-  
+
   // alters the matrix so that drawing onto the world "using normal graphic functions" will result in its proper position relative to the screen
   void alterMatrix() {
     translate(-x, -y);
   }
-  
+
   // update coordinates so that it's centered on an Entity
   void centerOnEntity(Entity toCenter) {
     this.x = toCenter.x + toCenter.w / 2 - width / 2;
     this.y = toCenter.y + toCenter.h / 2 - height / 2;
   }
-  
+
   // get the x value in the world of a coordinate on the screen
   float getRealX(float curX) {
     return curX + x;
   }
-  
+
   // get the y value in the world of a coordinate on the screen
   float getRealY(float curY) {
     return curY + y;

@@ -24,8 +24,6 @@ abstract class StoryModule {
   }
   void storyDungeonCompleted() {
   }
-  void npcConversationEnded(String name) {
-  }
 }
 
 class CutScene extends StoryModule{

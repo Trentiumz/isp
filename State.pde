@@ -39,8 +39,7 @@ class MainMenuState extends State {
   void startGame() {
     PlayerInfo samplePlayer = getStartingStats(PlayerClass.Wizard);
     curEnvironment = new CoinsDungeon(null, samplePlayer);
-    //curState = new DefaultState();
-    curState = new UpgradingState(this, samplePlayer);
+    curState = new DefaultState();
     titleBGM.stop();
   }
 
@@ -410,7 +409,10 @@ class UpgradingState extends State {
 
 class IngameMenuState extends State {
   State previous;
-
+  
+  float backX=400, backY=300, backW=200, backH=200;
+  float menuX=100, menuY=100, menuW=800, menuH=600;
+  float exitX=100, exitY=100, exitW=800, exitH=600;
   IngameMenuState(State previous) {
     this.previous = previous;
   }

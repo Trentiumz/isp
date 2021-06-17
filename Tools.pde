@@ -163,20 +163,33 @@ void loadFiles() {
 
   // load player sprites
   currentMessage = "Loading player sprites...";
-  knightRight = loadImage("sprites/knight_right.png");
-  knightLeft = loadImage("sprites/knight_left.png");
-  wizardRight = loadImage("sprites/wizard_right.png");
-  wizardLeft = loadImage("sprites/wizard_left.png");
-  archerRight = loadImage("sprites/archer_right.png");
-  archerLeft = loadImage("sprites/archer_left.png");
-
-  knightRight.resize(DefaultDungeon.knightWidth, DefaultDungeon.knightHeight);
-  knightLeft.resize(DefaultDungeon.knightWidth, DefaultDungeon.knightHeight);
-  archerRight.resize(DefaultDungeon.archerWidth, DefaultDungeon.archerHeight);
-  archerLeft.resize(DefaultDungeon.archerWidth, DefaultDungeon.archerHeight);
-  wizardRight.resize(DefaultDungeon.wizardWidth, DefaultDungeon.wizardHeight);
-  wizardLeft.resize(DefaultDungeon.wizardWidth, DefaultDungeon.wizardHeight);
-
+  knightIdle = loadImage("sprites/knight/knightIdle.png");
+  knightWalk1 = loadImage("sprites/knight/knightWalk1.png");
+  knightWalk2 = loadImage("sprites/knight/knightWalk2.png");
+  knightAttack = loadImage("sprites/knight/knightAttack.png");
+  knightIdle.resize(DefaultDungeon.knightWidth, DefaultDungeon.knightHeight);
+  knightWalk1.resize(DefaultDungeon.knightWidth, DefaultDungeon.knightHeight);
+  knightWalk2.resize(DefaultDungeon.knightWidth, DefaultDungeon.knightHeight);
+  knightAttack.resize(DefaultDungeon.knightWidth, DefaultDungeon.knightHeight);
+  
+  archerIdle = loadImage("sprites/archer/archerIdle.png");
+  archerWalk1 = loadImage("sprites/archer/archerWalk1.png");
+  archerWalk2 = loadImage("sprites/archer/archerWalk2.png");
+  archerAttack = loadImage("sprites/archer/archerAttack.png");
+  archerWalk1.resize(DefaultDungeon.archerWidth, DefaultDungeon.archerHeight);
+  archerIdle.resize(DefaultDungeon.archerWidth, DefaultDungeon.archerHeight);
+  archerWalk2.resize(DefaultDungeon.archerWidth, DefaultDungeon.archerHeight);
+  archerAttack.resize(DefaultDungeon.archerWidth, DefaultDungeon.archerHeight);
+  
+  wizardIdle = loadImage("sprites/wizard/wizardIdle.png");
+  wizardWalk1 = loadImage("sprites/wizard/wizardWalk1.png");
+  wizardWalk2 = loadImage("sprites/wizard/wizardWalk2.png");
+  wizardAttack = loadImage("sprites/wizard/wizardAttack.png");
+  wizardIdle.resize(DefaultDungeon.wizardWidth, DefaultDungeon.wizardHeight);
+  wizardWalk1.resize(DefaultDungeon.wizardWidth, DefaultDungeon.wizardHeight);
+  wizardWalk2.resize(DefaultDungeon.wizardWidth, DefaultDungeon.wizardHeight);
+  wizardAttack.resize(DefaultDungeon.wizardWidth, DefaultDungeon.wizardHeight);
+  
   // load fonts
   currentMessage = "Loading fonts...";
   dungeonDragonAttackFont = loadFont("LucidaBright-Demi-16.vlw");
@@ -254,6 +267,6 @@ PlayerInfo getStartingStats(PlayerClass chosen) {
 }
 
 // returns if a point is inside a box
-boolean pointInBox(float px, float py, float bx, float by, float bw, float bh){
- return bx < px && px < bx + bw && by < py && py < by + bh; 
+boolean pointInBox(float px, float py, float bx, float by, float bw, float bh) {
+  return bx < px && px < bx + bw && by < py && py < by + bh;
 }
