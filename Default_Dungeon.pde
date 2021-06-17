@@ -66,6 +66,15 @@ abstract class DefaultDungeon extends DungeonState {
   void playerDiedAnimation() {
     curState = new DeadScreen(info.playerClass);
   }
+  
+  // when the state is exited
+  void exitState(){
+   stopBackgroundMusic(); 
+  }
+  
+  void enterState(){
+   playBackgroundMusic(); 
+  }
 
   // Player death mechanics
   void playerDied() {
@@ -1175,6 +1184,12 @@ abstract class DefaultDungeon extends DungeonState {
       // error trapping for invalid inputs
       println("didn't get proper parameters for character creation! Function getPlayerOf");
       return null;
+    }
+  }
+  
+  void keyPressed(){
+    if(key == 'm' || key == 'M'){
+     curState = new DungeonMenuState(curState, this); 
     }
   }
 }

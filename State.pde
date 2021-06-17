@@ -281,6 +281,78 @@ enum UpgradingButton {
   noButton, health, a1, a2, speed
 };
 
+class OverworldMenuState extends State {
+  State previous;
+
+  float backX=400, backY=300, backW=200, backH=200;
+  float menuX=420, menuY=340, menuW=100, menuH=40;
+  float exitX=420, exitY=420, exitW=100, exitH=40;
+
+  color defaultColor = #FFA2F9;
+  color hoverColor = #FF006B;
+  OverworldMenuState(State previous) {
+    this.previous = previous;
+  }
+  boolean mouseOnMenuButton() {
+    return pointInBox(mouseX, mouseY, menuX, menuY, menuW, menuH);
+  }
+  boolean mouseOnExitButton() {
+    return pointInBox(mouseX, mouseY, exitX, exitY, exitW, exitH);
+  }
+  void tick() {
+  }
+  void mousePressed() {
+    if (mouseOnMenuButton()) {
+      curState = new MainMenuState();
+      curEnvironment.exitState();
+    } else if (mouseOnExitButton()) {
+      curState = new ExitState();
+      curEnvironment.exitState();
+    } else if (pointDistance(mouseX, mouseY, backX + backW, backY) < 25) {
+      curState = previous;
+    }
+  }
+  void render() {
+    previous.render();
+
+    fill(#FFBC03);
+    noStroke();
+    rect(backX, backY, backW, backH, 10, 10, 10, 10);
+
+    stroke(255, 0, 0);
+    strokeWeight(3);
+    textAlign(CENTER);
+    textFont(mainMenuFont3);
+    textSize(14);
+
+    if (mouseOnMenuButton()) {
+      fill(hoverColor);
+    } else {
+      fill(defaultColor);
+    }
+    rect(menuX, menuY, menuW, menuH, 10, 10, 10, 10);
+    fill(255);
+    text("Main Menu", menuX + menuW / 2, menuY + menuH / 2); 
+
+    if (mouseOnExitButton()) {
+      fill(hoverColor);
+    } else {
+      fill(defaultColor);
+    }
+    rect(exitX, exitY, exitW, exitH, 10, 10, 10, 10);
+    fill(255);
+    text("Exit", exitX + exitW / 2, exitY + exitH / 2);
+
+    fill(255, 0, 0);
+    stroke(255);
+    ellipse(backX + backW, backY, 50, 50);
+    textSize(20);
+    fill(255);
+    text("X", backX + backW, backY + 10);
+  }
+}
+
+
 class UpgradingState extends State {
   PlayerInfo character;
 
@@ -408,17 +480,20 @@ class UpgradingState extends State {
   }
 }
 
-class OverworldMenuState extends State {
+class DungeonMenuState extends State {
   State previous;
+  DungeonState dungeonEnvironment;
 
-  float backX=400, backY=300, backW=200, backH=200;
+  float backX=400, backY=300, backW=200, backH=280;
   float menuX=420, menuY=340, menuW=100, menuH=40;
   float exitX=420, exitY=420, exitW=100, exitH=40;
+  float hardExitX=420, hardExitY=500, hardExitW=100, hardExitH=40;
 
   color defaultColor = #FFA2F9;
   color hoverColor = #FF006B;
-  OverworldMenuState(State previous) {
+  DungeonMenuState(State previous, DungeonState dungeonEnvironment) {
     this.previous = previous;
+    this.dungeonEnvironment = dungeonEnvironment;
   }
   boolean mouseOnMenuButton() {
     return pointInBox(mouseX, mouseY, menuX, menuY, menuW, menuH);
@@ -426,15 +501,23 @@ class OverworldMenuState extends State {
   boolean mouseOnExitButton() {
     return pointInBox(mouseX, mouseY, exitX, exitY, exitW, exitH);
   }
+  boolean mouseOnHardExitButton() {
+    return pointInBox(mouseX, mouseY, hardExitX, hardExitY, hardExitW, hardExitH);
+  }
   void tick() {
   }
   void mousePressed() {
     if (mouseOnMenuButton()) {
       curState = new MainMenuState();
       curEnvironment.exitState();
-    } else if (mouseOnExitButton()) {
+      curEnvironment = null;
+    } else if (mouseOnHardExitButton()) {
       curState = new ExitState();
       curEnvironment.exitState();
+      curEnvironment = null;
+    } else if (mouseOnExitButton()) {
+      dungeonEnvironment.dungeonExited();
+      curState = previous;
     } else if (pointDistance(mouseX, mouseY, backX + backW, backY) < 25) {
       curState = previous;
     }
@@ -450,7 +533,7 @@ class OverworldMenuState extends State {
     strokeWeight(3);
     textAlign(CENTER);
     textFont(mainMenuFont3);
-    textSize(14);
+    textSize(12);
 
     if (mouseOnMenuButton()) {
       fill(hoverColor);
@@ -468,7 +551,16 @@ class OverworldMenuState extends State {
     }
     rect(exitX, exitY, exitW, exitH, 10, 10, 10, 10);
     fill(255);
-    text("Exit", exitX + exitW / 2, exitY + exitH / 2);
+    text("Exit Dungeon", exitX + exitW / 2, exitY + exitH / 2);
+
+    if (mouseOnHardExitButton()) {
+      fill(hoverColor);
+    } else {
+      fill(defaultColor);
+    }
+    rect(hardExitX, hardExitY, hardExitW, hardExitH, 10, 10, 10, 10);
+    fill(255);
+    text("Exit Game", hardExitX + hardExitW / 2, hardExitY + hardExitH / 2);
 
     fill(255, 0, 0);
     stroke(255);
@@ -477,9 +569,6 @@ class OverworldMenuState extends State {
     fill(255);
     text("X", backX + backW, backY + 10);
   }
-}
-
-class DungeonIngameMenu {
 }
 
 class ExitState extends State {
