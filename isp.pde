@@ -39,6 +39,8 @@ PImage wizardIdle, wizardWalk1, wizardWalk2, wizardAttack;
 PImage archerIdle, archerWalk1, archerWalk2, archerAttack;
 PImage dungeonWarrior;
 
+PImage knightIcon, archerIcon, wizardIcon;
+
 // animations
 PImage[] loadingAnimation;
 PImage[] splashAnimation;
@@ -105,7 +107,7 @@ void setup() {
   // begin with loading things in
   currentMessage = "";
   curState = new LoadingState();
-  
+
   storyDungeonsCompleted = 0;
 
   frameRate(30);

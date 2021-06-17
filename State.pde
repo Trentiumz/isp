@@ -37,10 +37,7 @@ class MainMenuState extends State {
   String button = "homePage";
 
   void startGame() {
-    PlayerInfo samplePlayer = getStartingStats(PlayerClass.Knight);
-    curEnvironment = new OverworldEnvironment(samplePlayer);
-    curState = new DefaultState();
-    titleBGM.stop();
+    curState = new ClassChoiceState();
   }
 
   void setup() {
@@ -509,12 +506,10 @@ class DungeonMenuState extends State {
   void mousePressed() {
     if (mouseOnMenuButton()) {
       curState = new MainMenuState();
-      curEnvironment.exitState();
-      curEnvironment = null;
+      changeEnvironment(null);
     } else if (mouseOnHardExitButton()) {
       curState = new ExitState();
-      curEnvironment.exitState();
-      curEnvironment = null;
+      changeEnvironment(null);
     } else if (mouseOnExitButton()) {
       dungeonEnvironment.dungeonExited();
       curState = previous;
@@ -585,5 +580,73 @@ class ExitState extends State {
   }
   void render() {
     image(exitScreen, 0, 0);
+  }
+}
+
+class ClassChoiceState extends State {
+  float backX=250, backY=300, backW=500, backH=280;
+  final static int knightX=300, knightY=340, knightW=100, knightH=200;
+  final static int archerX=450, archerY=340, archerW=100, archerH=200;
+  final static int wizardX=600, wizardY=340, wizardW=100, wizardH=200;
+
+  final static int knightImgX=250, knightImgY=340, knightImgW=200, knightImgH=200;
+  final static int archerImgX=400, archerImgY=340, archerImgW=200, archerImgH=200;
+  final static int wizardImgX=550, wizardImgY=340, wizardImgW=200, wizardImgH=200;
+
+  PImage knight, wizard, archer;
+
+  ClassChoiceState() {
+    this.knight = getIcon(PlayerClass.Knight);
+    this.wizard = getIcon(PlayerClass.Wizard);
+    this.archer = getIcon(PlayerClass.Archer);
+
+    this.knight.resize(knightImgW, knightImgH);
+    this.archer.resize(archerImgW, archerImgH);
+    this.wizard.resize(wizardImgW, wizardImgH);
+  }
+  boolean knightPressed() {
+    return pointInBox(mouseX, mouseY, knightX, knightY, knightW, knightH);
+  }
+  boolean archerPressed() {
+    return pointInBox(mouseX, mouseY, archerX, archerY, archerW, archerH);
+  }
+  boolean wizardPressed() {
+    return pointInBox(mouseX, mouseY, wizardX, wizardY, wizardW, wizardH);
+  }
+  void startGame(PlayerInfo player) {
+    curEnvironment = new OverworldEnvironment(player);
+    curState = new DefaultState();
+    titleBGM.stop();
+  }
+  void tick() {
+  }
+  void mousePressed() {
+    if (knightPressed()) {
+      startGame(getStartingStats(PlayerClass.Knight));
+    } else if (archerPressed()) {
+      startGame(getStartingStats(PlayerClass.Archer));
+    } else if (wizardPressed()) {
+      startGame(getStartingStats(PlayerClass.Wizard));
+    }
+  }
+  void render() {
+    fill(#00B0FF);
+    rect(backX, backY, backW, backH, 10, 10, 10, 10);
+    image(knight, knightImgX, knightImgY);
+    image(archer, archerImgX, archerImgY);
+    image(wizard, wizardImgX, wizardImgY);
+
+    fill(255);
+    textFont(mainMenuFont3);
+    textAlign(CENTER);
+    textSize(24);
+    text("Choose your class!", backX + backW / 2, backY + 30);
+
+    textFont(mainMenuFont1);
+    fill(255, 0, 0);
+    textSize(20);
+    text("Knight", knightX + knightW / 2, knightY + knightH + 20);
+    text("Archer", archerX + archerW / 2, archerY + archerH + 20);
+    text("Wizard", wizardX + wizardW / 2, wizardY + wizardH + 20);
   }
 }

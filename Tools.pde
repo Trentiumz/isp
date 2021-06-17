@@ -181,6 +181,10 @@ void loadFiles() {
   wizardWalk2.resize(wizardWidth, wizardHeight);
   wizardAttack.resize(wizardWidth, wizardHeight);
 
+  knightIcon = loadImage("sprites/knight/knightIdle.png");
+  archerIcon = loadImage("sprites/archer/archerIdle.png");
+  wizardIcon = loadImage("sprites/wizard/wizardIdle.png");
+
   // load fonts
   currentMessage = "Loading fonts...";
   dungeonDragonAttackFont = loadFont("LucidaBright-Demi-16.vlw");
@@ -319,4 +323,32 @@ DungeonState getStoryDungeon(int dungeonsCompleted, OverworldEnvironment previou
     println("somehow, the program has gotten 6 or more completed story dungeons by now the game should have already ended!");
     return null;
   }
+}
+
+// changes the environment, making sure to properly stop them
+void changeEnvironment(EnvironmentState changeTo) {
+  if (curEnvironment != null)
+    curEnvironment.exitState();
+  if (changeTo != null)
+    changeTo.enterState();
+  curEnvironment = changeTo;
+}
+
+// get the icon of for a class
+PImage getIcon(PlayerClass toGet) {
+  if (toGet == PlayerClass.Knight) {
+    return knightIcon.copy();
+  } else if (toGet == PlayerClass.Archer) {
+    return archerIcon.copy();
+  } else if (toGet == PlayerClass.Wizard) {
+    return wizardIcon.copy();
+  } else {
+    println("Tried getting an icon of a playerclass that doesn't exist! Called from Tools.getIcon()");
+    return null;
+  }
+}
+
+// same as above, but this time just needs a player info
+PImage getIcon(PlayerInfo character) {
+  return getIcon(character.playerClass);
 }

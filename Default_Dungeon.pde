@@ -51,15 +51,12 @@ abstract class DefaultDungeon extends DungeonState {
 
   // the dungeon exited
   void dungeonExited() {
-    curEnvironment = previous;
-    previous.enterState();
-    stopBackgroundMusic();
+    changeEnvironment(previous);
   }
 
   // the dungeon completed animation
   void dungeonCompletedAnimation() {
-    curEnvironment = previous;
-    previous.enterState();
+    
   }
 
   // the player died animation

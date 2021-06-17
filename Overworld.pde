@@ -15,6 +15,7 @@ class OverworldEnvironment extends EnvironmentState {
   void stopBackgroundMusic(){
     outdoorsBGM.stop();
   }
+  
   void exitState(){
    stopBackgroundMusic(); 
   }
@@ -23,13 +24,11 @@ class OverworldEnvironment extends EnvironmentState {
   }
 
   void enterStoryDungeon() {
-    curEnvironment = getStoryDungeon(storyDungeonsCompleted, this, curPlayer.character);
-    exitState();
+    changeEnvironment(getStoryDungeon(storyDungeonsCompleted, this, curPlayer.character));
   }
 
   void enterCoinsDungeon() {
-    curEnvironment = new CoinsDungeon(this, curPlayer.character);
-    exitState();
+    changeEnvironment(new CoinsDungeon(this, curPlayer.character));
   }
 
   boolean stepDoor(float bx, float by, float bw, float bh) {
