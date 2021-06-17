@@ -205,8 +205,9 @@ class LoadingState extends State {
 }
 
 class SplashState extends State {
-  int curAnimationFrame;
+  float curAnimationFrame;
 
+  final float speed = 0.7;
   SplashState() {
     curAnimationFrame = 0;
   }
@@ -223,9 +224,9 @@ class SplashState extends State {
   }
 
   void render() {
-    int index = curAnimationFrame % splashAnimation.length;
+    int index = (int) curAnimationFrame % splashAnimation.length;
     image(splashAnimation[index], 0, 0);
-    curAnimationFrame += 1;
+    curAnimationFrame += speed;
   }
 }
 
@@ -362,26 +363,26 @@ class UpgradingState extends State {
     fill(defaultColor);
     stroke(0, 0, 255);
     strokeWeight(3);
-    
-    if(mouseOn == UpgradingButton.health){
+
+    if (mouseOn == UpgradingButton.health) {
       fill(hoverColor);
     }
     rect(healthX, healthY, healthW, healthH, 10, 10, 10, 10);
-    
+
     fill(defaultColor);
-    if(mouseOn == UpgradingButton.a1){
+    if (mouseOn == UpgradingButton.a1) {
       fill(hoverColor);
     }
     rect(a1AtkX, a1AtkY, a1AtkW, a1AtkH, 10, 10, 10, 10);
-    
+
     fill(defaultColor);
-    if(mouseOn == UpgradingButton.a2){
+    if (mouseOn == UpgradingButton.a2) {
       fill(hoverColor);
     }
     rect(a2AtkX, a2AtkY, a2AtkW, a2AtkH, 10, 10, 10, 10);
-    
+
     fill(defaultColor);
-    if(mouseOn == UpgradingButton.speed){
+    if (mouseOn == UpgradingButton.speed) {
       fill(hoverColor);
     }
     rect(speedX, speedY, speedW, speedH, 10, 10, 10, 10);
@@ -409,14 +410,20 @@ class UpgradingState extends State {
 
 class IngameMenuState extends State {
   State previous;
-  
+
   float backX=400, backY=300, backW=200, backH=200;
   float menuX=100, menuY=100, menuW=800, menuH=600;
   float exitX=100, exitY=100, exitW=800, exitH=600;
+
+  color defaultColor = #FFA2F9;
+  color hoverColor = #FF006B;
   IngameMenuState(State previous) {
     this.previous = previous;
   }
   void tick() {
+    if(pointInBox(mouseX, mouseY, menuX, menuY, menuW, menuH)){
+      
+    }
   }
   void render() {
   }
