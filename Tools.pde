@@ -167,29 +167,29 @@ void loadFiles() {
   knightWalk1 = loadImage("sprites/knight/knightWalk1.png");
   knightWalk2 = loadImage("sprites/knight/knightWalk2.png");
   knightAttack = loadImage("sprites/knight/knightAttack.png");
-  knightIdle.resize(DefaultDungeon.knightWidth, DefaultDungeon.knightHeight);
-  knightWalk1.resize(DefaultDungeon.knightWidth, DefaultDungeon.knightHeight);
-  knightWalk2.resize(DefaultDungeon.knightWidth, DefaultDungeon.knightHeight);
-  knightAttack.resize(DefaultDungeon.knightWidth, DefaultDungeon.knightHeight);
-  
+  knightIdle.resize(knightWidth, knightHeight);
+  knightWalk1.resize(knightWidth, knightHeight);
+  knightWalk2.resize(knightWidth, knightHeight);
+  knightAttack.resize(knightWidth, knightHeight);
+
   archerIdle = loadImage("sprites/archer/archerIdle.png");
   archerWalk1 = loadImage("sprites/archer/archerWalk1.png");
   archerWalk2 = loadImage("sprites/archer/archerWalk2.png");
   archerAttack = loadImage("sprites/archer/archerAttack.png");
-  archerWalk1.resize(DefaultDungeon.archerWidth, DefaultDungeon.archerHeight);
-  archerIdle.resize(DefaultDungeon.archerWidth, DefaultDungeon.archerHeight);
-  archerWalk2.resize(DefaultDungeon.archerWidth, DefaultDungeon.archerHeight);
-  archerAttack.resize(DefaultDungeon.archerWidth, DefaultDungeon.archerHeight);
-  
+  archerWalk1.resize(archerWidth, archerHeight);
+  archerIdle.resize(archerWidth, archerHeight);
+  archerWalk2.resize(archerWidth, archerHeight);
+  archerAttack.resize(archerWidth, archerHeight);
+
   wizardIdle = loadImage("sprites/wizard/wizardIdle.png");
   wizardWalk1 = loadImage("sprites/wizard/wizardWalk1.png");
   wizardWalk2 = loadImage("sprites/wizard/wizardWalk2.png");
   wizardAttack = loadImage("sprites/wizard/wizardAttack.png");
-  wizardIdle.resize(DefaultDungeon.wizardWidth, DefaultDungeon.wizardHeight);
-  wizardWalk1.resize(DefaultDungeon.wizardWidth, DefaultDungeon.wizardHeight);
-  wizardWalk2.resize(DefaultDungeon.wizardWidth, DefaultDungeon.wizardHeight);
-  wizardAttack.resize(DefaultDungeon.wizardWidth, DefaultDungeon.wizardHeight);
-  
+  wizardIdle.resize(wizardWidth, wizardHeight);
+  wizardWalk1.resize(wizardWidth, wizardHeight);
+  wizardWalk2.resize(wizardWidth, wizardHeight);
+  wizardAttack.resize(wizardWidth, wizardHeight);
+
   // load fonts
   currentMessage = "Loading fonts...";
   dungeonDragonAttackFont = loadFont("LucidaBright-Demi-16.vlw");
@@ -217,11 +217,45 @@ void loadFiles() {
   // load in death animations
   currentMessage = "loading death animations..";
   loadDeathAnimations();
-  
+
   // load in the exit screen
   currentMessage = "loading exit screen...";
   exitScreen = loadImage("exitScreen.png");
   exitScreen.resize(width, height);
+
+  // load in sprites for the overworld
+  currentMessage = "loading overworld...";
+  overWorldgrass = loadImage("sprites/outdoor_map/grass.png");
+  overWorldwall1 = loadImage("sprites/outdoor_map/wall.png");
+  overWorldpath = loadImage("sprites/outdoor_map/stone.png");
+  overWorldhospital = loadImage("sprites/outdoor_map/hospital.png");
+  overWorldtreestump = loadImage("sprites/outdoor_map/treestump.png");
+  overWorldhospitalwall = loadImage("sprites/outdoor_map/hospitalwall.png");
+  overWorldhospitaldoor = loadImage("sprites/outdoor_map/hospitaldoor.png");
+  overWorldcaveentrance = loadImage("sprites/outdoor_map/caveentrance.png");
+  overWorlddirt = loadImage("sprites/outdoor_map/dirt.png");
+  overWorldhouse1 = loadImage("sprites/outdoor_map/house1.png");
+  overWorldhouse2 = loadImage("sprites/outdoor_map/house2.png");
+  overWorldsign1 = loadImage("sprites/outdoor_map/sign1.png");
+  overWorldsign2 = loadImage("sprites/outdoor_map/sign2.png");
+  overWorldsign3 = loadImage("sprites/outdoor_map/sign3.png");
+  overWorldsign4 = loadImage("sprites/outdoor_map/sign4.png");
+
+  overWorldgrass.resize(World.gridSize, World.gridSize);
+  overWorldwall1.resize(World.gridSize, World.gridSize);
+  overWorldpath.resize(World.gridSize, World.gridSize);
+  overWorldhospital.resize(World.gridSize*7, World.gridSize*6);
+  overWorldtreestump.resize(World.gridSize, World.gridSize);
+  overWorldhospitalwall.resize(World.gridSize*3, World.gridSize);
+  overWorldhospitaldoor.resize(World.gridSize, World.gridSize);
+  overWorldcaveentrance.resize(World.gridSize*5, World.gridSize*5);
+  overWorlddirt.resize(World.gridSize, World.gridSize);
+  overWorldhouse1.resize(World.gridSize*6, World.gridSize*3);
+  overWorldhouse2.resize(World.gridSize*3, World.gridSize*3);
+  overWorldsign1.resize(World.gridSize*4, World.gridSize*3);
+  overWorldsign2.resize(World.gridSize*4, World.gridSize*3);
+  overWorldsign3.resize(World.gridSize*4, World.gridSize*3);
+  overWorldsign4.resize(World.gridSize*4, World.gridSize*3);
 
   // it is completed... this is also used for the loading state to know that we can progress to progress
   currentMessage = "completed";

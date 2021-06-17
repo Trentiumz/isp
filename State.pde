@@ -38,7 +38,7 @@ class MainMenuState extends State {
 
   void startGame() {
     PlayerInfo samplePlayer = getStartingStats(PlayerClass.Knight);
-    curEnvironment = new CoinsDungeon(null, samplePlayer);
+    curEnvironment = new OverworldEnvironment(samplePlayer);
     curState = new DefaultState();
     titleBGM.stop();
   }

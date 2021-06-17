@@ -1,4 +1,4 @@
-enum DungeonElement { //<>//
+enum DungeonElement { //<>// //<>//
   Wall, Ground, Empty
 };
 
@@ -34,11 +34,6 @@ abstract class DefaultDungeon extends DungeonState {
   final int framesPerSkeletonAttack = 45;
   final float skeletonAttack = 15;
   final float skeletonSpeed = 4;
-
-  // default dimensions for the different players
-  final static int knightWidth=50, knightHeight=50;
-  final static int archerWidth=50, archerHeight=50;
-  final static int wizardWidth=50, wizardHeight=50;
 
   DungeonWorld curWorld; // the current world
   DungeonPlayer curPlayer; // the current player

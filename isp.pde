@@ -76,10 +76,34 @@ PImage exitScreen;
 
 PFont upgradingDescription;
 
+// overWorld
+
+PImage overWorldgrass;
+PImage overWorldwall1;
+PImage overWorldpath;
+PImage overWorldhospital;
+PImage overWorldtreestump;
+PImage overWorldhospitalwall;
+PImage overWorldhospitaldoor;
+PImage overWorldcaveentrance;
+PImage overWorlddirt;
+PImage overWorldhouse1;
+PImage overWorldhouse2;
+PImage overWorldsign1;
+PImage overWorldsign2;
+PImage overWorldsign3;
+PImage overWorldsign4;
+
+
+// default dimensions for the different players
+final int knightWidth=50, knightHeight=50;
+final int archerWidth=50, archerHeight=50;
+final int wizardWidth=50, wizardHeight=50;
+
 void setup() {
   // set the size
   size(1000, 800);
-  
+
   // begin with loading things in
   currentMessage = "";
   curStory = new NoStory();
