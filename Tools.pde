@@ -88,15 +88,6 @@ void loadFiles() {
   currentMessage = "Loading outdoors.wav...";
   outdoorsBGM = getTrack("music/outdoors.wav");
 
-  currentMessage = "Loading hospital.wav...";
-  hospitalBGM = getTrack("music/hospital.wav");
-
-  currentMessage = "Loading guild_hq.wav...";
-  guildHQBGM = getTrack("music/guild_hq.wav");
-
-  currentMessage = "Loading castle.wav...";
-  castleBGM = getTrack("music/castle.wav");
-
   currentMessage = "Loading title.wav...";
   titleBGM = getTrack("music/title.wav");
 
@@ -308,4 +299,24 @@ PlayerInfo getStartingStats(PlayerClass chosen) {
 // returns if a point is inside a box
 boolean pointInBox(float px, float py, float bx, float by, float bw, float bh) {
   return bx < px && px < bx + bw && by < py && py < by + bh;
+}
+
+// gets the current story dungeon based on the number of dungeons completed
+DungeonState getStoryDungeon(int dungeonsCompleted, OverworldEnvironment previous, PlayerInfo character) {
+  if (dungeonsCompleted == 0) {
+    return new MazeDungeon(previous, character);
+  } else if (dungeonsCompleted == 1) {
+    return new L3RoomDungeon(previous, character);
+  } else if (dungeonsCompleted == 2) {
+    return new WarriorDungeon(previous, character);
+  } else if (dungeonsCompleted == 3) {
+    return new GiantBossDungeon(previous, character);
+  } else if (dungeonsCompleted == 4) {
+    return new DragonBossDungeon(previous, character);
+  } else if (dungeonsCompleted == 5) {
+    return new SerpantBossDungeon(previous, character);
+  } else {
+    println("somehow, the program has gotten 6 or more completed story dungeons by now the game should have already ended!");
+    return null;
+  }
 }

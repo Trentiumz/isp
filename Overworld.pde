@@ -9,12 +9,27 @@ class OverworldEnvironment extends EnvironmentState {
   void enterHospital() {
   }
 
+  void playBackgroundMusic(){
+    outdoorsBGM.loop();
+  }
+  void stopBackgroundMusic(){
+    outdoorsBGM.stop();
+  }
+  void exitState(){
+   stopBackgroundMusic(); 
+  }
+  void enterState(){
+   playBackgroundMusic(); 
+  }
+
   void enterStoryDungeon() {
-    println("test");
+    curEnvironment = getStoryDungeon(storyDungeonsCompleted, this, curPlayer.character);
+    exitState();
   }
 
   void enterCoinsDungeon() {
-    println("test");
+    curEnvironment = new CoinsDungeon(this, curPlayer.character);
+    exitState();
   }
 
   boolean stepDoor(float bx, float by, float bw, float bh) {
@@ -39,6 +54,11 @@ class OverworldEnvironment extends EnvironmentState {
   OverworldEnvironment(PlayerInfo character) {
     curPlayer = getPlayerOf(60, 400, character);
     curWorld = getWorldOf("over_maps/overworld1.txt", curPlayer);
+    this.setup();
+  }
+  
+  void setup(){
+   playBackgroundMusic(); 
   }
 
   class Overworld extends World {
@@ -141,6 +161,7 @@ class OverworldEnvironment extends EnvironmentState {
     int lastWalkFrame;
 
     float frontMargin, backMargin, topMargin, botMargin;
+    final float speedMultiplier = 3;
 
     OverPlayer(float x, float y, int w, int h, float backMargin, float frontMargin, float topMargin, float botMargin, PlayerInfo character, PImage idle, PImage walk1, PImage walk2) {
       super(x + backMargin, y + topMargin, w - backMargin - frontMargin, h - topMargin - botMargin);
@@ -169,21 +190,21 @@ class OverworldEnvironment extends EnvironmentState {
       lastWalkFrame = curFrame;
     }
     void moveRight() {
-      curWorld.moveEntitySoft(this, character.speed, 0);
+      curWorld.moveEntitySoft(this, character.speed * speedMultiplier, 0);
       lastHorizontal = Direction.right;
       movedSpriteUpdate();
     }
     void moveLeft() {
-      curWorld.moveEntitySoft(this, -character.speed, 0);
+      curWorld.moveEntitySoft(this, -character.speed * speedMultiplier, 0);
       lastHorizontal = Direction.left;
       movedSpriteUpdate();
     }
     void moveUp() {
-      curWorld.moveEntitySoft(this, 0, -character.speed);
+      curWorld.moveEntitySoft(this, 0, -character.speed * speedMultiplier);
       movedSpriteUpdate();
     }
     void moveDown() {
-      curWorld.moveEntitySoft(this, 0, character.speed);
+      curWorld.moveEntitySoft(this, 0, character.speed * speedMultiplier);
       movedSpriteUpdate();
     }
     void tick() {
@@ -335,6 +356,9 @@ class OverworldEnvironment extends EnvironmentState {
   void keyPressed() {
     if (key == 'e' || key == 'E') {
       enterDoors();
+    }
+    if (key == 'm' || key == 'M') {
+      curState = new OverworldMenuState(curState);
     }
   }
 

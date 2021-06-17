@@ -1,4 +1,4 @@
-enum DungeonElement { //<>// //<>//
+enum DungeonElement { //<>//
   Wall, Ground, Empty
 };
 
@@ -44,20 +44,22 @@ abstract class DefaultDungeon extends DungeonState {
 
   // function for when the dungeon is completed
   void dungeonCompleted() {
-    curStory.storyDungeonCompleted();
     dungeonCompletedAnimation();
+    storyDungeonsCompleted++;
     dungeonExited();
   }
 
   // the dungeon exited
   void dungeonExited() {
     curEnvironment = previous;
+    previous.enterState();
     stopBackgroundMusic();
   }
 
   // the dungeon completed animation
   void dungeonCompletedAnimation() {
     curEnvironment = previous;
+    previous.enterState();
   }
 
   // the player died animation

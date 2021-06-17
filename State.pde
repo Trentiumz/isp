@@ -431,8 +431,10 @@ class OverworldMenuState extends State {
   void mousePressed() {
     if (mouseOnMenuButton()) {
       curState = new MainMenuState();
+      curEnvironment.exitState();
     } else if (mouseOnExitButton()) {
       curState = new ExitState();
+      curEnvironment.exitState();
     } else if (pointDistance(mouseX, mouseY, backX + backW, backY) < 25) {
       curState = previous;
     }

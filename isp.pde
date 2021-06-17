@@ -8,8 +8,7 @@
 // Usage of State Pattern - each class represents a different state & different conditions change these global variables to other states
 //   The State Pattern uses inheritance (I used abstract classes and/or interfaces)
 
-// the current story "module", state and environment
-StoryModule curStory;
+// the current state and environment
 State curState;
 EnvironmentState curEnvironment;
 
@@ -25,9 +24,6 @@ boolean[] codePressed = new boolean[500];
 // background music, loaded in once
 SoundFile dungeonBGM;
 SoundFile outdoorsBGM;
-SoundFile hospitalBGM;
-SoundFile guildHQBGM;
-SoundFile castleBGM;
 SoundFile titleBGM;
 
 // the current message to display while loading
@@ -76,8 +72,7 @@ PImage exitScreen;
 
 PFont upgradingDescription;
 
-// overWorld
-
+// overWorld images
 PImage overWorldgrass;
 PImage overWorldwall1;
 PImage overWorldpath;
@@ -100,14 +95,18 @@ final int knightWidth=50, knightHeight=50;
 final int archerWidth=50, archerHeight=50;
 final int wizardWidth=50, wizardHeight=50;
 
+// number of dungeons completed
+int storyDungeonsCompleted;
+
 void setup() {
   // set the size
   size(1000, 800);
 
   // begin with loading things in
   currentMessage = "";
-  curStory = new NoStory();
   curState = new LoadingState();
+  
+  storyDungeonsCompleted = 0;
 
   frameRate(30);
 }
@@ -115,16 +114,16 @@ void setup() {
 void draw() {
   background(0);
   // extrapolate the behavior to the current story
-  curStory.tick();
-  curStory.render();
+  curState.tick();
+  curState.render();
 }
 
 // extrapolate events to the current story
 void mousePressed() {
-  curStory.mousePressed();
+  curState.mousePressed();
 }
 void mouseReleased() {
-  curStory.mouseReleased();
+  curState.mouseReleased();
 }
 void keyPressed() {
   // make sure to track which keys are pressed/not pressed
@@ -132,7 +131,7 @@ void keyPressed() {
     isPressed[key] = true;
   if (keyCode < 500)
     codePressed[keyCode] = true;
-  curStory.keyPressed();
+  curState.keyPressed();
 }
 void keyReleased() {
   // updating which keys are pressed
@@ -140,8 +139,8 @@ void keyReleased() {
     isPressed[key] = false;
   if (keyCode < 500)
     codePressed[keyCode] = false;
-  curStory.keyReleased();
+  curState.keyReleased();
 }
 void mouseClicked() {
-  curStory.mouseClicked();
+  curState.mouseClicked();
 }
