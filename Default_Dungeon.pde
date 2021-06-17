@@ -1,4 +1,4 @@
-enum DungeonElement { //<>// //<>//
+enum DungeonElement { //<>//
   Wall, Ground, Empty
 };
 
@@ -749,8 +749,8 @@ abstract class DefaultDungeon extends DungeonState {
         }
         changeTimer = walkFrames;
       }
-      if(curSprite == attack && changeTimer <= 0){
-       curSprite = idle; 
+      if (curSprite == attack && changeTimer <= 0) {
+        curSprite = idle;
       }
       changeTimer--;
     }

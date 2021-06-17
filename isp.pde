@@ -71,6 +71,9 @@ PFont dungeonDragonAttackFont;
 PFont mainMenuFont1, mainMenuFont2, mainMenuFont3, mainMenuFont4;
 PImage mainMenuImage1, mainMenuImage2;
 
+// exit screen
+PImage exitScreen;
+
 PFont upgradingDescription;
 
 void setup() {

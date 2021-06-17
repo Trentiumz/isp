@@ -217,6 +217,11 @@ void loadFiles() {
   // load in death animations
   currentMessage = "loading death animations..";
   loadDeathAnimations();
+  
+  // load in the exit screen
+  currentMessage = "loading exit screen...";
+  exitScreen = loadImage("exitScreen.png");
+  exitScreen.resize(width, height);
 
   // it is completed... this is also used for the loading state to know that we can progress to progress
   currentMessage = "completed";

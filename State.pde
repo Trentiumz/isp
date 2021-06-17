@@ -324,7 +324,7 @@ class UpgradingState extends State {
   }
   void mousePressed() {
     updateCost();
-    if (pointDistance(mouseX, mouseY, backX + backW, backY) < 50) {
+    if (pointDistance(mouseX, mouseY, backX + backW, backY) < 25) {
       curState = previous;
     } else if (mouseOn == UpgradingButton.health) {
       if (character.coins >= upgradeCoins && character.healthLevel < maxLevel) {
@@ -408,23 +408,86 @@ class UpgradingState extends State {
   }
 }
 
-class IngameMenuState extends State {
+class OverworldMenuState extends State {
   State previous;
 
   float backX=400, backY=300, backW=200, backH=200;
-  float menuX=100, menuY=100, menuW=800, menuH=600;
-  float exitX=100, exitY=100, exitW=800, exitH=600;
+  float menuX=420, menuY=340, menuW=100, menuH=40;
+  float exitX=420, exitY=420, exitW=100, exitH=40;
 
   color defaultColor = #FFA2F9;
   color hoverColor = #FF006B;
-  IngameMenuState(State previous) {
+  OverworldMenuState(State previous) {
     this.previous = previous;
   }
+  boolean mouseOnMenuButton() {
+    return pointInBox(mouseX, mouseY, menuX, menuY, menuW, menuH);
+  }
+  boolean mouseOnExitButton() {
+    return pointInBox(mouseX, mouseY, exitX, exitY, exitW, exitH);
+  }
   void tick() {
-    if(pointInBox(mouseX, mouseY, menuX, menuY, menuW, menuH)){
-      
+  }
+  void mousePressed() {
+    if (mouseOnMenuButton()) {
+      curState = new MainMenuState();
+    } else if (mouseOnExitButton()) {
+      curState = new ExitState();
+    } else if (pointDistance(mouseX, mouseY, backX + backW, backY) < 25) {
+      curState = previous;
     }
   }
   void render() {
+    fill(#FFBC03);
+    noStroke();
+    rect(backX, backY, backW, backH, 10, 10, 10, 10);
+
+    stroke(255, 0, 0);
+    strokeWeight(3);
+    textAlign(CENTER);
+    textFont(mainMenuFont3);
+    textSize(14);
+
+    if (mouseOnMenuButton()) {
+      fill(hoverColor);
+    } else {
+      fill(defaultColor);
+    }
+    rect(menuX, menuY, menuW, menuH, 10, 10, 10, 10);
+    fill(255);
+    text("Main Menu", menuX + menuW / 2, menuY + menuH / 2); 
+
+    if (mouseOnExitButton()) {
+      fill(hoverColor);
+    } else {
+      fill(defaultColor);
+    }
+    rect(exitX, exitY, exitW, exitH, 10, 10, 10, 10);
+    fill(255);
+    text("Exit", exitX + exitW / 2, exitY + exitH / 2);
+
+    fill(255, 0, 0);
+    stroke(255);
+    ellipse(backX + backW, backY, 50, 50);
+    textSize(20);
+    fill(255);
+    text("X", backX + backW, backY + 10);
+  }
+}
+
+class ExitState extends State {
+  int curFrame;
+  final int framesExist = 30;
+  ExitState() {
+    curFrame = 0;
+  }
+  void tick() {
+    if (curFrame > framesExist) {
+      exit();
+    }
+    curFrame++;
+  }
+  void render() {
+    image(exitScreen, 0, 0);
   }
 }
