@@ -502,7 +502,7 @@ abstract class DefaultDungeon extends DungeonState {
     int spawnFrame; // frame in which the zap was spawned (for animation)
     int existFrames; // the amount of time the zap should stay on the screen
     
-    final float maxRange = 800;
+    final float maxRange = 200;
     WizardZap(float attackX, float attackY, float damage) {
       // initalize values
       closestEnemy = null;
@@ -811,6 +811,8 @@ abstract class DefaultDungeon extends DungeonState {
 
   //     WIZARD PLAYERS
   class Wizard extends DungeonPlayer {
+    final float wizardRange = 400;
+    
     Wizard(float x, float y, int w, int h, PlayerInfo character) {
       // set boundaries, load in images
       super(x, y, w, h, w * 0.4, w * 0.35, h * 0.25, h * 0.2, character, wizardIdle, wizardWalk1, wizardWalk2, wizardAttack);
@@ -827,7 +829,7 @@ abstract class DefaultDungeon extends DungeonState {
     }
     void attack2() {
       // if the frames from now to the last frame is more than the frames per attack
-      if (curFrame - lastAttackFrame2 >= character.framesBetweenA2) {
+      if (curFrame - lastAttackFrame2 >= character.framesBetweenA2 && pointDistance(curWorld.camera.getRealX(mouseX), curWorld.camera.getRealY(mouseY), centerX(), centerY()) < 350) {
         // then add a fireball projectile
         curWorld.addProjectile(new WizardFireball(curWorld.camera.getRealX(mouseX), curWorld.camera.getRealY(mouseY), 100, character.baseA2Attack, 30, 5));
         lastAttackFrame2 = curFrame;
@@ -855,7 +857,7 @@ abstract class DefaultDungeon extends DungeonState {
         float mag = pointDistance(curWorld.camera.getRealX(mouseX), curWorld.camera.getRealY(mouseY), centerX, centerY);
 
         // add an arrow, giving it a speed of 10 (we first normalize xDiff and yDiff)
-        curWorld.addProjectile(new ArcherArrow(centerX, centerY, 10 * xDiff / mag, 10 * yDiff / mag, character.baseA1Attack, 350, 2));
+        curWorld.addProjectile(new ArcherArrow(centerX, centerY, 10 * xDiff / mag, 10 * yDiff / mag, character.baseA1Attack, 400, 2));
 
         // the last time the archer attacked is now
         lastAttackFrame1 = curFrame;
