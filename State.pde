@@ -256,9 +256,8 @@ class DeadScreen extends State {
   int curFrame;
 
   DeadScreen(PlayerClass died) {
-    if (died == PlayerClass.Knight) {
-      curAnimation = knightDeadAnimation;
-    }
+
+    curAnimation = knightDeadAnimation;
     curFrame = 0;
   }
   void tick() {
@@ -382,7 +381,7 @@ class UpgradingState extends State {
     this.character = character;
     mouseOn = UpgradingButton.noButton;
     updateCost();
-    
+
     this.playerIcon = getIcon(character);
     this.playerIcon.resize(playerW, playerH);
   }
@@ -484,7 +483,7 @@ class UpgradingState extends State {
     textSize(20);
     fill(255);
     text("X", backX + backW, backY + 10);
-    
+
     image(playerIcon, playerX, playerY);
   }
 }
