@@ -102,6 +102,10 @@ final int knightWidth=50, knightHeight=50;
 final int archerWidth=50, archerHeight=50;
 final int wizardWidth=50, wizardHeight=50;
 
+// images for the CYOA portion of the game
+PImage beginCYOAImg, beginCYOAImg2, beginCYOAImg3, beginCYOAImg4, beginCYOAImg5;
+PFont beginCYOAFont, beginCYOAFont2;
+
 // number of dungeons completed
 int storyDungeonsCompleted;
 

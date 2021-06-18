@@ -312,16 +312,6 @@ abstract class DefaultDungeon extends DungeonState {
       return false;
     }
 
-    // return the enemy that the current entity is touching, if any. If not, return null  
-    Enemy touchingEnemy(Entity query) {
-      // Loop through each of the enemies. If the current entity is touching any of them, return it
-      for (Enemy other : this.enemies)
-        if (query.collided(other))
-          return other;
-      // otherwise, return null (nothing)
-      return null;
-    }
-
     void changeElement(int c, int r, DungeonElement newElement) {
       tileMap[r][c] = newElement; 
       if (tileMap[r][c] == DungeonElement.Ground) {

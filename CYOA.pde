@@ -27,17 +27,16 @@ class BeginCYOAState extends State {
   PImage img5;
   PFont font;
   PFont font2;
-  //boolean actionGame = false;
 
   void setup() {
     size(1000, 800);
-    font = loadFont("cyoa/Gabriola-48.vlw");
-    font2 = loadFont("cyoa/BaskOldFace-48.vlw");
-    img = loadImage("cyoa/buttonsBackgroundCYOA.jpg");
-    img2 = loadImage("cyoa/forestFence.jpg");
-    img3 = loadImage("cyoa/forestClearing.png");
-    img4 = loadImage("cyoa/forestRaiders.png");
-    img5 = loadImage("cyoa/townRaiders.png");
+    font = beginCYOAFont;
+    font2 = beginCYOAFont2;
+    img = beginCYOAImg;
+    img2 = beginCYOAImg2;
+    img3 = beginCYOAImg3;
+    img4 = beginCYOAImg4;
+    img5 = beginCYOAImg5;
 
     levelNumber = 0;
     playerChoice = 0;

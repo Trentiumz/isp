@@ -263,6 +263,16 @@ void loadFiles() {
   currentMessage = "loading level completed animation...";
   loadLevelCompletedAnimation();
 
+  // load in the CYOA portion
+  currentMessage = "loading story assets...";
+  beginCYOAFont = loadFont("cyoa/Gabriola-48.vlw");
+  beginCYOAFont2 = loadFont("cyoa/BaskOldFace-48.vlw");
+  beginCYOAImg = loadImage("cyoa/buttonsBackgroundCYOA.jpg");
+  beginCYOAImg2 = loadImage("cyoa/forestFence.jpg");
+  beginCYOAImg3 = loadImage("cyoa/forestClearing.png");
+  beginCYOAImg4 = loadImage("cyoa/forestRaiders.png");
+  beginCYOAImg5 = loadImage("cyoa/townRaiders.png");
+
   // it is completed... this is also used for the loading state to know that we can progress to progress
   currentMessage = "completed";
 }
@@ -357,6 +367,7 @@ DungeonState getStoryDungeon(int dungeonsCompleted, OverworldEnvironment previou
   } else if (dungeonsCompleted == 5) {
     return new SerpantBossDungeon(previous, character);
   } else {
+    // TODO ADD EPILOGUE CYOA
     println("somehow, the program has gotten 6 or more completed story dungeons by now the game should have already ended!");
     return null;
   }
