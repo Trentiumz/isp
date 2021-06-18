@@ -366,23 +366,25 @@ class UpgradingState extends State {
   float a1AtkX=160, a1AtkY=200, a1AtkW=100, a1AtkH=50;
   float a2AtkX=740, a2AtkY=200, a2AtkW=100, a2AtkH=50;
   float speedX=300, speedY=600, speedW=100, speedH=50;
+  int playerX=300, playerY=180, playerW=400, playerH=400;
+  PImage playerIcon;
 
   color defaultColor = #03FFFD;
   color hoverColor = #00B4B3;
 
   UpgradingButton mouseOn;
 
-  State previous;
-
   int upgradeCoins;
 
   final int maxLevel = 6;
 
-  UpgradingState(State previous, PlayerInfo character) {
+  UpgradingState(PlayerInfo character) {
     this.character = character;
-    this.previous = previous;
     mouseOn = UpgradingButton.noButton;
     updateCost();
+    
+    this.playerIcon = getIcon(character);
+    this.playerIcon.resize(playerW, playerH);
   }
   void tick() {
     mouseOn = UpgradingButton.noButton;
@@ -402,7 +404,7 @@ class UpgradingState extends State {
   void mousePressed() {
     updateCost();
     if (pointDistance(mouseX, mouseY, backX + backW, backY) < 25) {
-      curState = previous;
+      curState = new DefaultState();
     } else if (mouseOn == UpgradingButton.health) {
       if (character.coins >= upgradeCoins && character.healthLevel < maxLevel) {
         character.maxHealth *= 1.9;
@@ -482,6 +484,8 @@ class UpgradingState extends State {
     textSize(20);
     fill(255);
     text("X", backX + backW, backY + 10);
+    
+    image(playerIcon, playerX, playerY);
   }
 }
 

@@ -24,6 +24,7 @@ boolean[] codePressed = new boolean[500];
 // background music, loaded in once
 SoundFile dungeonBGM;
 SoundFile outdoorsBGM;
+SoundFile hospitalBGM;
 SoundFile titleBGM;
 
 // the current message to display while loading
@@ -108,7 +109,7 @@ void setup() {
   currentMessage = "";
   curState = new LoadingState();
 
-  storyDungeonsCompleted = 1;
+  storyDungeonsCompleted = 0;
 
   frameRate(30);
 }

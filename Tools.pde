@@ -91,6 +91,9 @@ void loadFiles() {
   currentMessage = "Loading title.wav...";
   titleBGM = getTrack("music/title.wav");
 
+  currentMessage = "Loading hospital.wav...";
+  hospitalBGM = getTrack("music/hospital.wav");
+
   // load enemy sprites
   currentMessage = "Loading dungeon enemy sprites...";
   zombieRight = loadImage("sprites/dungeon/zombie_right.png");
