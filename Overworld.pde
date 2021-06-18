@@ -39,6 +39,22 @@ class OverworldEnvironment extends EnvironmentState {
     return false;
   }
 
+  void drawOverlays() {
+    fill(0, 0, 0, 100);
+    noStroke();
+    rect(0, 0, width, 28);
+
+    textFont(mainMenuFont3);
+    textSize(20);
+    fill(255);
+    textAlign(CENTER);
+    if (stepDoor(1400, 1250, 50, 50) || stepDoor(5200, 300, 50, 50) || stepDoor(5400, 1050, 50, 50)) {
+      text("Press E to enter", width/2, 20);
+    }
+    textAlign(RIGHT);
+    text("Coins: " + curPlayer.character.coins, width, 20);
+  }
+
   void enterDoors() {
     if (stepDoor(1400, 1250, 50, 50)) {
       enterHospital();
@@ -353,6 +369,7 @@ class OverworldEnvironment extends EnvironmentState {
   void render() {
     background(0);
     curWorld.render();
+    drawOverlays();
   }
 
   void keyPressed() {
@@ -687,8 +704,31 @@ class HospitalEnvironment extends EnvironmentState {
     }
   }
 
+
+  void drawOverlays() {
+    fill(0, 0, 0, 100);
+    noStroke();
+    rect(0, 0, width, 28);
+
+    textFont(mainMenuFont3);
+    textSize(20);
+    fill(255);
+    textAlign(CENTER);
+    if (stepDoor(50, 450, 50, 50)) {
+      text("Press E to exit", width/2, 20);
+    } else if (stepDoor(450, 50, 50, 50)) {
+      text("Press E to heal", width/2, 20);
+    } else if (stepDoor(450, 450, 50, 50)) {
+      text("Press E to upgrade", width/2, 20);
+    }
+
+    textAlign(RIGHT);
+    text("Coins: " + curPlayer.character.coins, width, 20);
+  }
+
   void render() {
     background(0);
     curWorld.render();
+    drawOverlays();
   }
 }

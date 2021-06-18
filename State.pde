@@ -683,3 +683,28 @@ class ClassChoiceState extends State {
     text("Wizard", wizardX + wizardW / 2, wizardY + wizardH + 20);
   }
 }
+
+class LevelCompletedState extends State {
+  DungeonState previous;
+  int curFrame;
+  LevelCompletedState(DungeonState previous) {
+    this.previous = previous;
+    curFrame = 0;
+  }
+  void nextState() {
+    previous.dungeonExited();
+    curState = new DefaultState();
+  }
+  void tick() {
+    curFrame++;
+    if (curFrame >= levelCompletedAnimation.length) {
+      nextState();
+    }
+  }
+  void mousePressed() {
+    nextState();
+  }
+  void render() {
+    image(levelCompletedAnimation[curFrame % levelCompletedAnimation.length], 0, 0);
+  }
+}

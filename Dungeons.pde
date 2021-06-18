@@ -19,8 +19,7 @@ class CoinsDungeon extends DefaultDungeon {
 
   // overriding the behavior for when you completed a dungeon (as it isn't going to progress in the story)
   void dungeonCompleted() {
-    dungeonCompletedAnimation();
-    dungeonExited();
+    curState = new LevelCompletedState(this);
   }
 
   CoinsDungeon(EnvironmentState previous, PlayerInfo character) {
@@ -31,7 +30,7 @@ class CoinsDungeon extends DefaultDungeon {
   void tick() {
     super.tick();
     // if all players defeated then give the player the chest
-    if (curWorld.enemies.size() == 0) {
+    if (curWorld.enemies.size() == 0 && curChest == null) {
       curChest = new Chest(78*50, 8 * 50, (int) random(300, 400));
       curWorld.addEntity(curChest);
     }
@@ -57,13 +56,30 @@ class CoinsDungeon extends DefaultDungeon {
     }
   }
 
+  void drawOverlays() {
+    super.drawOverlays();
+    textFont(mainMenuFont3);
+    fill(255);
+    textAlign(RIGHT);
+    textSize(20);
+    text("Coins: " + curPlayer.character.coins, width, 20);
+  }
+
   void setup() {
     // create a new player at the spawn location
     curPlayer = getPlayerOf(60, 340, info);
 
     // load in the world
     curWorld = getWorldOf("dungeon_maps/coin.txt", curPlayer);
+    
+    // add enemies
+    addEnemies();
 
+    // start the background music
+    playBackgroundMusic();
+  }
+
+  void addEnemies(){
     // in the first room, randomly add goblins at each spot
     for (int i = 360; i < 1000; i += 100) {
       for (int c = 210; c < 700; c += 100) {
@@ -74,7 +90,7 @@ class CoinsDungeon extends DefaultDungeon {
       }
     }
 
-    // in the first room, randomly add goblins with higher probability
+    // in the second room, randomly add goblins and zombies with higher probability
     for (int i = 29*50; i < 45*50; i += 100) {
       for (int c = 4*50; c < 12*50; c += 100) {
         float r = random(1);
@@ -90,7 +106,7 @@ class CoinsDungeon extends DefaultDungeon {
       }
     }
 
-    // in the third room, randomly add goblins and are more condensed
+    // in the third room, randomly add enemies with highest probability
     for (int i = 53*50; i < 70*50; i += 50) {
       for (int c = 2*50; c < 15*50; c += 50) {
         float r = random(1);
@@ -105,21 +121,28 @@ class CoinsDungeon extends DefaultDungeon {
           }
         }
       }
-    }
-
-    // start the background music
-    playBackgroundMusic();
+    } 
   }
 
   // The chest that is used here
   class Chest extends Entity {
     int coins;
     PImage chest;
+
+    ArrayList<Coin> animationCoins;
+    final static float coinLiveDistance = 100;
+    boolean clicked;
+    final static int clickedAnimationFrames = 90;
+    int clickedAnimationTimer;
+    float coinChance = 1.0 / 6;
+
     Chest(float x, float y, int w, int h, int coins) {
       // initialize variables
       super(x, y, w, h);
       this.coins = coins;
       chest = coinsDungeonChest;
+
+      animationCoins = new ArrayList<Coin>();
     }
 
     // another constructor giving in default values
@@ -129,10 +152,11 @@ class CoinsDungeon extends DefaultDungeon {
 
     // if pressed
     void pressed() {
-      // remove the chest, add coins to the player, completed the dungeon
-      curWorld.removeEntity(this);
-      curPlayer.character.coins += this.coins;
-      dungeonCompleted();
+      if (!clicked) {
+        clicked = true;
+        curPlayer.character.coins += this.coins;
+        clickedAnimationTimer = clickedAnimationFrames;
+      }
     }
 
     // draw the image onto the screen
@@ -143,6 +167,51 @@ class CoinsDungeon extends DefaultDungeon {
       textAlign(LEFT);
       fill(255);
       text("Click the chest!", x, y - 14);
+
+      if (clicked) {
+        --clickedAnimationTimer;
+        if (clickedAnimationTimer <= 0) {
+          curWorld.removeEntity(this);
+          dungeonCompleted();
+        }
+
+        ArrayList<Coin> toRemove = new ArrayList<Coin>();
+        for (Coin coin : animationCoins) {
+          coin.render();
+          if (pointDistance(coin.x, coin.y, centerX(), centerY()) > coinLiveDistance) {
+            toRemove.add(coin);
+          }
+        }
+        for (Coin coin : toRemove) {
+          animationCoins.remove(coin);
+        }
+
+        float rand = random(1);
+        if (rand < coinChance) {
+          float angle = random(PI * 7/6, PI * 11/6);
+          animationCoins.add(new Coin(centerX(), centerY(), 3 * cos(angle), 3 * sin(angle)));
+        }
+      }
+    }
+
+    // coins
+    class Coin {
+      float x, y, xDiff, yDiff;
+      Coin(float x, float y, float xDiff, float yDiff) {
+        this.x = x;
+        this.y = y;
+        this.xDiff = xDiff;
+        this.yDiff = yDiff;
+      }
+      void render() {
+        x += xDiff;
+        y += yDiff;
+
+        fill(#FFE308);
+        stroke(#FFBC00);
+        strokeWeight(5);
+        ellipse(x, y, 20, 20);
+      }
     }
   }
 }

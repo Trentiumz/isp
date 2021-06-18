@@ -255,6 +255,10 @@ void loadFiles() {
   overWorldsign3.resize(World.gridSize*4, World.gridSize*3);
   overWorldsign4.resize(World.gridSize*4, World.gridSize*3);
 
+  // load in the level completed animation
+  currentMessage = "loading level completed animation...";
+  loadLevelCompletedAnimation();
+
   // it is completed... this is also used for the loading state to know that we can progress to progress
   currentMessage = "completed";
 }
@@ -267,7 +271,7 @@ void loadDeathAnimations() {
     knightDeadAnimation[i] = loadImage("animations/dead/knight/frame_" + sNum + "_delay-0.1s.gif");
     knightDeadAnimation[i].resize(width, height);
   }
-  
+
   int numArcherFrames = 56;
   archerDeadAnimation = new PImage[numArcherFrames];
   for (int i = 0; i < numKnightFrames; ++i) {
@@ -275,13 +279,23 @@ void loadDeathAnimations() {
     archerDeadAnimation[i] = loadImage("animations/dead/archer/frame_" + sNum + "_delay-0.1s.gif");
     archerDeadAnimation[i].resize(width, height);
   }
-  
+
   int numWizardFrames = 56;
   wizardDeadAnimation = new PImage[numWizardFrames];
   for (int i = 0; i < numKnightFrames; ++i) {
     String sNum = numTo2Characters(i);
     wizardDeadAnimation[i] = loadImage("animations/dead/wizard/frame_" + sNum + "_delay-0.1s.gif");
     wizardDeadAnimation[i].resize(width, height);
+  }
+}
+
+void loadLevelCompletedAnimation() {
+  int numFrames = 101;
+  levelCompletedAnimation = new PImage[numFrames];
+  for (int i = 0; i < numFrames; ++i) {
+    String sNum = numTo3Characters(i + 1);
+    levelCompletedAnimation[i] = loadImage("animations/levelCompleted/ezgif-frame-" + sNum + ".jpg");
+    levelCompletedAnimation[i].resize(width, height);
   }
 }
 
@@ -308,7 +322,8 @@ String numTo3Characters(int num) {
 // gets the starting statistics for a player of some class
 PlayerInfo getStartingStats(PlayerClass chosen) {
   if (chosen == PlayerClass.Knight) {
-    return new PlayerInfo(100, 8, 6, 7, 30, 3, 100, PlayerClass.Knight);
+    //return new PlayerInfo(100, 8, 6, 7, 30, 3, 100, PlayerClass.Knight);
+    return new PlayerInfo(99999, 9999, 6, 7, 30, 20, 100, PlayerClass.Knight);
   } else if (chosen == PlayerClass.Wizard) {
     return new PlayerInfo(70, 7, 4, 30, 60, 3, 100, PlayerClass.Wizard);
   } else if (chosen == PlayerClass.Archer) {

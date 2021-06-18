@@ -1,4 +1,4 @@
-enum DungeonElement { //<>//
+enum DungeonElement {
   Wall, Ground, Empty
 };
 
@@ -40,39 +40,32 @@ abstract class DefaultDungeon extends DungeonState {
   PlayerInfo info; // the information on the player
   int curFrame; // a common variable for the current frame
 
+  float sightRangeIncrease = 1.0/6 * 5/3; // the speed at which the sight range of enemies increases in form (blocks / seconds * (constant rate))
+
   abstract void setup();
 
   // function for when the dungeon is completed
   void dungeonCompleted() {
-    dungeonCompletedAnimation();
+    curState = new LevelCompletedState(this);
     storyDungeonsCompleted++;
-    dungeonExited();
   }
-
-  // the dungeon exited
+  // function for when the dungeon is exited
   void dungeonExited() {
     changeEnvironment(previous);
   }
-
-  // the dungeon completed animation
-  void dungeonCompletedAnimation() {
-    
-  }
-  
-  // when the state is exited
-  void exitState(){
-   stopBackgroundMusic(); 
-  }
-  
-  void enterState(){
-   playBackgroundMusic(); 
-  }
-
   // Player death mechanics
   void playerDied() {
     // revive the player slightly, giving them a few health buffs
     curWorld.player.character.health = min(curWorld.player.character.maxHealth, 10);
     curState = new DeadScreen(previous, info.playerClass);
+  }
+
+  // when the state is exited
+  void exitState() {
+    stopBackgroundMusic();
+  }
+  void enterState() {
+    playBackgroundMusic();
   }
 
   void playBackgroundMusic() {
@@ -501,7 +494,7 @@ abstract class DefaultDungeon extends DungeonState {
 
     int spawnFrame; // frame in which the zap was spawned (for animation)
     int existFrames; // the amount of time the zap should stay on the screen
-    
+
     final float maxRange = 200;
     WizardZap(float attackX, float attackY, float damage) {
       // initalize values
@@ -812,7 +805,7 @@ abstract class DefaultDungeon extends DungeonState {
   //     WIZARD PLAYERS
   class Wizard extends DungeonPlayer {
     final float wizardRange = 400;
-    
+
     Wizard(float x, float y, int w, int h, PlayerInfo character) {
       // set boundaries, load in images
       super(x, y, w, h, w * 0.4, w * 0.35, h * 0.25, h * 0.2, character, wizardIdle, wizardWalk1, wizardWalk2, wizardAttack);
@@ -878,8 +871,8 @@ abstract class DefaultDungeon extends DungeonState {
 
         // add 3 arrow, giving it a speed of 10
         curWorld.addProjectile(new ArcherArrow(centerX, centerY, cos(angle) * 10, sin(angle) * 10, character.baseA2Attack, 150, 2));
-        curWorld.addProjectile(new ArcherArrow(centerX, centerY, cos(angle - PI / 5) * 10, sin(angle - PI / 5) * 10, character.baseA2Attack, 100, 1));
-        curWorld.addProjectile(new ArcherArrow(centerX, centerY, cos(angle + PI / 5) * 10, sin(angle + PI / 5) * 10, character.baseA2Attack, 100, 1));
+        curWorld.addProjectile(new ArcherArrow(centerX, centerY, cos(angle - PI / 5) * 10, sin(angle - PI / 10) * 10, character.baseA2Attack, 100, 1));
+        curWorld.addProjectile(new ArcherArrow(centerX, centerY, cos(angle + PI / 5) * 10, sin(angle + PI / 10) * 10, character.baseA2Attack, 100, 1));
 
         // set the last time we attacked to now
         lastAttackFrame2 = curFrame;
@@ -910,6 +903,8 @@ abstract class DefaultDungeon extends DungeonState {
         curPlayer.character.coins += 1;
       }
     }
+
+    // draws a health bar for the current enemy in the rectangle (x,y, w, h)
     void drawHealthBar(float x, float y, float w, float h) {
       float barWidth = w * health / maxHealth;
       fill(0, 0, 0, 0);
@@ -1025,6 +1020,9 @@ abstract class DefaultDungeon extends DungeonState {
       this.left = left;
     }
     void tick() {
+      // as time goes on, the enemies in a dungeon will have longer and longer sight range; prevents long drawn out plays
+      sightRange = min(playerTargettedRange, (sightRange + sightRangeIncrease));
+
       // if this player is within its range
       if (distance(curPlayer) <= range) {
         // the time between now and our last attack is past the cooldown
@@ -1124,7 +1122,6 @@ abstract class DefaultDungeon extends DungeonState {
     }
   }
 
-
   // TOOL FUNCTIONS ---------------------------------------------------------------------
   // convert a text "mapping" of the world into an actual dungeon world
   DungeonWorld getWorldOf(String filePath, DungeonPlayer player) {
@@ -1181,10 +1178,10 @@ abstract class DefaultDungeon extends DungeonState {
       return null;
     }
   }
-  
-  void keyPressed(){
-    if(key == 'm' || key == 'M'){
-     curState = new DungeonMenuState(curState, this, curPlayer.character); 
+
+  void keyPressed() {
+    if (key == 'm' || key == 'M') {
+      curState = new DungeonMenuState(curState, this, curPlayer.character);
     }
   }
 }

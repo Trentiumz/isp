@@ -48,6 +48,7 @@ PImage[] splashAnimation;
 PImage[] knightDeadAnimation;
 PImage[] archerDeadAnimation;
 PImage[] wizardDeadAnimation;
+PImage[] levelCompletedAnimation;
 
 // the sprites for the enemies in boss dungeons
 PImage dungeonDragonBoss;
