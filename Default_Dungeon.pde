@@ -35,6 +35,11 @@ abstract class DefaultDungeon extends DungeonState {
   final float skeletonAttack = 15;
   final float skeletonSpeed = 4;
 
+  // defaults for boss skeleton
+  final static int skelKnightWidth=30, skelKnightHeight=30;
+  final static int skelKnightHealth=45, framesPerSkelKnightAttack=30, skelKnightAtkRange=10, skelKnightSightRange=800;
+  final float skelKnightAtk=20, skelKnightSpeed=5;
+
   DungeonWorld curWorld; // the current world
   DungeonPlayer curPlayer; // the current player
   PlayerInfo info; // the information on the player
@@ -1037,7 +1042,8 @@ abstract class DefaultDungeon extends DungeonState {
           lastHorizontal = Direction.right;
         else
           lastHorizontal = Direction.left;
-      } else if (distance(curPlayer) <= sightRange || seesPlayer && distance(curPlayer) <= playerTargettedRange) {
+      }
+      if (distance(curPlayer) <= sightRange || seesPlayer && distance(curPlayer) <= playerTargettedRange) {
         moveTowardsPlayer();
       }
 
@@ -1049,14 +1055,14 @@ abstract class DefaultDungeon extends DungeonState {
     // move this entity towards the player
     void moveTowardsPlayer() {
       // get the vector to the player
-      float xDiff = curPlayer.x - x;
-      float yDiff = curPlayer.y - y;
+      float xDiff = curPlayer.centerX() - centerX();
+      float yDiff = curPlayer.centerY() - centerY();
 
       // get the magnitude of our movement
       float mag = sqrt(pow(xDiff, 2) + pow(yDiff, 2));
       // get the x and y components that we'll be moving
-      float moveX = speed * xDiff / mag;
-      float moveY = speed * yDiff / mag;
+      float moveX = min(speed, mag) * xDiff / mag;
+      float moveY = min(speed, mag) * yDiff / mag;
       // try to move in this direction (but we won't collide into another entity)
       curWorld.moveEntitySoft(this, moveX, moveY);
 
@@ -1119,6 +1125,14 @@ abstract class DefaultDungeon extends DungeonState {
     void takeDamage(float amount) {
       super.takeDamage(amount);
       this.seesPlayer = true;
+    }
+  }
+
+  // a very strong skeleton knight, should only be spawned through bosses
+  class SkeletonKnight extends MeleeEnemy {
+    SkeletonKnight(float x, float y) {
+      super(x, y, skelKnightWidth, skelKnightHeight, framesPerSkelKnightAttack, skelKnightAtkRange, skelKnightSightRange, skelKnightSightRange, skelKnightAtk, skelKnightSpeed, skelKnightHealth, null, null);
+      seesPlayer = true;
     }
   }
 

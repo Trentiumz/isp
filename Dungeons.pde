@@ -722,9 +722,7 @@ class DragonBossDungeon extends DefaultDungeon {
     void spawnMinions() {
       for (float x = 35*50; x <= 39*50; x += 60) {
         for (float y = 7*50; y <= 9 * 50 && toSpawn.size() + curWorld.enemies.size() < totalDragonEnemies; y += 50) {
-          Skeleton toAdd = new Skeleton(x, y, skeletonWidth, skeletonWidth, 10000, 10000);
-          toAdd.seesPlayer = true;
-          toSpawn.add(toAdd);
+          toSpawn.add(new SkeletonKnight(x, y));
         }
       }
     }
@@ -1128,9 +1126,7 @@ class SerpantBossDungeon extends DefaultDungeon {
       // summon skeletons in a grid
       for (int x = 35*50; x <= 37*50; x += 50) {
         for (int y = 7*50; y <= 9*50 && enemiesToAdd.size() + curWorld.enemies.size() < totalSerpantEnemies; y += 50) {
-          Skeleton toAdd = new Skeleton(x, y, skeletonWidth, skeletonHeight);
-          toAdd.seesPlayer = true;
-          enemiesToAdd.add(toAdd);
+          enemiesToAdd.add(new SkeletonKnight(x, y));
         }
       }
     }
