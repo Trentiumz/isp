@@ -922,7 +922,7 @@ class SerpantBossDungeon extends DefaultDungeon {
 
   // stats for the ranged guard
   PImage rangedRight, rangedLeft;
-  final float rangedHealth=40, rangedBulletDamage=10, rangedBulletSpeed=15, rangedRange=900, rangedSpeed=4;
+  final float rangedHealth=40, rangedBulletDamage=5, rangedBulletSpeed=15, rangedRange=900, rangedSpeed=4;
   final static int rangedWidth=15, rangedHeight=30;
   final int rangedFPA=20;
   float rangedOnWaterDamageReduction = 0.7;
@@ -1405,7 +1405,7 @@ class GiantBossDungeon extends DefaultDungeon {
   PImage giant;
   final static int giantWidth=123, giantHeight=100;
   final int giantFPA=30, giantKnockbackFrames=15, giantNumDaggers=10, giantBoulderDamageInterval=15, giantBoulderEF=120, giantDaggerEF=20;
-  final float giantBoulderDamage=30, giantDaggerDamage=10, giantSmashDamage=60, giantKnockbackSpeed=15, giantHealth=1000, giantSpeed=3, giantSmashRange=125, giantBoulderSpeed=5, giantDaggerSpeed=18, giantBoulderRadius=40, giantDaggerAngleVariation=PI/10;
+  final float giantBoulderDamage=30, giantDaggerDamage=10, giantSmashDamage=60, giantKnockbackSpeed=15, giantHealth=1000, giantSpeed=5, giantSmashRange=125, giantBoulderSpeed=7, giantDaggerSpeed=20, giantBoulderRadius=40, giantDaggerAngleVariation=PI/10;
 
   int curState; // 0 for guards, 1 for guards completed (still moving to the next room), 2 for boss fight
 
@@ -1728,7 +1728,7 @@ class GiantBossDungeon extends DefaultDungeon {
 class WarriorDungeon extends DefaultDungeon {
   final static int warriorWidth=40, warriorHeight=60;
   final int warriorMovementChangeInterval=15, warriorAttackInterval=5;
-  final float warriorSpeed=15, warriorHealth=400, warriorDamage=20, warriorAttackAngleDiff=PI/2, warriorLongRadius=130, warriorShortRadius=50;
+  final float warriorSpeed=15, warriorHealth=400, warriorDamage=13, warriorAttackAngleDiff=PI/2, warriorLongRadius=130, warriorShortRadius=50;
   PImage warrior;
 
   WarriorDungeon(EnvironmentState previous, PlayerInfo character) {
