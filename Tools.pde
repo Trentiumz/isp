@@ -104,6 +104,7 @@ void loadFiles() {
   skeletonLeft = loadImage("sprites/dungeon/skeleton_left.png");
   dungeonWarrior = loadImage("sprites/dungeon/cursedWarrior.png");
 
+  //   resize enemy sprites
   dungeonWarrior.resize(WarriorDungeon.warriorWidth, WarriorDungeon.warriorHeight);
   goblinRight.resize(DefaultDungeon.goblinWidth, DefaultDungeon.goblinHeight);
   goblinLeft.resize(DefaultDungeon.goblinWidth, DefaultDungeon.goblinHeight);
@@ -124,6 +125,7 @@ void loadFiles() {
   dungeonSkeletonKnightRight = loadImage("sprites/dungeon/skeletonKnight_right.png");
   dungeonSkeletonKnightLeft = loadImage("sprites/dungeon/skeletonKnight_left.png");
 
+  //   resize boss dungeon sprites
   dungeonGiantBossGuardMeleeRight.resize(GiantBossDungeon.giantGuardWidth, GiantBossDungeon.giantGuardHeight);
   dungeonGiantBossGuardMeleeLeft.resize(GiantBossDungeon.giantGuardWidth, GiantBossDungeon.giantGuardHeight);
   dungeonDragonBossGuardMeleeRight.resize(DragonBossDungeon.meleeWidth, DragonBossDungeon.meleeHeight);
@@ -243,6 +245,7 @@ void loadFiles() {
   overWorldsign3 = loadImage("sprites/outdoor_map/sign3.png");
   overWorldsign4 = loadImage("sprites/outdoor_map/sign4.png");
 
+  //   resize the sprites to the default grid size of a world
   overWorldgrass.resize(World.gridSize, World.gridSize);
   overWorldwall1.resize(World.gridSize, World.gridSize);
   overWorldpath.resize(World.gridSize, World.gridSize);
@@ -277,7 +280,9 @@ void loadFiles() {
   currentMessage = "completed";
 }
 
+// load the animations for when the player dies
 void loadDeathAnimations() {
+  // the animation for the death of a knight
   int numKnightFrames = 56;
   knightDeadAnimation = new PImage[numKnightFrames];
   for (int i = 0; i < numKnightFrames; ++i) {
@@ -286,6 +291,7 @@ void loadDeathAnimations() {
     knightDeadAnimation[i].resize(width, height);
   }
 
+  // animation for death of an archer
   int numArcherFrames = 56;
   archerDeadAnimation = new PImage[numArcherFrames];
   for (int i = 0; i < numKnightFrames; ++i) {
@@ -294,6 +300,7 @@ void loadDeathAnimations() {
     archerDeadAnimation[i].resize(width, height);
   }
 
+  // animation for death of a wizard
   int numWizardFrames = 56;
   wizardDeadAnimation = new PImage[numWizardFrames];
   for (int i = 0; i < numKnightFrames; ++i) {
@@ -303,6 +310,7 @@ void loadDeathAnimations() {
   }
 }
 
+// load the animation for when a level is completed
 void loadLevelCompletedAnimation() {
   int numFrames = 101;
   levelCompletedAnimation = new PImage[numFrames];

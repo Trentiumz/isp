@@ -65,7 +65,7 @@ abstract class DefaultDungeon extends DungeonState {
     curState = new DeadScreen(previous, info.playerClass);
   }
 
-  // when the state is exited
+  // when the player away from the current environment (the environment may still exist, but it's not the "active" environment"
   void exitState() {
     stopBackgroundMusic();
   }
@@ -73,19 +73,21 @@ abstract class DefaultDungeon extends DungeonState {
     playBackgroundMusic();
   }
 
+  // play/stop the background music
   void playBackgroundMusic() {
     dungeonBGM.loop();
   }
-
   void stopBackgroundMusic() {
     dungeonBGM.stop();
   }
 
   // called when the mouse is pressed
   void mousePressed() {
+    // left click is attack 1
     if (mouseButton == LEFT) {
       curPlayer.attack1();
       curPlayer.attackSpriteUpdate();
+    // right click is attack 2
     } else if (mouseButton == RIGHT) {
       curPlayer.attack2();
       curPlayer.attackSpriteUpdate();
@@ -146,11 +148,13 @@ abstract class DefaultDungeon extends DungeonState {
     float attackIndicatorRadius = 50;
     float center1 = 10+barWidth+40;
     float center2 = 10+barWidth+100;
+    
     //   draw indicator circles 
     fill(#00C4C9);
     noStroke();
     ellipse(center1, 30, attackIndicatorRadius, attackIndicatorRadius);
     ellipse(center2, 30, attackIndicatorRadius, attackIndicatorRadius);
+    
     //   fill in circles based on cooldown
     fill(255, 255, 255, 100);
     float firstAngle = 2 * PI * (curFrame - curPlayer.lastAttackFrame1) / curPlayer.character.framesBetweenA1;
@@ -312,6 +316,7 @@ abstract class DefaultDungeon extends DungeonState {
       return false;
     }
 
+    // a function for changing the element at the c-th column and r-th row to newElement
     void changeElement(int c, int r, DungeonElement newElement) {
       tileMap[r][c] = newElement; 
       if (tileMap[r][c] == DungeonElement.Ground) {
@@ -641,7 +646,7 @@ abstract class DefaultDungeon extends DungeonState {
       curSprite = idle;
     }
 
-    // function for updating variables for when this player has moved
+    // function for updating variables and sprites for when this player has moved
     void moved() {
       lastWalkFrame = curFrame;
       if (curSprite != walk1 && curSprite != walk2 && curSprite != attack) {
@@ -725,9 +730,12 @@ abstract class DefaultDungeon extends DungeonState {
 
     // the needed "logic updates" for each frame
     void tick() {
+      // if we're no longer walking, and the current sprite is walking, then change it back
       if (curFrame - lastWalkFrame > 3 && (curSprite == walk1 || curSprite == walk2)) {
         curSprite = idle;
       }
+      
+      // if the "change timer" is over, and we're walking, then swap to the other leg of the walk
       if ((curSprite == walk1 || curSprite == walk2) && changeTimer <= 0) {
         if (curSprite == walk1) {
           curSprite = walk2;
@@ -736,9 +744,13 @@ abstract class DefaultDungeon extends DungeonState {
         }
         changeTimer = walkFrames;
       }
+      
+      // if we're attacking and the timer is finished, then go back to idling
       if (curSprite == attack && changeTimer <= 0) {
         curSprite = idle;
       }
+      
+      // continue the timer
       changeTimer--;
     }
   }
@@ -1183,6 +1195,7 @@ abstract class DefaultDungeon extends DungeonState {
     }
   }
 
+  // if we click "m", then open the dungeon ingame menu
   void keyPressed() {
     if (key == 'm' || key == 'M') {
       curState = new DungeonMenuState(curState, this, curPlayer.character);

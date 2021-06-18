@@ -71,7 +71,7 @@ class CoinsDungeon extends DefaultDungeon {
 
     // load in the world
     curWorld = getWorldOf("dungeon_maps/coin.txt", curPlayer);
-    
+
     // add enemies
     addEnemies();
 
@@ -79,7 +79,7 @@ class CoinsDungeon extends DefaultDungeon {
     playBackgroundMusic();
   }
 
-  void addEnemies(){
+  void addEnemies() {
     // in the first room, randomly add goblins at each spot
     for (int i = 360; i < 1000; i += 100) {
       for (int c = 210; c < 700; c += 100) {
@@ -121,7 +121,7 @@ class CoinsDungeon extends DefaultDungeon {
           }
         }
       }
-    } 
+    }
   }
 
   // The chest that is used here
@@ -1589,6 +1589,7 @@ class GiantBossDungeon extends DefaultDungeon {
       }
     }
     void render() {
+      // add a matrix for drawing this sprite
       pushMatrix();
       translate(x, y);
       rotate(angleOf(xDiff, yDiff));
@@ -1606,27 +1607,33 @@ class GiantBossDungeon extends DefaultDungeon {
     }
   }
 
+  // A projectile for the "smash attack"
   class Smash implements Projectile {
-    final int animationFrames = 10;
-    int curAnimFrame;
+    final int animationFrames = 10; // the number of frames to animate this
+    int curAnimFrame; // the current "animation frame"
 
-    float xDiff, yDiff;
-    int knockbackTimer;
+    float xDiff, yDiff; // "movement vector" for knocking back the player
+    int knockbackTimer; // the current timer for how long to knock back the player
 
-    float finalRadius;
+    float finalRadius; // how large of an area to cover
 
-    float cx, cy;
+    float cx, cy; // position of the "smash attack"
     Smash(float cx, float cy, int backFrames, float backSpeed, float damage, float radius) {
+      // initialize variables
       this.finalRadius = radius;
       curAnimFrame = 0;
 
+      // if the player is inside the attack radius
       if (curPlayer.distance(cx, cy) <= finalRadius) {
+        // damage the player
         curPlayer.takeDamage(damage);
 
+        // find the "outward direction"
         float xDiff = curPlayer.centerX() - cx;
         float yDiff = curPlayer.centerY() - cy;
         float mag = magnitude(xDiff, yDiff);
 
+        // set the "movement vector" for knocking the player back
         this.xDiff = xDiff / mag * backSpeed;
         this.yDiff = yDiff / mag * backSpeed;
 
@@ -1639,18 +1646,23 @@ class GiantBossDungeon extends DefaultDungeon {
       this.cy = cy;
     }
     void tick() {
+      // update the frames and timers
       curAnimFrame++;
       knockbackTimer--;
 
+      // if the projectile is finished, remove the projectile
       if (curAnimFrame > animationFrames && knockbackTimer <= 0) {
         curWorld.removeProjectile(this);
       }
+      // continue to knock back the player as long as the timer hasn't run out
       if (knockbackTimer > 0) {
         curWorld.moveEntity(curPlayer, xDiff, yDiff);
       }
     }
+    // drawing the animation
     void render() {
       if (curAnimFrame <= animationFrames) {
+        // the current "size" of the circle
         float curRad = finalRadius * curAnimFrame / animationFrames;
         fill(0, 0, 0, 0);
         stroke(255);
@@ -1661,15 +1673,19 @@ class GiantBossDungeon extends DefaultDungeon {
     }
   }
 
+  // the "boulder attack" for the giant
   class Boulder implements Projectile {
-    float cx, cy;
-    int existTimer;
-    float xDiff, yDiff;
-    float radius;
+    float cx, cy; // position of boulder
+    int existTimer; // time to exist
+    float xDiff, yDiff; // the direction of the boulder
+    float radius; // size of the boulder
 
+    // the boulder continously damages the player in "intervals"
     float damage;
     int damageInterval;
     int damageTimer;
+
+    // constructor for initializing variables
     Boulder(float cx, float cy, float xDiff, float yDiff, float radius, int framesExist, float damage, int damageInterval) {
       this.cx = cx;
       this.cy = cy;
@@ -1682,17 +1698,24 @@ class GiantBossDungeon extends DefaultDungeon {
       this.damageInterval = damageInterval;
       this.damageTimer = 0;
     }
+
+    // updating the "back end" of the program
     void tick() {
       damageTimer -= 1;
       existTimer -= 1;
 
+      // if the "bounding box" of this boulder isn't touching a wall, then we move it
       if (!curWorld.touchingWall(cx - radius, cy - radius, cx + radius, cy + radius)) {
         cx += xDiff;
         cy += yDiff;
       }
+
+      // after the boulder no longer needs to exist, remove the projectile
       if (existTimer <= 0) {
         curWorld.removeProjectile(this);
       }
+
+      // if the distance from the player to this center is less than the radius, then damage them
       if (curPlayer.distance(cx, cy) <= radius) {
         if (damageTimer <= 0) {
           curPlayer.takeDamage(damage);
@@ -1700,6 +1723,8 @@ class GiantBossDungeon extends DefaultDungeon {
         }
       }
     }
+
+    // draw the boulder onto the screen
     void render() {
       fill(100);
       stroke(0);
@@ -1708,6 +1733,7 @@ class GiantBossDungeon extends DefaultDungeon {
     }
   }
 
+  // add guards to the dungeon
   void guardRoom() {
     for (int x = 7*50; x <= 20*50; x += 200)
       for (int y = 2 * 50; y <= 14*50; y += 200) {
@@ -1715,6 +1741,7 @@ class GiantBossDungeon extends DefaultDungeon {
       }
   }
 
+  // a guard for the giant, initialized using default values
   class GiantGuard extends MeleeEnemy {
     GiantGuard(float x, float y, int w, int h, int framesPerAttack, float range, float sightRange, float playerTargettedRange, float attack, float speed, float startingHealth) {
       super(x, y, w, h, framesPerAttack, range, sightRange, playerTargettedRange, attack, speed, startingHealth, guardRight, guardLeft);
@@ -1725,24 +1752,31 @@ class GiantBossDungeon extends DefaultDungeon {
   }
 }
 
+// the dungeon for the warrior
 class WarriorDungeon extends DefaultDungeon {
-  final static int warriorWidth=40, warriorHeight=60;
-  final int warriorMovementChangeInterval=15, warriorAttackInterval=5;
-  final float warriorSpeed=15, warriorHealth=400, warriorDamage=13, warriorAttackAngleDiff=PI/2, warriorLongRadius=130, warriorShortRadius=50;
-  PImage warrior;
+  final static int warriorWidth=40, warriorHeight=60; // dimensions of the warrior
+  final int warriorMovementChangeInterval=15, warriorAttackInterval=5; // the "intervals" at which the warrior does various actions
+  final float warriorSpeed=15, warriorHealth=400, warriorDamage=13, warriorAttackAngleDiff=PI/2, warriorLongRadius=130, warriorShortRadius=50; // basic stats of the warrior
+  PImage warrior; // the image of the warrior
 
+  // constructor passing on the parameters
   WarriorDungeon(EnvironmentState previous, PlayerInfo character) {
     super(previous, character);
   }
+
+  // run when this dungeon is created
   void setup() {
+    // create the player and world
     curPlayer = getPlayerOf(9*50, 17*50, info);
     curWorld = getWorldOf("dungeon_maps/warrior.txt", curPlayer);
     playBackgroundMusic();
 
+    // add a warrior
     curWorld.addEnemy(new Warrior(9*50, 2*50));
     warrior = dungeonWarrior;
   }
 
+  // updating the "back end"
   void tick() {
     super.tick();
     if (curWorld.enemies.size() == 0) {
@@ -1750,13 +1784,18 @@ class WarriorDungeon extends DefaultDungeon {
     }
   }
 
+  // a class for the warrior
   class Warrior extends Enemy {
-    int moveChangeInterval, atkInterval;
+    int moveChangeInterval, atkInterval; // intervals for various actions
+
+    // statistics for the warrior
     float speed, damage;
     float attackPadding, longRadius, shortRadius;
 
-    int moveChangeTimer, atkTimer;
-    boolean towardsPlayer;
+    int moveChangeTimer, atkTimer; // timers
+    boolean towardsPlayer; // whether or not we're currently moving towards the player
+
+    // A constructor initializing the variables of the Warrior
     Warrior(float x, float y, int w, int h, float health, float speed, float damage, int moveChangeInterval, int attackInterval, float attackPadding, float longRad, float shortRad) {
       super(x, y, w, h, health);
       this.speed = speed;
@@ -1771,17 +1810,26 @@ class WarriorDungeon extends DefaultDungeon {
       towardsPlayer = true;
       atkTimer = attackInterval;
     }
+
+    // initializing the warrior with default values
     Warrior(float x, float y) {
       this(x, y, warriorWidth, warriorHeight, warriorHealth, warriorSpeed, warriorDamage, warriorMovementChangeInterval, warriorAttackInterval, warriorAttackAngleDiff, warriorLongRadius, warriorShortRadius);
     }
+
+    // the method for the "logic" and updating variables
     void tick() {
+      // continue the timers
       --moveChangeTimer;
       --atkTimer;
+
+      // change the direction randomly
       if (moveChangeTimer <= 0) {
         moveChangeTimer = moveChangeInterval;
         if (random(1) < 0.5)
           towardsPlayer = !towardsPlayer;
       }
+
+      // if the timer for attacking is completed, then add an attack
       if (atkTimer <= 0) {
         float angle = random(0, 2 * PI);
         if (random(1) < 0.5) {
@@ -1794,15 +1842,20 @@ class WarriorDungeon extends DefaultDungeon {
         atkTimer = atkInterval;
       }
 
+      // find the vector towards the player
       float xDiff = curPlayer.centerX() - centerX();
       float yDiff = curPlayer.centerY() - centerY();
       float mag = magnitude(xDiff, yDiff);
+
+      // depending on whether or not we're moving towards the player, move either in the direction of the player or in the opposite direction
       if (towardsPlayer) {
         curWorld.moveEntitySoft(this, xDiff / mag * speed, yDiff / mag * speed);
       } else {
         curWorld.moveEntitySoft(this, -xDiff / mag * speed, -yDiff / mag * speed);
       }
     }
+
+    // draw the warrior onto the screen
     void render() {
       image(warrior, x, y);
       drawHealthBar(x, y - 7, w, 7);
@@ -1884,6 +1937,7 @@ class WarriorDungeon extends DefaultDungeon {
 
       hitPlayer = false;
     }
+    
     void tick() {
       float cx = toFollow.centerX();
       float cy = toFollow.centerY();
@@ -1900,6 +1954,7 @@ class WarriorDungeon extends DefaultDungeon {
       // move the sword (go to the next angle)
       curAngle += angleIncrease;
     }
+    
     void render() {
       float cx = toFollow.centerX();
       float cy = toFollow.centerY();

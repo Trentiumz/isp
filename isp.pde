@@ -35,6 +35,7 @@ PImage zombieRight, zombieLeft;
 PImage goblinRight, goblinLeft;
 PImage skeletonRight, skeletonLeft;
 
+// the sprites for the different "classes"
 PImage knightIdle, knightWalk1, knightWalk2, knightAttack;
 PImage wizardIdle, wizardWalk1, wizardWalk2, wizardAttack;
 PImage archerIdle, archerWalk1, archerWalk2, archerAttack;
@@ -77,6 +78,7 @@ PImage mainMenuImage1, mainMenuImage2;
 // exit screen
 PImage exitScreen;
 
+// the font for the description of upgrades
 PFont upgradingDescription;
 
 // overWorld images
@@ -117,6 +119,7 @@ void setup() {
   currentMessage = "";
   curState = new LoadingState();
 
+  // begin with 0 story dungeons done (so that we start with the first story dungeon)
   storyDungeonsCompleted = 0;
 
   frameRate(30);
@@ -124,12 +127,12 @@ void setup() {
 
 void draw() {
   background(0);
-  // extrapolate the behavior to the current story
+  // extrapolate the behavior to the current state
   curState.tick();
   curState.render();
 }
 
-// extrapolate events to the current story
+// extrapolate events to the current state
 void mousePressed() {
   curState.mousePressed();
 }

@@ -1,25 +1,33 @@
+// the Choose your own adventure state done before the game
 class BeginCYOAState extends State {
+  // "logic" updates
   void tick() {
   }
+  // drawing onto the screen
   void render() {
     draw();
   }
+  // once the "fight begins", we continue to the next state
   void raidersFightTextAnimation() {
     curState = new ClassChoiceState();
   }
 
+  // constructor
   BeginCYOAState() {
     setup();
   }
 
-  PVector buttonSize = new PVector (150, 30);
+  PVector buttonSize = new PVector (150, 30); // size of the buttons
 
-  int levelNumber;
+  int levelNumber; // current level
+  // what to display at various levels
   String textForMyLevel [];
   String buttonOneText [];
   String buttonTwoText [];
+  // the choice the player made
   int playerChoice; 
 
+  // images and fonts
   PImage img;
   PImage img2;
   PImage img3;
@@ -28,8 +36,9 @@ class BeginCYOAState extends State {
   PFont font;
   PFont font2;
 
+  // run at the start of the state
   void setup() {
-    size(1000, 800);
+    // load in the fonts
     font = beginCYOAFont;
     font2 = beginCYOAFont2;
     img = beginCYOAImg;
@@ -38,10 +47,12 @@ class BeginCYOAState extends State {
     img4 = beginCYOAImg4;
     img5 = beginCYOAImg5;
 
+    // initialize the current level and choices
     levelNumber = 0;
     playerChoice = 0;
     textForMyLevel = new String [9];
 
+    // initialize the text to display
     textForMyLevel[0] = "It is the year 1378 on Earth-024. \nYou are an apprentice to a successful merchant in your town. The life of a merchant’s apprentice is a tad mundane. \nThis occupation does give you access to a fairly high education and an adept understanding of financial matters, however you yearn for adventure. \nOne scorching evening, you are near the outskirts of the town on your way to the town square with a friend of yours, Trent, \nwho you’ve known for 10 years. Trent is a squire for a prominent knight from the city. \n“He is so lucky, he gets to go on so many adventures” you think to yourself. \nWhile on the way, you notice something peculiar near the outpost fences. You think you notice a flicker of movement within the shadows. \n“Wait, did you see that?” you ask Trent. \n“Huh? What? Nah it’s probably the wind. Besides, it’s getting late, let’s get going.” \n Not feeling reassured, you:";
     textForMyLevel[1] = "“I don’t know man, it feels weird. It might be something important, let’s check it out.” you say. \n“Well if you say so. It’s probably nothing. Let’s hurry up so that we can get back.” \nYou and Trent approach the outpost fence. \nBeyond the fence is a forest, which unfortunately happens to be dying due to the increasing temperatures in the region. \nYou scan across the landscape, trying to assess what could have possibly been in the shadows. \n“Are we done yet? I told you, there is absolutely nothing here.” Trent cuts in, slightly annoyed by the delay. \nHe is about to say more, when you hear something. “Be quiet! Stay still!” you urgently whisper. \nJust ahead in the clearing, you can make out shapes moving. Clearly, something is up. \nYou can see about 5 people, armed with crossbows and daggers, in a huddle discussing something in hushed tones. \n“What is it?” Trent worriedly asks. You wordlessly point ahead. \n“This is bad, this is really bad. We’ve got to leave now!” Trent says frantically. \nYou consider the scenarios.";
     textForMyLevel[2] = "“You know what, you might be right.” you say to Trent, as both of you pick up the pace to head to the Town Square. \nYou continue on your way to the Town Square, albeit a little apprehensive and what you may have witnessed. \nYou reach the Town Square and are about to carry on with your tasks, but you consider notifying the town guard of the strange sightings. \nSuddenly, you hear rumbling from the direction you just arrived from. You gaze towards the bystanders, but the looks on their face are that of fear. \nPerplexed, you turn around. “Shoot.” Trent says in a low tone. \nUp ahead, about 100 metres or so, the 5 people you saw earlier are charging towards the village. At full speed. Armed with their weapons. \nThe buffest of the group, probably the leader, yells in a gruff voice “Raiders, ATTACK!” Things are not looking good. \n“Uh, oops.” Trent says nervously, as he begins to back away into the crowd. \nOther bystanders immediately begin to scramble, running in all directions away from the incoming threat. \n“Alert the town guard!” you proclaim, but you realize that backup won’t be able to reach in time. \nBefore you can make a move, the raiders enter the town and begin looting. \nYou look at the vulnerable bystanders running around, and realize how defenseless the town is. You know what you have to do. \nPeople are counting on you. You have to defend.";
@@ -60,6 +71,7 @@ class BeginCYOAState extends State {
     buttonTwoText[3] = "Continue";
   }
 
+  // drawing onto the screen (called each frame)
   void draw () {
     background(#E0EEE0);
 
@@ -93,7 +105,7 @@ class BeginCYOAState extends State {
   }
 
   // -----------------------------------------------------
-
+  // printing the text for the buttons
   void PrintMyButtonTexts() {
     textFont(font2, 18);
     fill(0);
@@ -103,11 +115,12 @@ class BeginCYOAState extends State {
     }
   }
   // -----------------------------------------------------
-
+  // handling when the mouse is pressed
   void mousePressed() {
     playerChoice = buttonSelection ();
   }
 
+  // handling events for button presses
   int buttonSelection () {
     // default 
     int thingToReturn = 0;
@@ -126,9 +139,9 @@ class BeginCYOAState extends State {
   }
 
   // -----------------------------------------------------
-
+  // functions for the various levels
   void LevelZero () {
-
+    // depending on choice, we change the current level
     if (playerChoice == 1) {
       levelNumber = 1;
       playerChoice = 0;
@@ -146,6 +159,7 @@ class BeginCYOAState extends State {
   }
 
   void LevelOne () {
+    // depending on choice, we change the current level
     if (playerChoice == 1)
     {
       levelNumber = 3;
@@ -164,6 +178,7 @@ class BeginCYOAState extends State {
   }
 
   void LevelTwo () {
+    // depending on choice, we change the current level
     if (playerChoice == 1) {
       playerChoice = 0;
       raidersFightTextAnimation();
@@ -178,6 +193,7 @@ class BeginCYOAState extends State {
   }
 
   void LevelThree() {
+    // depending on choice, we change the current level
     if (playerChoice == 1) {
       playerChoice = 0;
       raidersFightTextAnimation();
@@ -193,7 +209,7 @@ class BeginCYOAState extends State {
 
 
   // -----------------------------------------------------
-
+  // print the text for the current level
   void PrintMyLevelText() {
     textFont(font, 20);
     fill(#000080);

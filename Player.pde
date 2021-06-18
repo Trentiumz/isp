@@ -1,7 +1,11 @@
+// the different classes
 enum PlayerClass {
   Knight, Wizard, Archer
 };
+
+// the information for the player - this should be persisted throughout the game
 class PlayerInfo {
+  // basic statistics
   float health;
   float maxHealth;
   float baseA1Attack;
@@ -12,11 +16,14 @@ class PlayerInfo {
   float speed;
   PlayerClass playerClass;
   
+  // the "levels" of its stats; keeps track of how many times something has been upgraded so that we can implement a "level cap"
   int healthLevel;
   int speedLevel;
   int a1AtkLevel;
   int a2AtkLevel;
+  
   PlayerInfo(float maxHealth, float A1Damage, float A2Damage, int A1Frames, int A2Frames, float speed, int coins, PlayerClass currentClass) {
+    // initialize variables
     this.health = maxHealth;
     this.maxHealth = maxHealth;
     baseA1Attack = A1Damage;
@@ -32,12 +39,4 @@ class PlayerInfo {
     a1AtkLevel = 1;
     a2AtkLevel = 1;
   }
-}
-
-class OverworldPlayer{
-  
-}
-
-class DungeonPlayer{
-  
 }

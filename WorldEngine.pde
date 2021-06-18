@@ -194,7 +194,7 @@ class Camera {
     this.y = y;
   }
 
-  // alters the matrix so that drawing onto the world "using normal graphic functions" will result in its proper position relative to the screen
+  // alters the matrix so that drawing onto the world "using normal graphic functions" will result in its proper position within the world relative to the screen
   void alterMatrix() {
     translate(-x, -y);
   }

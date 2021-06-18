@@ -1,3 +1,4 @@
+// template for the different environments
 abstract class EnvironmentState {
   abstract void render();
   abstract void tick();
