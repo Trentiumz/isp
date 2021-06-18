@@ -9,5 +9,6 @@ We'd like to thank ~~google~~ the various artists for allowing us to ~~steal~~ b
 
 Furthermore, Pradyumn & Kevin were two collaborators that worked on this project with me
 
-Furthermore, I would like to thank cheollie (github at https://github.com/cheollie)
+Furthermore, I would like to thank cheollie (github at https://github.com/cheollie) for super pog art and kawaii mc's (wizidette >>)
+
 Thanks to aaron for moral support and for beta testing :D (AZron; github at https://github.com/AAZZAZRON)
