@@ -827,7 +827,7 @@ abstract class DefaultDungeon extends DungeonState {
     }
     void attack2() {
       // if the frames from now to the last frame is more than the frames per attack
-      if (curFrame - lastAttackFrame2 >= character.framesBetweenA2 && pointDistance(curWorld.camera.getRealX(mouseX), curWorld.camera.getRealY(mouseY), centerX(), centerY()) < 350) {
+      if (curFrame - lastAttackFrame2 >= character.framesBetweenA2) {
         // then add a fireball projectile
         curWorld.addProjectile(new WizardFireball(curWorld.camera.getRealX(mouseX), curWorld.camera.getRealY(mouseY), 100, character.baseA2Attack, 30, 5));
         lastAttackFrame2 = curFrame;

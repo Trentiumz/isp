@@ -37,7 +37,7 @@ class MainMenuState extends State {
   String button = "homePage";
 
   void startGame() {
-    curState = new ClassChoiceState();
+    curState = new BeginCYOAState();
   }
 
   void setup() {
@@ -257,11 +257,12 @@ class DeadScreen extends State {
 
   EnvironmentState changeTo;
   DeadScreen(EnvironmentState changeTo, PlayerClass died) {
-    // TODO ADD OTHER DEATH SCREENS
     if (died == PlayerClass.Knight) {
       curAnimation = knightDeadAnimation;
     } else if (died == PlayerClass.Archer) {
       curAnimation = archerDeadAnimation;
+    } else {
+      curAnimation = wizardDeadAnimation;
     }
     curFrame = 0;
     this.changeTo = changeTo;
