@@ -260,6 +260,8 @@ class DeadScreen extends State {
     // TODO ADD OTHER DEATH SCREENS
     if (died == PlayerClass.Knight) {
       curAnimation = knightDeadAnimation;
+    } else if (died == PlayerClass.Archer) {
+      curAnimation = archerDeadAnimation;
     }
     curFrame = 0;
     this.changeTo = changeTo;
@@ -405,7 +407,7 @@ class UpgradingState extends State {
   }
   void mousePressed() {
     updateCost();
-    
+
     int maxLevel = storyDungeonsCompleted + 1;
     if (pointDistance(mouseX, mouseY, backX + backW, backY) < 25) {
       curState = new DefaultState();
@@ -490,7 +492,7 @@ class UpgradingState extends State {
     text("X", backX + backW, backY + 10);
 
     image(playerIcon, playerX, playerY);
-    
+
     textFont(upgradingDescription);
     textSize(12);
     textAlign(CENTER);

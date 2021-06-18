@@ -267,6 +267,22 @@ void loadDeathAnimations() {
     knightDeadAnimation[i] = loadImage("animations/dead/knight/frame_" + sNum + "_delay-0.1s.gif");
     knightDeadAnimation[i].resize(width, height);
   }
+  
+  int numArcherFrames = 56;
+  archerDeadAnimation = new PImage[numArcherFrames];
+  for (int i = 0; i < numKnightFrames; ++i) {
+    String sNum = numTo2Characters(i);
+    archerDeadAnimation[i] = loadImage("animations/dead/archer/frame_" + sNum + "_delay-0.1s.gif");
+    archerDeadAnimation[i].resize(width, height);
+  }
+  
+  int numWizardFrames = 56;
+  wizardDeadAnimation = new PImage[numWizardFrames];
+  for (int i = 0; i < numKnightFrames; ++i) {
+    String sNum = numTo2Characters(i);
+    wizardDeadAnimation[i] = loadImage("animations/dead/wizard/frame_" + sNum + "_delay-0.1s.gif");
+    wizardDeadAnimation[i].resize(width, height);
+  }
 }
 
 // converts a number and "buffs" it up to 2 characters - returning a string
@@ -292,11 +308,11 @@ String numTo3Characters(int num) {
 // gets the starting statistics for a player of some class
 PlayerInfo getStartingStats(PlayerClass chosen) {
   if (chosen == PlayerClass.Knight) {
-    return new PlayerInfo(100, 7, 4, 7, 30, 3, 100, PlayerClass.Knight);
+    return new PlayerInfo(100, 8, 6, 7, 30, 3, 100, PlayerClass.Knight);
   } else if (chosen == PlayerClass.Wizard) {
     return new PlayerInfo(70, 7, 4, 30, 60, 3, 100, PlayerClass.Wizard);
   } else if (chosen == PlayerClass.Archer) {
-    return new PlayerInfo(70, 10, 10, 16, 30, 5, 100, PlayerClass.Archer);
+    return new PlayerInfo(70, 8, 10, 16, 30, 5, 100, PlayerClass.Archer);
   } else {
     println("somehow the chosen class isn't a class!");
     return null;

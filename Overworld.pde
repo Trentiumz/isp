@@ -585,9 +585,9 @@ class HospitalEnvironment extends EnvironmentState {
       fill(0, 0, 0, 0);
       stroke(255);
       strokeWeight(0.5);
-      rect(barLeft, y - 7, barWidth, 5);
+      rect(barLeft, y - 5 - topMargin, barWidth, 5);
       fill(255, 0, 0);
-      rect(barLeft, y - 7, barWidth * character.health / character.maxHealth, 5);
+      rect(barLeft, y - 5 - topMargin, barWidth * character.health / character.maxHealth, 5);
     }
   }
 
