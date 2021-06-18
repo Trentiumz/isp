@@ -163,6 +163,8 @@ class OverworldEnvironment extends EnvironmentState {
     float frontMargin, backMargin, topMargin, botMargin;
     final float speedMultiplier = 3;
 
+    final float overworldSpeed = 15;
+
     OverPlayer(float x, float y, int w, int h, float backMargin, float frontMargin, float topMargin, float botMargin, PlayerInfo character, PImage idle, PImage walk1, PImage walk2) {
       super(x + backMargin, y + topMargin, w - backMargin - frontMargin, h - topMargin - botMargin);
       // set the margins & initialize variables
@@ -190,21 +192,21 @@ class OverworldEnvironment extends EnvironmentState {
       lastWalkFrame = curFrame;
     }
     void moveRight() {
-      curWorld.moveEntitySoft(this, min(character.speed * speedMultiplier, 15), 0);
+      curWorld.moveEntitySoft(this, overworldSpeed, 0);
       lastHorizontal = Direction.right;
       movedSpriteUpdate();
     }
     void moveLeft() {
-      curWorld.moveEntitySoft(this, -min(character.speed * speedMultiplier, 15), 0);
+      curWorld.moveEntitySoft(this, -overworldSpeed, 0);
       lastHorizontal = Direction.left;
       movedSpriteUpdate();
     }
     void moveUp() {
-      curWorld.moveEntitySoft(this, 0, -min(character.speed * speedMultiplier, 15));
+      curWorld.moveEntitySoft(this, 0, -overworldSpeed);
       movedSpriteUpdate();
     }
     void moveDown() {
-      curWorld.moveEntitySoft(this, 0, min(character.speed * speedMultiplier, 15));
+      curWorld.moveEntitySoft(this, 0, overworldSpeed);
       movedSpriteUpdate();
     }
     void tick() {

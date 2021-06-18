@@ -255,10 +255,14 @@ class DeadScreen extends State {
   PImage[] curAnimation;
   int curFrame;
 
-  DeadScreen(PlayerClass died) {
-
-    curAnimation = knightDeadAnimation;
+  EnvironmentState changeTo;
+  DeadScreen(EnvironmentState changeTo, PlayerClass died) {
+    // TODO ADD OTHER DEATH SCREENS
+    if (died == PlayerClass.Knight) {
+      curAnimation = knightDeadAnimation;
+    }
     curFrame = 0;
+    this.changeTo = changeTo;
   }
   void tick() {
     curFrame++;
@@ -267,6 +271,7 @@ class DeadScreen extends State {
   }
   void mousePressed() {
     curState = new DefaultState();
+    changeEnvironment(changeTo);
   }
   void render() {
     image(curAnimation[(curFrame / 2) % curAnimation.length], 0, 0);
@@ -375,8 +380,6 @@ class UpgradingState extends State {
 
   int upgradeCoins;
 
-  final int maxLevel = 6;
-
   UpgradingState(PlayerInfo character) {
     this.character = character;
     mouseOn = UpgradingButton.noButton;
@@ -402,6 +405,8 @@ class UpgradingState extends State {
   }
   void mousePressed() {
     updateCost();
+    
+    int maxLevel = storyDungeonsCompleted + 1;
     if (pointDistance(mouseX, mouseY, backX + backW, backY) < 25) {
       curState = new DefaultState();
     } else if (mouseOn == UpgradingButton.health) {
@@ -485,6 +490,13 @@ class UpgradingState extends State {
     text("X", backX + backW, backY + 10);
 
     image(playerIcon, playerX, playerY);
+    
+    textFont(upgradingDescription);
+    textSize(12);
+    textAlign(CENTER);
+    fill(0);
+    int maxLevel = storyDungeonsCompleted + 1;
+    text("Max Level: " + maxLevel, 300, 125);
   }
 }
 

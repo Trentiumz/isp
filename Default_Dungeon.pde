@@ -58,11 +58,6 @@ abstract class DefaultDungeon extends DungeonState {
   void dungeonCompletedAnimation() {
     
   }
-
-  // the player died animation
-  void playerDiedAnimation() {
-    curState = new DeadScreen(info.playerClass);
-  }
   
   // when the state is exited
   void exitState(){
@@ -77,8 +72,7 @@ abstract class DefaultDungeon extends DungeonState {
   void playerDied() {
     // revive the player slightly, giving them a few health buffs
     curWorld.player.character.health = min(curWorld.player.character.maxHealth, 10);
-    playerDiedAnimation();
-    dungeonExited();
+    curState = new DeadScreen(previous, info.playerClass);
   }
 
   void playBackgroundMusic() {

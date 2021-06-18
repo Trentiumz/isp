@@ -138,6 +138,11 @@ class CoinsDungeon extends DefaultDungeon {
     // draw the image onto the screen
     void render() {
       image(chest, x, y);
+      textFont(mainMenuFont3);
+      textSize(14);
+      textAlign(LEFT);
+      fill(255);
+      text("Click the chest!", x, y - 14);
     }
   }
 }
