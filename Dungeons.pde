@@ -190,6 +190,21 @@ class MazeDungeon extends DefaultDungeon {
     curWorld.addEnemy(new Zombie(19*50, 10*50, 30, 30));
     curWorld.addEnemy(new Zombie(20*50, 10*50, 30, 30));
   }
+
+  void render() {
+    super.render();
+    pushMatrix();
+    curWorld.camera.alterMatrix();
+
+    fill(#00ECFF, 150);
+    rect(22*World.gridSize, 1 * World.gridSize, 3 * World.gridSize, World.gridSize);
+    fill(0);
+    textFont(mainMenuFont3);
+    textSize(12);
+    textAlign(CENTER);
+    text("Step here", 22 * World.gridSize + 1.5 * World.gridSize, World.gridSize + World.gridSize / 2);
+    popMatrix();
+  }
 }
 
 // the third level dungeon - 3 rooms of skeleton knights
@@ -269,9 +284,19 @@ class L3RoomDungeon extends DefaultDungeon {
     for (int c = 8 * 50; c <= 16*50; c += 50) {
       for (int r = 9 * 50; r <= 11*50; r += 50) {
         if (random(1) > 0.6) {
-          curWorld.addEnemy(new Skeleton(c, r, skeletonWidth, skeletonHeight));
+          curWorld.addEnemy(new Skeleton(c, r));
         }
       }
+    }
+  }
+
+  // adding a random enemy that spawns in room 2
+  void addRandomR2Enemy(float c, float r) {
+    float enemyRandom = random(1);
+    if (enemyRandom < 0.5) {
+      curWorld.addEnemy(new Goblin(c, r));
+    } else {
+      curWorld.addEnemy(new Zombie(c, r));
     }
   }
 
@@ -281,16 +306,28 @@ class L3RoomDungeon extends DefaultDungeon {
     for (int c = 30 * 50; c <= 34*50; c += 50) {
       for (int r = 5 * 50; r <= 7*50; r += 50) {
         if (random(1) > 0.6) {
-          curWorld.addEnemy(new Skeleton(c, r, skeletonWidth, skeletonHeight));
+          addRandomR2Enemy(c, r);
         }
       }
     }
     for (int c = 36 * 50; c <= 41*50; c += 50) {
       for (int r = 5 * 50; r <= 7*50; r += 50) {
         if (random(1) > 0.6) {
-          curWorld.addEnemy(new Skeleton(c, r, skeletonWidth, skeletonHeight));
+          addRandomR2Enemy(c, r);
         }
       }
+    }
+  }
+
+  // adds a random enemy for the third room
+  void addRandomR3Enemy(float c, float r) {
+    float enemyRandom = random(1);
+    if (enemyRandom < 0.33) {
+      curWorld.addEnemy(new Goblin(c, r));
+    } else if (enemyRandom < 0.66) {
+      curWorld.addEnemy(new Zombie(c, r));
+    } else {
+      curWorld.addEnemy(new Skeleton(c, r));
     }
   }
 
@@ -300,28 +337,28 @@ class L3RoomDungeon extends DefaultDungeon {
     for (int c = 56 * 50; c <=68*50; c += 50) {
       for (int r = 7 * 50; r <= 9*50; r += 50) {
         if (random(1) > 0.6) {
-          curWorld.addEnemy(new Skeleton(c, r, skeletonWidth, skeletonHeight));
+          addRandomR3Enemy(c, r);
         }
       }
     }
     for (int c = 58* 50; c <= 66*50; c += 50) {
       for (int r = 2 * 50; r <= 5*50; r += 50) {
         if (random(1) > 0.6) {
-          curWorld.addEnemy(new Skeleton(c, r, skeletonWidth, skeletonHeight));
+          addRandomR3Enemy(c, r);
         }
       }
     }
     for (int c = 56 * 50; c <= 66*50; c += 50) {
       for (int r = 11 * 50; r <= 15*50; r += 50) {
         if (random(1) > 0.6) {
-          curWorld.addEnemy(new Skeleton(c, r, skeletonWidth, skeletonHeight));
+          addRandomR3Enemy(c, r);
         }
       }
     }
     for (int c = 70 * 50; c <= 70*50; c += 50) {
       for (int r = 2 * 50; r <= 15*50; r += 50) {
         if (random(1) > 0.6) {
-          curWorld.addEnemy(new Skeleton(c, r, skeletonWidth, skeletonHeight));
+          addRandomR3Enemy(c, r);
         }
       }
     }
@@ -376,6 +413,9 @@ class DragonBossDungeon extends DefaultDungeon {
 
   // enemies to spawn (when a dragon spawns enemies, this prevents concurrentmodificationerror)
   ArrayList<Enemy> toSpawn;
+
+  // maximum total number of enemies with dragon
+  final int totalDragonEnemies = 20;
 
   DragonBossDungeon(EnvironmentState previous, PlayerInfo character) {
     super(previous, character);
@@ -607,7 +647,7 @@ class DragonBossDungeon extends DefaultDungeon {
     // attack for spawning minions
     void spawnMinions() {
       for (float x = 35*50; x <= 39*50; x += 60) {
-        for (float y = 7*50; y <= 9 * 50; y += 50) {
+        for (float y = 7*50; y <= 9 * 50 && toSpawn.size() + curWorld.enemies.size() < totalDragonEnemies; y += 50) {
           Skeleton toAdd = new Skeleton(x, y, skeletonWidth, skeletonWidth, 10000, 10000);
           toAdd.seesPlayer = true;
           toSpawn.add(toAdd);
@@ -826,6 +866,9 @@ class SerpantBossDungeon extends DefaultDungeon {
   // enemies to add (can't add them directly, as it causes concurrentmodificationexception)
   ArrayList<Enemy> enemiesToAdd;
 
+  // maximum number of total spawned enemies
+  final int totalSerpantEnemies = 20;
+
   SerpantBossDungeon(EnvironmentState previous, PlayerInfo character) {
     super(previous, character);
   }
@@ -1010,7 +1053,7 @@ class SerpantBossDungeon extends DefaultDungeon {
     void summon() {
       // summon skeletons in a grid
       for (int x = 35*50; x <= 37*50; x += 50) {
-        for (int y = 7*50; y <= 9*50; y += 50) {
+        for (int y = 7*50; y <= 9*50 && enemiesToAdd.size() + curWorld.enemies.size() < totalSerpantEnemies; y += 50) {
           Skeleton toAdd = new Skeleton(x, y, skeletonWidth, skeletonHeight);
           toAdd.seesPlayer = true;
           enemiesToAdd.add(toAdd);
@@ -1286,7 +1329,7 @@ class GiantBossDungeon extends DefaultDungeon {
   PImage guardRight, guardLeft;
   final static int giantGuardWidth=45, giantGuardHeight=50;
   final int giantGuardFPA=30;
-  final float giantGuardRange=5, giantGuardSightRange=300, giantGuardPlayerTargettedRange=600, giantGuardDamage=40, giantGuardSpeed=3, giantGuardHealth=400;
+  final float giantGuardRange=5, giantGuardSightRange=300, giantGuardPlayerTargettedRange=600, giantGuardDamage=40, giantGuardSpeed=3, giantGuardHealth=200;
 
   // parameters/stats for the giant itself
   PImage giant;

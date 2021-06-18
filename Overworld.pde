@@ -9,18 +9,18 @@ class OverworldEnvironment extends EnvironmentState {
   void enterHospital() {
   }
 
-  void playBackgroundMusic(){
+  void playBackgroundMusic() {
     outdoorsBGM.loop();
   }
-  void stopBackgroundMusic(){
+  void stopBackgroundMusic() {
     outdoorsBGM.stop();
   }
-  
-  void exitState(){
-   stopBackgroundMusic(); 
+
+  void exitState() {
+    stopBackgroundMusic();
   }
-  void enterState(){
-   playBackgroundMusic(); 
+  void enterState() {
+    playBackgroundMusic();
   }
 
   void enterStoryDungeon() {
@@ -55,9 +55,9 @@ class OverworldEnvironment extends EnvironmentState {
     curWorld = getWorldOf("over_maps/overworld1.txt", curPlayer);
     this.setup();
   }
-  
-  void setup(){
-   playBackgroundMusic(); 
+
+  void setup() {
+    playBackgroundMusic();
   }
 
   class Overworld extends World {
@@ -357,7 +357,7 @@ class OverworldEnvironment extends EnvironmentState {
       enterDoors();
     }
     if (key == 'm' || key == 'M') {
-      curState = new OverworldMenuState(curState);
+      curState = new OverworldMenuState(curState, curPlayer.character);
     }
   }
 

@@ -108,7 +108,7 @@ void setup() {
   currentMessage = "";
   curState = new LoadingState();
 
-  storyDungeonsCompleted = 0;
+  storyDungeonsCompleted = 1;
 
   frameRate(30);
 }

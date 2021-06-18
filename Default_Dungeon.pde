@@ -507,6 +507,8 @@ abstract class DefaultDungeon extends DungeonState {
 
     int spawnFrame; // frame in which the zap was spawned (for animation)
     int existFrames; // the amount of time the zap should stay on the screen
+    
+    final float maxRange = 800;
     WizardZap(float attackX, float attackY, float damage) {
       // initalize values
       closestEnemy = null;
@@ -515,7 +517,7 @@ abstract class DefaultDungeon extends DungeonState {
       // get the closest enemy iteratively
       for (Enemy enemy : curWorld.enemies) {
         float enemyDistance = pointDistance(enemy.x + enemy.w / 2, enemy.y + enemy.h / 2, attackX, attackY);
-        if (closestEnemy == null || enemyDistance < closestDistance) {
+        if ((closestEnemy == null || enemyDistance < closestDistance) && enemyDistance < maxRange) {
           closestEnemy = enemy;
           closestDistance = enemyDistance;
         }
@@ -1186,7 +1188,7 @@ abstract class DefaultDungeon extends DungeonState {
   
   void keyPressed(){
     if(key == 'm' || key == 'M'){
-     curState = new DungeonMenuState(curState, this); 
+     curState = new DungeonMenuState(curState, this, curPlayer.character); 
     }
   }
 }

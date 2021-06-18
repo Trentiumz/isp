@@ -284,11 +284,17 @@ class OverworldMenuState extends State {
   float backX=400, backY=300, backW=200, backH=200;
   float menuX=420, menuY=340, menuW=100, menuH=40;
   float exitX=420, exitY=420, exitW=100, exitH=40;
+  int playerImgX=510, playerImgY=350, playerImgW=100, playerImgH=100;
+
+  PImage playerIcon;
 
   color defaultColor = #FFA2F9;
   color hoverColor = #FF006B;
-  OverworldMenuState(State previous) {
+  OverworldMenuState(State previous, PlayerInfo character) {
     this.previous = previous;
+
+    playerIcon = getIcon(character);
+    playerIcon.resize(playerImgW, playerImgH);
   }
   boolean mouseOnMenuButton() {
     return pointInBox(mouseX, mouseY, menuX, menuY, menuW, menuH);
@@ -346,6 +352,8 @@ class OverworldMenuState extends State {
     textSize(20);
     fill(255);
     text("X", backX + backW, backY + 10);
+
+    image(playerIcon, playerImgX, playerImgY);
   }
 }
 
@@ -486,11 +494,17 @@ class DungeonMenuState extends State {
   float exitX=420, exitY=420, exitW=100, exitH=40;
   float hardExitX=420, hardExitY=500, hardExitW=100, hardExitH=40;
 
+  int playerImgX=510, playerImgY=390, playerImgW=100, playerImgH=100;
+  PImage playerIcon;
+
   color defaultColor = #FFA2F9;
   color hoverColor = #FF006B;
-  DungeonMenuState(State previous, DungeonState dungeonEnvironment) {
+  DungeonMenuState(State previous, DungeonState dungeonEnvironment, PlayerInfo character) {
     this.previous = previous;
     this.dungeonEnvironment = dungeonEnvironment;
+
+    playerIcon = getIcon(character);
+    playerIcon.resize(playerImgW, playerImgH);
   }
   boolean mouseOnMenuButton() {
     return pointInBox(mouseX, mouseY, menuX, menuY, menuW, menuH);
@@ -523,6 +537,8 @@ class DungeonMenuState extends State {
     fill(#FFBC03);
     noStroke();
     rect(backX, backY, backW, backH, 10, 10, 10, 10);
+
+    image(playerIcon, playerImgX, playerImgY);
 
     stroke(255, 0, 0);
     strokeWeight(3);
