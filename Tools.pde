@@ -121,6 +121,8 @@ void loadFiles() {
   dungeonSnakeBossGuardRangedLeft = loadImage("sprites/dungeon/serpantGuard_left.png");
   dungeonGiantBossGuardMeleeRight = loadImage("sprites/dungeon/giantGuardMelee_right.png");
   dungeonGiantBossGuardMeleeLeft = loadImage("sprites/dungeon/giantGuardMelee_left.png");
+  dungeonSkeletonKnightRight = loadImage("sprites/dungeon/skeletonKnight_right.png");
+  dungeonSkeletonKnightLeft = loadImage("sprites/dungeon/skeletonKnight_left.png");
 
   dungeonGiantBossGuardMeleeRight.resize(GiantBossDungeon.giantGuardWidth, GiantBossDungeon.giantGuardHeight);
   dungeonGiantBossGuardMeleeLeft.resize(GiantBossDungeon.giantGuardWidth, GiantBossDungeon.giantGuardHeight);
@@ -130,6 +132,8 @@ void loadFiles() {
   dungeonDragonBossGuardRangedLeft.resize(DragonBossDungeon.rangedWidth, DragonBossDungeon.rangedHeight);
   dungeonSnakeBossGuardRangedRight.resize(SerpantBossDungeon.rangedWidth, SerpantBossDungeon.rangedHeight);
   dungeonSnakeBossGuardRangedLeft.resize(SerpantBossDungeon.rangedWidth, SerpantBossDungeon.rangedHeight);
+  dungeonSkeletonKnightRight.resize(DefaultDungeon.skelKnightWidth, DefaultDungeon.skelKnightHeight);
+  dungeonSkeletonKnightLeft.resize(DefaultDungeon.skelKnightWidth, DefaultDungeon.skelKnightHeight);
 
   dungeonDragonBoss = loadImage("sprites/dungeon/dragon.png");
   dungeonSnakeBossUp = loadImage("sprites/dungeon/serpant_up.png");

@@ -1131,7 +1131,7 @@ abstract class DefaultDungeon extends DungeonState {
   // a very strong skeleton knight, should only be spawned through bosses
   class SkeletonKnight extends MeleeEnemy {
     SkeletonKnight(float x, float y) {
-      super(x, y, skelKnightWidth, skelKnightHeight, framesPerSkelKnightAttack, skelKnightAtkRange, skelKnightSightRange, skelKnightSightRange, skelKnightAtk, skelKnightSpeed, skelKnightHealth, null, null);
+      super(x, y, skelKnightWidth, skelKnightHeight, framesPerSkelKnightAttack, skelKnightAtkRange, skelKnightSightRange, skelKnightSightRange, skelKnightAtk, skelKnightSpeed, skelKnightHealth, dungeonSkeletonKnightRight, dungeonSkeletonKnightLeft);
       seesPlayer = true;
     }
   }

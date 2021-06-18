@@ -3,8 +3,8 @@
  Teacher: Philip Guglielmi
  Description: A dungeon game
  NEEDED LIBRARIES: processing.sound
- */
-
+ */ 
+ 
 // Usage of State Pattern - each class represents a different state & different conditions change these global variables to other states
 //   The State Pattern uses inheritance (I used abstract classes and/or interfaces)
 
@@ -58,6 +58,7 @@ PImage dungeonDragonBossGuardMeleeRight, dungeonDragonBossGuardMeleeLeft;
 PImage dungeonDragonBossGuardRangedRight, dungeonDragonBossGuardRangedLeft;
 PImage dungeonSnakeBossGuardRangedRight, dungeonSnakeBossGuardRangedLeft;
 PImage dungeonGiantBossGuardMeleeRight, dungeonGiantBossGuardMeleeLeft;
+PImage dungeonSkeletonKnightRight, dungeonSkeletonKnightLeft;
 
 // environmental sprites
 PImage coinsDungeonChest;
