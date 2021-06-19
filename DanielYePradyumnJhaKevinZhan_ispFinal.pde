@@ -51,6 +51,7 @@ PImage[] archerDeadAnimation;
 PImage[] wizardDeadAnimation;
 PImage[] levelCompletedAnimation;
 PImage[] dancingPugAnimation;
+PImage[] wizidettePoses;
 Movie fightDescription;
 
 // the sprites for the enemies in boss dungeons
@@ -114,6 +115,8 @@ PFont endCYOAFont;
 
 // number of dungeons completed
 int storyDungeonsCompleted;
+
+PFont tutorialFont;
 
 void setup() {
   // set the size

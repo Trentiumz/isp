@@ -294,6 +294,21 @@ void loadFiles() {
 
   loadDancePugAnimation();
 
+  // load in the tutorial
+  currentMessage = "loading tutorial...";
+  tutorialFont = loadFont("tutorial/GillSansMT-Italic-18.vlw");
+
+  wizidettePoses = new PImage[4];
+  wizidettePoses[0] = loadImage("sprites/wizidette/wizardAttack.png");
+  wizidettePoses[1] = loadImage("sprites/wizidette/wizardWalk2.png");
+  wizidettePoses[2] = loadImage("sprites/wizidette/wizardIdle.png");
+  wizidettePoses[3] = loadImage("sprites/wizidette/wizardWalk1.png");
+  
+  wizidettePoses[0].resize(150, 150);
+  wizidettePoses[1].resize(150, 150);
+  wizidettePoses[2].resize(150, 150);
+  wizidettePoses[3].resize(150, 150);
+
   // it is completed... this is also used for the loading state to know that we can progress to progress
   currentMessage = "completed";
 }

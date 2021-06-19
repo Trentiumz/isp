@@ -1,6 +1,6 @@
 /*
   Description: The two states for handling when the player is inside the overworld
-*/
+ */
 
 // enum for the current element in the overworld
 enum OverworldElement {
@@ -483,7 +483,7 @@ class HospitalEnvironment extends EnvironmentState {
     curPlayer.character.health = curPlayer.character.maxHealth;
   }
   void upgrades() { 
-    curState = new UpgradingState(curPlayer.character);
+    curState = new UpgradingState(curState, curPlayer.character);
   }
 
   // returns if the player has stepped on a door
@@ -730,21 +730,26 @@ class HospitalEnvironment extends EnvironmentState {
     }
   }
 
+  // checking for if the player is on any of the doors
+  void enterDoors() {
+    if (stepDoor(50, 450, 50, 50)) {
+      exitHospitalClicked();
+    }
+    if (stepDoor(450, 50, 50, 50)) {
+      healing();
+    }
+    if (stepDoor(450, 450, 50, 50)) {
+      upgrades();
+    }
+  }
+
   // handling key presses
   void keyPressed() {
     // when 'e' is pressed, see if we're at any door
     if (key == 'e' || key == 'E') {
-      if (stepDoor(50, 450, 50, 50)) {
-        exitHospitalClicked();
-      }
-      if (stepDoor(450, 50, 50, 50)) {
-        healing();
-      }
-      if (stepDoor(450, 450, 50, 50)) {
-        upgrades();
-      }
+      enterDoors();
     }
-    
+
     // open the menu when 'm' is clicked
     if (key == 'm' || key == 'M') {
       curState = new OverworldMenuState(curState, curPlayer.character);

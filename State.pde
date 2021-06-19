@@ -455,14 +455,18 @@ class UpgradingState extends State {
 
   int upgradeCoins; // the coins needed for upgrading
 
+  State previous;
+
   // constructor initializing variables
-  UpgradingState(PlayerInfo character) {
+  UpgradingState(State previous, PlayerInfo character) {
     this.character = character;
     mouseOn = UpgradingButton.noButton;
     updateCost();
 
     this.playerIcon = getIcon(character);
     this.playerIcon.resize(playerW, playerH);
+
+    this.previous = previous;
   }
 
   void tick() {
@@ -492,7 +496,7 @@ class UpgradingState extends State {
 
     // handling the events for various buttons (for most of the buttons, they will upgrade the player and multiply his/her statistics before reducing the coins and increasing the level)
     if (pointDistance(mouseX, mouseY, backX + backW, backY) < 25) {
-      curState = new DefaultState();
+      curState = previous;
     } else if (mouseOn == UpgradingButton.health) {
       if (character.coins >= upgradeCoins && character.healthLevel < maxLevel) {
         character.maxHealth *= 1.9;
@@ -780,8 +784,7 @@ class ClassChoiceState extends State {
 
   // start the game (when a class has been chosen)
   void startGame(PlayerInfo player) {
-    curEnvironment = new OverworldEnvironment(player);
-    curState = new DefaultState();
+    curState = new TutorialState(player);
     titleBGM.stop();
   }
   void tick() {
@@ -901,9 +904,11 @@ class EndState extends State {
   PImage img3;
   PImage img4;
   PFont font;
-  
-  EndState(){
-   setup(); 
+
+  final int framesNeeded=50;
+  int curFrame;
+  EndState() {
+    setup();
   }
 
   void setup() {
@@ -912,14 +917,18 @@ class EndState extends State {
     img3 = endCYOAImg3;
     img4 = endCYOAImg4;
     font = endCYOAFont;
+    curFrame = 0;
   }
 
   void mousePressed() {
-    changeEnvironment(null);
-    curState = new MainMenuState();
+    if (curFrame > framesNeeded) {
+      changeEnvironment(null);
+      curState = new MainMenuState();
+    }
   }
 
   void tick() {
+    curFrame++;
   }
   void render() {
     background(#E0EEE0);
