@@ -46,6 +46,7 @@ PImage[] knightDeadAnimation;
 PImage[] archerDeadAnimation;
 PImage[] wizardDeadAnimation;
 PImage[] levelCompletedAnimation;
+PImage[] dancingPugAnimation;
 Movie fightDescription;
 
 // the sprites for the enemies in boss dungeons

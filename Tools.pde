@@ -1,6 +1,6 @@
 /*
   Description: Tool methods and functions
-*/
+ */
 
 // returns whether or not a box defined by (x1, y1, w1, h1) is touching the box defined by (x2, y2, w2, h2)
 boolean boxCollided(float x1, float y1, float w1, float h1, float x2, float y2, float w2, float h2) {
@@ -65,7 +65,6 @@ float pointDistance(float x1, float y1, float x2, float y2) {
 }
 
 // returns the clockwise angle of the vector defined by (x,y) from the vector in the direction "right"
-//   uses trigonometry, which I already knew previously
 float angleOf(float x, float y) {
   if (x > 0)
     return asin(y / sqrt(pow(x, 2) + pow(y, 2)));
@@ -281,12 +280,24 @@ void loadFiles() {
   beginCYOAImg5 = loadImage("cyoa/townRaiders.png");
 
   fightDescription = new Movie(this, "animations/starwars.mp4");
-  
+
   endScreenBackground = loadImage("endScreenBackground.jpg");
   endScreenBackground.resize(width, height);
+  
+  loadDancePugAnimation();
 
   // it is completed... this is also used for the loading state to know that we can progress to progress
   currentMessage = "completed";
+}
+
+// load in animations for a dancing pug
+void loadDancePugAnimation() {
+  int numFrames = 63;
+  dancingPugAnimation = new PImage[numFrames];
+  for (int i = 0; i < numFrames; ++i) {
+    dancingPugAnimation[i] = loadImage("animations/pugDance/749585236400275526-" + i + ".png");
+    dancingPugAnimation[i].resize(200, 200);
+  }
 }
 
 // load the animations for when the player dies

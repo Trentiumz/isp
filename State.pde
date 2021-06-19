@@ -1,6 +1,6 @@
 /*
   Description: The different types of states that are common (ingame menu, main menu, etc.)
-*/
+ */
 
 // template for the current state
 abstract class State {
@@ -908,5 +908,23 @@ class EndState extends State {
     textSize(24);
     textAlign(LEFT);
     text("You make it through the final dungeon, and on the other side, you see the smoke and the gray skies. You see burnt out factories and twigs on the ground. The environment burns, and ash dominates the ground. Goblins, skeletons, zombies, dragons and giants cough within the forests. \"It's over... it's over. We can no longer fight. The humans will wipe us out, just as they have thousands of years ago. They'll destroy our homes, eat us for dinner, and kill us for 'business'.\", says a surviving raider. You look around, and that's when it hits you. Humans have built the factories, operated the stations, created the gray skies and altered the world into a place of fire and tsunamis. These creatures weren't determined to destroy us, they were determined to keep us away from the knowledge of factories, from the knowledge of oil, from the knowledge of burning for energy. After all, of course we would abuse such a simple way of getting energy, ignoring any consequences it may bring. They were simply protecting themselves, from an ignorant race who had already once destroyed their homes. But it doesn't have to be that way. Today is 2021, and we live on Earth. The world is not destroyed, nor does it need to be. We can protect those who live on the earth, both us, and the organisms around us.", 50, 50, width-100, height-100);
+  }
+}
+
+// end state with a dancing pug
+class DancePugState extends State {
+  final int numFrames = 90; // number of total frames
+  int curFrame = 0; // current frame
+  void tick() {
+    curFrame++;
+    // check if the current frame is over total frame
+    if (curFrame > numFrames) {
+      changeEnvironment(null);
+      exit();
+    }
+  }
+  void render() {
+    // draw the current frame
+    image(dancingPugAnimation[curFrame % dancingPugAnimation.length], width - 100, height - 100);
   }
 }
