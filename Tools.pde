@@ -281,9 +281,17 @@ void loadFiles() {
 
   fightDescription = new Movie(this, "animations/starwars.mp4");
 
-  endScreenBackground = loadImage("endScreenBackground.jpg");
-  endScreenBackground.resize(width, height);
-  
+  endCYOAImg = loadImage("cyoa/innerCastle.png");
+  endCYOAImg2 = loadImage("cyoa/wizardTrainer.png");
+  endCYOAImg3 = loadImage("cyoa/archerTrainer.png");
+  endCYOAImg4 = loadImage("cyoa/knightTrainer.png");
+  endCYOAFont = loadFont("cyoa/CenturyGothic-48.vlw");
+
+  endCYOAImg.resize(250, 150);
+  endCYOAImg2.resize(120, 140);
+  endCYOAImg3.resize(120, 140);
+  endCYOAImg4.resize(120, 140);
+
   loadDancePugAnimation();
 
   // it is completed... this is also used for the loading state to know that we can progress to progress

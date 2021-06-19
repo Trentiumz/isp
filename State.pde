@@ -896,18 +896,56 @@ class FightDescriptionState extends State {
 
 // the end screen
 class EndState extends State {
+  PImage img;
+  PImage img2;
+  PImage img3;
+  PImage img4;
+  PFont font;
+  
+  EndState(){
+   setup(); 
+  }
+
+  void setup() {
+    img = endCYOAImg;
+    img2 = endCYOAImg2;
+    img3 = endCYOAImg3;
+    img4 = endCYOAImg4;
+    font = endCYOAFont;
+  }
+
   void mousePressed() {
+    changeEnvironment(null);
     curState = new MainMenuState();
   }
+
   void tick() {
   }
   void render() {
-    image(endScreenBackground, 0, 0);
-    fill(255);
-    textFont(mainMenuFont3);
-    textSize(24);
+    background(#E0EEE0);
+    epilogue();
+  }
+
+  void epilogue() {
+
+    image(img, 0, 660);
+
+    image(img2, 391, 660);
+
+    image(img3, 544, 660);
+
+    image(img4, 711, 660);
+
+    strokeWeight(3);
+    stroke(#000080);
+    fill(#96CDCD, 150);
+    rect(35, 15, 942, 625);  
+
+    fill(#000080);
+    textFont(font);
+    textSize(14.5);
     textAlign(LEFT);
-    text("You make it through the final dungeon, and on the other side, you see the smoke and the gray skies. You see burnt out factories and twigs on the ground. The environment burns, and ash dominates the ground. Goblins, skeletons, zombies, dragons and giants cough within the forests. \"It's over... it's over. We can no longer fight. The humans will wipe us out, just as they have thousands of years ago. They'll destroy our homes, eat us for dinner, and kill us for 'business'.\", says a surviving raider. You look around, and that's when it hits you. Humans have built the factories, operated the stations, created the gray skies and altered the world into a place of fire and tsunamis. These creatures weren't determined to destroy us, they were determined to keep us away from the knowledge of factories, from the knowledge of oil, from the knowledge of burning for energy. After all, of course we would abuse such a simple way of getting energy, ignoring any consequences it may bring. They were simply protecting themselves, from an ignorant race who had already once destroyed their homes. But it doesn't have to be that way. Today is 2021, and we live on Earth. The world is not destroyed, nor does it need to be. We can protect those who live on the earth, both us, and the organisms around us.", 50, 50, width-100, height-100);
+    text("Blinding light fills your vision as you defeat the serpent, the final boss. You remember striking the final blow, when some sort of shockwave \nKO’d you. Dazed, you wake up to find yourself outside of the dungeon. A stone tablet lays in front of you. It pulses in a neon blue glow. \nYou pick it up and begin reading. “If you are seeing this tablet, then by now you probably have defeated the dragon, giant, and serpent. \nYou may have also uncovered the other creatures lurking around within the dungeons. You might think that these beings are of evil origin, \nbut if so, then you are mistaken. You see, all of these beings you fought, were actually mutations caused by Global Climate Change. \nYou see, Global Climate Change is destroying the world, and that is what created these creatures dwelling in these dungeons. \nThe dragon mutated from a lizard, the giant mutated from a tree sapling, and the serpent mutated from a baby worm. \nThey had no fault, they were produced by the Global Climate Change you humans have created. It is not too late to save the world from \nits climate perils. You need to take action to save this planet.” You are shocked. You knew that the climate was feeling different. \nThere were more wildfires, more droughts, more hurricanes near the coastal regions, more tornadoes. But you weren’t aware that this was \nall caused by human actions. You realize that defeating the dungeons was just the beginning. You have to bring this to the attention of the \nKing and his advisors. You set off to visit the castle. After a few hours of non-stop trekking, you reach the palace. Although before you even \nreach inside, thousands of people are cheering your name. They must have heard about your journey in defeating the creatures of the \ndungeons. You are welcomed into the throne room of the palace, where the king is sitting, along with two of his advisors. \n“Hello, I am Prady, the advisor of King Shane. This here is Kev, another advisor. We have heard a lot about your journey to the dungeons, \nand are thankful for your courage and perseverance shown.” “Uh it’s an honor, thank you” you reply, still unable to believe that you are \nin THE palace. Shane, the king, talks. “You have done well. As a reward, you can ask for anything you wish, and as long as it is reasonable, \nfeasible, and just, then we can.” “You see Sir, after I emerged from the dungeons, I found this tablet” you say, passing the tablet to Prady. \n“Ohh, it makes sense now. I had a feeling, but this adds proof. We must take action against this Global Climate Change” Prady says. \n“Exactly!” you reply, hoping that change can happen. “Shane, I think that we should consider some more eco policies. We should aim to \nplant 2 trees for every 1 we cut down, as well as plant more trees in general. We should also reduce any activities which emit a lot of \npollution.” Prady says, addressing Shane and Kev. “What you say makes sense. I will sign orders for that to be implemented after reaching \na consensus with the court. Kev, assemble a meeting with all the advisors and delegates in 1 hour, this is a pressing matter and we must \ndiscuss it soon.” Shane proclaims. “Yes, I will do that” Kev says, as he leaves to assemble the meeting. “And for you, seeing as this journey \nrequired a lot of courage and bravery, I would like to award you with land, gold, and elite gear. In fact, you may need this for a future \nadventure.” Shane says in a serious voice. “What?” you ask. Shane responds. “You see, we have heard of a relic which might be able to \naid us in our fight against Global Climate Change. And we want our best team on it. You will be working with renowned adventurers: \nCheollin the sorceress, Aron the knight, and Fatma the archer. I have also heard of your friend, Trent. I heard of how he and you defended \nyour town from raiders. He too is welcome to join this quest. And meanwhile I will do all I can to pass more eco policies.” “This is an honor” \nyou reply. You know that this is an opportunity to change the world for the better. “And I’m looking forward to working with Cheollin, Aron, \nand Fatma. And Trent too is probably willing to aid in this cause.” you say. Prady replies. “Great, I’ll brief you on the situation. You can \nreturn to your town, we will send communication and arrange for transportation. Also, your town will receive gold, repairs, and resources, \nas a token of our respect.” “Thank you so much! I’m looking forward to finding this relic. Let’s do this.” You emerge back into the courtyard \nof the palace, knowing that you have an opportunity to save the world. The cheers can still be heard, everyone celebrating your victory. \nDeep down you know that you must defend the earth, our only home. And so motivated, you set off back to your home, determined to \nmake a positive change.", 42, 37);
   }
 }
 
