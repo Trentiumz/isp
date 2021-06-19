@@ -1,3 +1,7 @@
+/*
+  Description: Code for the character
+*/
+
 // the different classes
 enum PlayerClass {
   Knight, Wizard, Archer

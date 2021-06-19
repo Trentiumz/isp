@@ -5,18 +5,13 @@
  NEEDED LIBRARIES: processing.sound, processing.video
  */
 import processing.video.*;
+import processing.sound.*;
 
 // Usage of State Pattern - each class represents a different state & different conditions change these global variables to other states
 //   The State Pattern uses inheritance (I used abstract classes and/or interfaces)
-
 // the current state and environment
 State curState;
 EnvironmentState curEnvironment;
-
-// the points for ending 1
-int e1Points = 0;
-int e2Points = 0;
-int e3Points = 0;
 
 // booleans to see if a key is pressed
 boolean[] isPressed = new boolean[500];
@@ -163,6 +158,7 @@ void mouseClicked() {
   curState.mouseClicked();
 }
 
+// THIS METHOD WAS TAKEN FROM https://processing.org/reference/libraries/video/Movie.html
 // Called every time a new frame is available to read
 void movieEvent(Movie m) {
   m.read();

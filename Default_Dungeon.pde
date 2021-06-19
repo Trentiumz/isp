@@ -1,3 +1,6 @@
+/*
+  Description: A "template dungeon" with common code
+*/
 enum DungeonElement {
   Wall, Ground, Empty
 };

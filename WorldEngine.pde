@@ -1,3 +1,7 @@
+/*
+  Description: A basic world engine for the game
+*/
+
 // Entities are the main "things" in the world. In this case they're used for collision detection and to store dimensions of other things
 class Entity {
   // dimensions of the entity

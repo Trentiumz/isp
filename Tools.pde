@@ -1,4 +1,7 @@
-import processing.sound.*;
+/*
+  Description: Tool methods and functions
+*/
+
 // returns whether or not a box defined by (x1, y1, w1, h1) is touching the box defined by (x2, y2, w2, h2)
 boolean boxCollided(float x1, float y1, float w1, float h1, float x2, float y2, float w2, float h2) {
   return x1 + w1 > x2 && x1 < x2 + w2 && y1 + h1 > y2 && y1 < y2 + h2;
@@ -62,6 +65,7 @@ float pointDistance(float x1, float y1, float x2, float y2) {
 }
 
 // returns the clockwise angle of the vector defined by (x,y) from the vector in the direction "right"
+//   uses trigonometry, which I already knew previously
 float angleOf(float x, float y) {
   if (x > 0)
     return asin(y / sqrt(pow(x, 2) + pow(y, 2)));

@@ -1,6 +1,6 @@
 /*
-  Authors: Pradyumn Jha, Daniel Ye, Kevin Zhan
- */
+  Description: The different types of dungeons
+*/
 
 // the common state for all of the dungeons
 abstract class DungeonState extends EnvironmentState {

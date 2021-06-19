@@ -1,3 +1,7 @@
+/*
+  Description: The different types of states that are common (ingame menu, main menu, etc.)
+*/
+
 // template for the current state
 abstract class State {
   abstract void render();

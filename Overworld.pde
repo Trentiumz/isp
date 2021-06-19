@@ -1,3 +1,7 @@
+/*
+  Description: The two states for handling when the player is inside the overworld
+*/
+
 // enum for the current element in the overworld
 enum OverworldElement {
   Wall1, Grass, Path, Hospital, TreeStump, HospitalWall, HospitalDoor, CaveEntrance, Dirt, House1, House2, Sign1, Sign2, Sign3, Sign4

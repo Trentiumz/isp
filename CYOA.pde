@@ -1,3 +1,6 @@
+/*
+  Description: The CYOA code
+*/
 // the Choose your own adventure state done before the game
 class BeginCYOAState extends State {
   // "logic" updates
