@@ -569,6 +569,7 @@ class UpgradingState extends State {
     text("Attack 2 Damage: L" + character.a2AtkLevel, a2AtkX + a2AtkW / 2, a2AtkY + a2AtkH + 14);
     text("Speed: L" + character.speedLevel, speedX + speedW / 2, speedY + speedH + 14);
 
+    textSize(18);
     // draw the coins that the character has as well as the cost of the current upgrade
     text("Coins: " + character.coins, 800, 650);
     text("Cost: " + upgradeCoins, 500, 125);
@@ -586,7 +587,7 @@ class UpgradingState extends State {
 
     // draw in the maximum level for each upgrade
     textFont(upgradingDescription);
-    textSize(12);
+    textSize(18);
     textAlign(CENTER);
     fill(0);
     int maxLevel = storyDungeonsCompleted + 1;
