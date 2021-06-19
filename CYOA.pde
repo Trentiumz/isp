@@ -9,7 +9,7 @@ class BeginCYOAState extends State {
   }
   // once the "fight begins", we continue to the next state
   void raidersFightTextAnimation() {
-    curState = new ClassChoiceState();
+    curState = new FightDescriptionState();
   }
 
   // constructor

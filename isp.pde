@@ -2,9 +2,10 @@
   Authors: Daniel Ye, Pradyumn Jha, Kevin Zhan
  Teacher: Philip Guglielmi
  Description: A dungeon game
- NEEDED LIBRARIES: processing.sound
- */ 
- 
+ NEEDED LIBRARIES: processing.sound, processing.video
+ */
+import processing.video.*;
+
 // Usage of State Pattern - each class represents a different state & different conditions change these global variables to other states
 //   The State Pattern uses inheritance (I used abstract classes and/or interfaces)
 
@@ -50,6 +51,7 @@ PImage[] knightDeadAnimation;
 PImage[] archerDeadAnimation;
 PImage[] wizardDeadAnimation;
 PImage[] levelCompletedAnimation;
+Movie fightDescription;
 
 // the sprites for the enemies in boss dungeons
 PImage dungeonDragonBoss;
@@ -111,6 +113,8 @@ PFont beginCYOAFont, beginCYOAFont2;
 // number of dungeons completed
 int storyDungeonsCompleted;
 
+PImage endScreenBackground;
+
 void setup() {
   // set the size
   size(1000, 800);
@@ -157,4 +161,9 @@ void keyReleased() {
 }
 void mouseClicked() {
   curState.mouseClicked();
+}
+
+// Called every time a new frame is available to read
+void movieEvent(Movie m) {
+  m.read();
 }

@@ -941,6 +941,11 @@ class SerpantBossDungeon extends DefaultDungeon {
   // maximum number of total spawned enemies
   final int totalSerpantEnemies = 20;
 
+  void DungeonCompleted() {
+    dungeonExited();
+    curState = new EndState();
+  }
+
   SerpantBossDungeon(EnvironmentState previous, PlayerInfo character) {
     super(previous, character);
   }
@@ -1937,7 +1942,7 @@ class WarriorDungeon extends DefaultDungeon {
 
       hitPlayer = false;
     }
-    
+
     void tick() {
       float cx = toFollow.centerX();
       float cy = toFollow.centerY();
@@ -1954,7 +1959,7 @@ class WarriorDungeon extends DefaultDungeon {
       // move the sword (go to the next angle)
       curAngle += angleIncrease;
     }
-    
+
     void render() {
       float cx = toFollow.centerX();
       float cy = toFollow.centerY();

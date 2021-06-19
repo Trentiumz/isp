@@ -276,6 +276,11 @@ void loadFiles() {
   beginCYOAImg4 = loadImage("cyoa/forestRaiders.png");
   beginCYOAImg5 = loadImage("cyoa/townRaiders.png");
 
+  fightDescription = new Movie(this, "animations/starwars.mp4");
+  
+  endScreenBackground = loadImage("endScreenBackground.jpg");
+  endScreenBackground.resize(width, height);
+
   // it is completed... this is also used for the loading state to know that we can progress to progress
   currentMessage = "completed";
 }
@@ -344,7 +349,7 @@ String numTo3Characters(int num) {
 // gets the starting statistics for a player of some class
 PlayerInfo getStartingStats(PlayerClass chosen) {
   if (chosen == PlayerClass.Knight) {
-    return new PlayerInfo(100, 6, 6, 7, 30, 3, 100, PlayerClass.Knight);
+    return new PlayerInfo(100, 7, 6, 7, 30, 3, 100, PlayerClass.Knight);
   } else if (chosen == PlayerClass.Wizard) {
     return new PlayerInfo(70, 7, 4, 30, 60, 3, 100, PlayerClass.Wizard);
   } else if (chosen == PlayerClass.Archer) {

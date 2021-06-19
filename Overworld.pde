@@ -740,6 +740,11 @@ class HospitalEnvironment extends EnvironmentState {
         upgrades();
       }
     }
+    
+    // open the menu when 'm' is clicked
+    if (key == 'm' || key == 'M') {
+      curState = new OverworldMenuState(curState, curPlayer.character);
+    }
   }
 
   // "logic" updates each frame

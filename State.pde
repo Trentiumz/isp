@@ -96,7 +96,7 @@ class MainMenuState extends State {
     // print out the instructions onto the page
     textFont(font4);
     textSize(18.5);
-    text("Hello! Welcome to 'Climate Hunters', an action game with choices made by FornaX Fusion Ø Studios. \nThe programmers are Pradyumn J, Daniel Y, and Kevin Z. \nFor action gameplay, utilize the WASD keys to move around the maps. \nLeft click is attack #1, and right click is attack #2. Each attack has different properties. \nAdditionally, there will be an in-game training section, so you can practice there. \nThis program was built with the intent to inform regarding Global Climate Change. \nGlobal Climate Change has a myriad of detrimental effects. \nGreenhouse gas levels are at an all-time high. \nOur oceans are dying. More than 1 million species face extinction. \nDozens of species go extinct every single day. \nWe must each do our part in maintaining the sustainability of our shared planet, for generations to come. \nFor more information regarding Global Climate Change, \ncheck this website (not affiliated with FornaX Fusion Ø Studios): \nhttps://libguides.depaul.edu/c.php?g=253564&p=1690283", 39, 191);
+    text("Hello! Welcome to 'Climate Hunters', an action game with choices made by FornaX Fusion Ø Studios. \nThe programmers are Pradyumn J, Daniel Y, and Kevin Z. \nFor action gameplay, utilize the WASD keys to move around the maps. \nLeft click is attack #1, and right click is attack #2. Each attack has different properties. \n Press 'e' to interact with doors and other interactive objects. Press 'm' to access the in-game menu. \nThis program was built with the intent to inform regarding Global Climate Change. \nGlobal Climate Change has a myriad of detrimental effects. \nGreenhouse gas levels are at an all-time high. \nOur oceans are dying. More than 1 million species face extinction. \nDozens of species go extinct every single day. \nWe must each do our part in maintaining the sustainability of our shared planet, for generations to come. \nFor more information regarding Global Climate Change, \ncheck this website (not affiliated with FornaX Fusion Ø Studios): \nhttps://libguides.depaul.edu/c.php?g=253564&p=1690283", 39, 191);
   }
 
   void tick() {
@@ -852,5 +852,56 @@ class LevelCompletedState extends State {
   // draw the current frame
   void render() {
     image(levelCompletedAnimation[curFrame % levelCompletedAnimation.length], 0, 0);
+  }
+}
+
+// the description of the fight after the cyoa
+class FightDescriptionState extends State {
+  Movie video;
+  FightDescriptionState() {
+    this.video = fightDescription;
+    // play the video
+    video.play();
+  }
+  void tick() {
+    // if the difference between the current time and the duration is less that 0.2 seconds, then we know it has completed
+    if (abs(video.time() - video.duration()) < 0.2) {
+      nextState();
+    }
+  }
+  void mousePressed() {
+    // when mouse pressed, skip the cutscene
+    nextState();
+  }
+  // get the player to choose their class
+  void nextState() {
+    if (video.time() > 1) {
+      video.stop();
+      curState = new ClassChoiceState();
+    }
+  }
+  void render() {
+    // draw the current frame
+    pushMatrix();
+    scale(1000.0 / 640, 800.0 / 480);
+    image(fightDescription, 0, 0);
+    popMatrix();
+  }
+}
+
+// the end screen
+class EndState extends State {
+  void mousePressed() {
+    curState = new MainMenuState();
+  }
+  void tick() {
+  }
+  void render() {
+    image(endScreenBackground, 0, 0);
+    fill(255);
+    textFont(mainMenuFont3);
+    textSize(24);
+    textAlign(LEFT);
+    text("You make it through the final dungeon, and on the other side, you see the smoke and the gray skies. You see burnt out factories and twigs on the ground. The environment burns, and ash dominates the ground. Goblins, skeletons, zombies, dragons and giants cough within the forests. \"It's over... it's over. We can no longer fight. The humans will wipe us out, just as they have thousands of years ago. They'll destroy our homes, eat us for dinner, and kill us for 'business'.\", says a surviving raider. You look around, and that's when it hits you. Humans have built the factories, operated the stations, created the gray skies and altered the world into a place of fire and tsunamis. These creatures weren't determined to destroy us, they were determined to keep us away from the knowledge of factories, from the knowledge of oil, from the knowledge of burning for energy. After all, of course we would abuse such a simple way of getting energy, ignoring any consequences it may bring. They were simply protecting themselves, from an ignorant race who had already once destroyed their homes. But it doesn't have to be that way. Today is 2021, and we live on Earth. The world is not destroyed, nor does it need to be. We can protect those who live on the earth, both us, and the organisms around us.", 50, 50, width-100, height-100);
   }
 }
