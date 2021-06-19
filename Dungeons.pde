@@ -941,8 +941,8 @@ class SerpantBossDungeon extends DefaultDungeon {
   // maximum number of total spawned enemies
   final int totalSerpantEnemies = 20;
 
-  void DungeonCompleted() {
-    dungeonExited();
+  void dungeonCompleted() {
+    changeEnvironment(null);
     curState = new EndState();
   }
 
