@@ -911,6 +911,7 @@ class EndState extends State {
     setup();
   }
 
+  // setup - initializing variables
   void setup() {
     img = endCYOAImg;
     img2 = endCYOAImg2;
@@ -921,6 +922,7 @@ class EndState extends State {
   }
 
   void mousePressed() {
+    // if the frames to exist is longer than the frames that must exist, then we allow for the user to click to skip (so that they don't accidentally overclick)
     if (curFrame > framesNeeded) {
       changeEnvironment(null);
       curState = new MainMenuState();
@@ -928,15 +930,18 @@ class EndState extends State {
   }
 
   void tick() {
+    // update the current frame
     curFrame++;
   }
   void render() {
+    // set a background, and draw the epilogue
     background(#E0EEE0);
     epilogue();
   }
 
   void epilogue() {
 
+    // draw the images in the right places
     image(img, 0, 660);
 
     image(img2, 391, 660);
@@ -945,11 +950,13 @@ class EndState extends State {
 
     image(img4, 711, 660);
 
+    // set the strokes, and draw a background for the text
     strokeWeight(3);
     stroke(#000080);
     fill(#96CDCD, 150);
     rect(35, 15, 942, 625);  
 
+    // draw in the narrative for the final text
     fill(#000080);
     textFont(font);
     textSize(14.5);
