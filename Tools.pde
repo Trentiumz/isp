@@ -303,7 +303,7 @@ void loadFiles() {
   wizidettePoses[1] = loadImage("sprites/wizidette/wizardWalk2.png");
   wizidettePoses[2] = loadImage("sprites/wizidette/wizardIdle.png");
   wizidettePoses[3] = loadImage("sprites/wizidette/wizardWalk1.png");
-  
+
   wizidettePoses[0].resize(150, 150);
   wizidettePoses[1].resize(150, 150);
   wizidettePoses[2].resize(150, 150);

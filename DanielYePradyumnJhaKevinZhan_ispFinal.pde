@@ -126,9 +126,6 @@ void setup() {
   currentMessage = "";
   curState = new LoadingState();
 
-  // begin with 0 story dungeons done (so that we start with the first story dungeon)
-  storyDungeonsCompleted = 0;
-
   frameRate(30);
 }
 

@@ -46,7 +46,9 @@ class MainMenuState extends State {
 
   // starts the game
   void startGame() {
-    curState = new BeginCYOAState();
+    curState = new BeginCYOAState();  
+    // begin with 0 story dungeons done (so that we start with the first story dungeon)
+    storyDungeonsCompleted = 0;
   }
 
   void setup() {
