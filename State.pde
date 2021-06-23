@@ -4,7 +4,9 @@
 
 // template for the current state
 abstract class State {
+  // render is for drawing onto the screen
   abstract void render();
+  // tick is for logic updates: updating variables, calculating most of the program, continuing to the "next frame"
   abstract void tick();
   void setup() {
   }
@@ -896,91 +898,5 @@ class FightDescriptionState extends State {
     scale(1000.0 / 640, 800.0 / 480);
     image(fightDescription, 0, 0);
     popMatrix();
-  }
-}
-
-// the end screen
-class EndState extends State {
-  PImage img;
-  PImage img2;
-  PImage img3;
-  PImage img4;
-  PFont font;
-
-  final int framesNeeded=50;
-  int curFrame;
-  EndState() {
-    setup();
-  }
-
-  // setup - initializing variables
-  void setup() {
-    img = endCYOAImg;
-    img2 = endCYOAImg2;
-    img3 = endCYOAImg3;
-    img4 = endCYOAImg4;
-    font = endCYOAFont;
-    curFrame = 0;
-  }
-
-  void mousePressed() {
-    // if the frames to exist is longer than the frames that must exist, then we allow for the user to click to skip (so that they don't accidentally overclick)
-    if (curFrame > framesNeeded) {
-      changeEnvironment(null);
-      curState = new MainMenuState();
-    }
-  }
-
-  void tick() {
-    // update the current frame
-    curFrame++;
-  }
-  void render() {
-    // set a background, and draw the epilogue
-    background(#E0EEE0);
-    epilogue();
-  }
-
-  void epilogue() {
-
-    // draw the images in the right places
-    image(img, 0, 660);
-
-    image(img2, 391, 660);
-
-    image(img3, 544, 660);
-
-    image(img4, 711, 660);
-
-    // set the strokes, and draw a background for the text
-    strokeWeight(3);
-    stroke(#000080);
-    fill(#96CDCD, 150);
-    rect(35, 15, 942, 625);  
-
-    // draw in the narrative for the final text
-    fill(#000080);
-    textFont(font);
-    textSize(14.5);
-    textAlign(LEFT);
-    text("Blinding light fills your vision as you defeat the serpent, the final boss. You remember striking the final blow, when some sort of shockwave \nKO’d you. Dazed, you wake up to find yourself outside of the dungeon. A stone tablet lays in front of you. It pulses in a neon blue glow. \nYou pick it up and begin reading. “If you are seeing this tablet, then by now you probably have defeated the dragon, giant, and serpent. \nYou may have also uncovered the other creatures lurking around within the dungeons. You might think that these beings are of evil origin, \nbut if so, then you are mistaken. You see, all of these beings you fought, were actually mutations caused by Global Climate Change. \nYou see, Global Climate Change is destroying the world, and that is what created these creatures dwelling in these dungeons. \nThe dragon mutated from a lizard, the giant mutated from a tree sapling, and the serpent mutated from a baby worm. \nThey had no fault, they were produced by the Global Climate Change you humans have created. It is not too late to save the world from \nits climate perils. You need to take action to save this planet.” You are shocked. You knew that the climate was feeling different. \nThere were more wildfires, more droughts, more hurricanes near the coastal regions, more tornadoes. But you weren’t aware that this was \nall caused by human actions. You realize that defeating the dungeons was just the beginning. You have to bring this to the attention of the \nKing and his advisors. You set off to visit the castle. After a few hours of non-stop trekking, you reach the palace. Although before you even \nreach inside, thousands of people are cheering your name. They must have heard about your journey in defeating the creatures of the \ndungeons. You are welcomed into the throne room of the palace, where the king is sitting, along with two of his advisors. \n“Hello, I am Prady, the advisor of King Shane. This here is Kev, another advisor. We have heard a lot about your journey to the dungeons, \nand are thankful for your courage and perseverance shown.” “Uh it’s an honor, thank you” you reply, still unable to believe that you are \nin THE palace. Shane, the king, talks. “You have done well. As a reward, you can ask for anything you wish, and as long as it is reasonable, \nfeasible, and just, then we can.” “You see Sir, after I emerged from the dungeons, I found this tablet” you say, passing the tablet to Prady. \n“Ohh, it makes sense now. I had a feeling, but this adds proof. We must take action against this Global Climate Change” Prady says. \n“Exactly!” you reply, hoping that change can happen. “Shane, I think that we should consider some more eco policies. We should aim to \nplant 2 trees for every 1 we cut down, as well as plant more trees in general. We should also reduce any activities which emit a lot of \npollution.” Prady says, addressing Shane and Kev. “What you say makes sense. I will sign orders for that to be implemented after reaching \na consensus with the court. Kev, assemble a meeting with all the advisors and delegates in 1 hour, this is a pressing matter and we must \ndiscuss it soon.” Shane proclaims. “Yes, I will do that” Kev says, as he leaves to assemble the meeting. “And for you, seeing as this journey \nrequired a lot of courage and bravery, I would like to award you with land, gold, and elite gear. In fact, you may need this for a future \nadventure.” Shane says in a serious voice. “What?” you ask. Shane responds. “You see, we have heard of a relic which might be able to \naid us in our fight against Global Climate Change. And we want our best team on it. You will be working with renowned adventurers: \nCheollin the sorceress, Aron the knight, and Fatma the archer. I have also heard of your friend, Trent. I heard of how he and you defended \nyour town from raiders. He too is welcome to join this quest. And meanwhile I will do all I can to pass more eco policies.” “This is an honor” \nyou reply. You know that this is an opportunity to change the world for the better. “And I’m looking forward to working with Cheollin, Aron, \nand Fatma. And Trent too is probably willing to aid in this cause.” you say. Prady replies. “Great, I’ll brief you on the situation. You can \nreturn to your town, we will send communication and arrange for transportation. Also, your town will receive gold, repairs, and resources, \nas a token of our respect.” “Thank you so much! I’m looking forward to finding this relic. Let’s do this.” You emerge back into the courtyard \nof the palace, knowing that you have an opportunity to save the world. The cheers can still be heard, everyone celebrating your victory. \nDeep down you know that you must defend the earth, our only home. And so motivated, you set off back to your home, determined to \nmake a positive change.", 42, 37);
-  }
-}
-
-// end state with a dancing pug
-class DancePugState extends State {
-  final int numFrames = 90; // number of total frames
-  int curFrame = 0; // current frame
-  void tick() {
-    curFrame++;
-    // check if the current frame is over total frame
-    if (curFrame > numFrames) {
-      changeEnvironment(null);
-      exit();
-    }
-  }
-  void render() {
-    // draw the current frame
-    image(dancingPugAnimation[curFrame % dancingPugAnimation.length], width - 100, height - 100);
   }
 }

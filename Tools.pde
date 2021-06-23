@@ -281,16 +281,23 @@ void loadFiles() {
 
   fightDescription = new Movie(this, "animations/starwars.mp4");
 
-  endCYOAImg = loadImage("cyoa/innerCastle.png");
-  endCYOAImg2 = loadImage("cyoa/wizardTrainer.png");
-  endCYOAImg3 = loadImage("cyoa/archerTrainer.png");
-  endCYOAImg4 = loadImage("cyoa/knightTrainer.png");
-  endCYOAFont = loadFont("cyoa/CenturyGothic-48.vlw");
+  epilogueImg = loadImage("cyoa/innerCastle.png");
+  epilogueImg2 = loadImage("cyoa/wizardTrainer.png");
+  epilogueImg3 = loadImage("cyoa/archerTrainer.png");
+  epilogueImg4 = loadImage("cyoa/knightTrainer.png");
+  epilogueImg5 = loadImage("cyoa/bookGlowing.png");
+  epilogueImg6 = loadImage("cyoa/globalWarmingBoss.png");
+  epilogueImg7 = loadImage("cyoa/globalWarmingBossJunior.png");
+  epilogueImg8 = loadImage("cyoa/natureGlobalWarming.jpg");
+  epilogueImg9 = loadImage("cyoa/globalWarmingDesert.jpg");
+  epilogueImg10 = loadImage("cyoa/treePlantPath.jpg");
+  epilogueImg11 = loadImage("cyoa/goldCoinsPile.png");
+  epilogueImg12 = loadImage("cyoa/sunriseForward.png");
 
-  endCYOAImg.resize(250, 150);
-  endCYOAImg2.resize(120, 140);
-  endCYOAImg3.resize(120, 140);
-  endCYOAImg4.resize(120, 140);
+  epilogueFont = loadFont("cyoa/CenturyGothic-48.vlw");
+  epilogueFont2 = loadFont("cyoa/Broadway-48.vlw");
+
+  epilogueMusic = new SoundFile(this, "cyoa/epilogueMusic.mp3");
 
   loadDancePugAnimation();
 

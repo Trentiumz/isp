@@ -71,15 +71,15 @@ PImage dungeonWallSprite;
 PImage dungeonEmptySprite;
 PImage dungeonWaterSprite;
 
+// exit screen
+PImage exitScreen;
+
 // font for the dragon attack indicator
 PFont dungeonDragonAttackFont;
 
 // fonts for main menu
 PFont mainMenuFont1, mainMenuFont2, mainMenuFont3, mainMenuFont4;
 PImage mainMenuImage1, mainMenuImage2;
-
-// exit screen
-PImage exitScreen;
 
 // the font for the description of upgrades
 PFont upgradingDescription;
@@ -110,8 +110,10 @@ final int wizardWidth=50, wizardHeight=50;
 // images for the CYOA portion of the game
 PImage beginCYOAImg, beginCYOAImg2, beginCYOAImg3, beginCYOAImg4, beginCYOAImg5;
 PFont beginCYOAFont, beginCYOAFont2;
-PImage endCYOAImg, endCYOAImg2, endCYOAImg3, endCYOAImg4;
-PFont endCYOAFont;
+
+SoundFile epilogueMusic;
+PImage epilogueImg, epilogueImg2, epilogueImg3, epilogueImg4, epilogueImg5, epilogueImg6, epilogueImg7, epilogueImg8, epilogueImg9, epilogueImg10, epilogueImg11, epilogueImg12;
+PFont epilogueFont, epilogueFont2;
 
 // number of dungeons completed
 int storyDungeonsCompleted;
@@ -132,6 +134,8 @@ void setup() {
 void draw() {
   background(0);
   // extrapolate the behavior to the current state
+
+  // NOTE: tick() is used for "logic updates", in which we update variables, calculate collisions, etc. render() is used simply for "drawing onto the screen". This allows us to have menus and the like which "pause" the game but still display it
   curState.tick();
   curState.render();
 }
