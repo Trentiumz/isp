@@ -53,6 +53,12 @@ class MainMenuState extends State {
     storyDungeonsCompleted = 0;
   }
 
+  // exits the game
+  void exitGame() {
+    titleBGM.stop();
+    curState = new ExitState();
+  }
+
   void setup() {
     textAlign(LEFT);
   }
@@ -83,6 +89,14 @@ class MainMenuState extends State {
     fill(#000000);
     textSize (16);
     text("Main Menu", 7, 20);
+
+    fill(255, 0, 0, 150);
+    noStroke();
+    rect(width - 100, 0, 100, 25);
+    fill(0);
+    textAlign(LEFT);
+    textSize(16);
+    text("Exit", width-75, 20);
   }
 
   // handling mouse clicked
@@ -96,6 +110,9 @@ class MainMenuState extends State {
     }
     if (mouseX > 0 && mouseX < 100 && mouseY > 0 && mouseY < 25) {
       button = "homePage";
+    }
+    if(mouseX > 700 && mouseX < width && mouseY > 0 && mouseY < 25){
+     exitGame(); 
     }
   }
 
@@ -119,8 +136,6 @@ class MainMenuState extends State {
 
     img2.resize(1000, 237);
     image(img2, 0, 563);
-
-    drawButtons();
 
     // if the current page is the home page
     if (button == "homePage") {
@@ -174,6 +189,8 @@ class MainMenuState extends State {
       text("Commencing the Game", 122, 112);
       startGame();
     }
+
+    drawButtons();
   }
 }
 
