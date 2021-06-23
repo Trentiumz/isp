@@ -1,6 +1,6 @@
 /*
   Description: The different types of dungeons
-*/
+ */
 
 // the common state for all of the dungeons
 abstract class DungeonState extends EnvironmentState {
@@ -40,8 +40,9 @@ class CoinsDungeon extends DefaultDungeon {
     super.mousePressed();
     // check to see if the chest was pressed
     if (curChest != null) {
-      if (curChest.inRange(curWorld.camera.getRealX(mouseX), curWorld.camera.getRealY(mouseY)))
+      if (curChest.inRange(curWorld.camera.getRealX(mouseX), curWorld.camera.getRealY(mouseY))) {
         curChest.pressed();
+      }
     }
   }
 
