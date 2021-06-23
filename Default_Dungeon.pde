@@ -1,6 +1,6 @@
 /*
   Description: A "template dungeon" with common code
-*/
+ */
 enum DungeonElement {
   Wall, Ground, Empty
 };
@@ -200,12 +200,16 @@ abstract class DefaultDungeon extends DungeonState {
     void tick() {
       // Gets the players, enemies and projectiles to do whatever they're supposed to do each frame. Make sure that if an entity is supposed to be removed, that we don't let them tick
       player.tick();
-      for (Enemy e : enemies)
-        if (!removeEntities.contains(e))
+      for (Enemy e : enemies) {
+        if (!removeEntities.contains(e)) {
           e.tick();
-      for (Projectile p : projectiles)
-        if (!removedProjectiles.contains(p))
+        }
+      }
+      for (Projectile p : projectiles) {
+        if (!removedProjectiles.contains(p)) {
           p.tick();
+        }
+      }
 
       // remove all of the entities
       for (Entity toRemove : removeEntities) {
@@ -234,13 +238,15 @@ abstract class DefaultDungeon extends DungeonState {
       drawTiles();
 
       // get all of the enemies to draw themselves
-      for (Enemy e : enemies)
+      for (Enemy e : enemies) {
         e.render();
+      }
       // draw the player
       player.render();
       // get all of the projectiles to draw themselves
-      for (Projectile p : projectiles)
+      for (Projectile p : projectiles) {
         p.render();
+      }
 
       // since the world has been drawn, anything else that must be drawn won't be in the world, and so won't need to be affected by the camera
       popMatrix();
@@ -294,11 +300,14 @@ abstract class DefaultDungeon extends DungeonState {
       int endY = (int) ((query.y + query.h) / gridSize);
 
       // for each tile in its range, if it's a "wall" and the entity is currently collided with it, return true.
-      for (int y = max(0, startY - 1); y <= min(walkable.length - 1, endY + 1); ++y)
-        for (int x = max(0, startX - 1); x <= min(walkable[y].length - 1, endX + 1); ++x)
+      for (int y = max(0, startY - 1); y <= min(walkable.length - 1, endY + 1); ++y) {
+        for (int x = max(0, startX - 1); x <= min(walkable[y].length - 1, endX + 1); ++x) {
           if (!walkable[y][x] &&  
-            boxCollided(query.x, query.y, query.w, query.h, x * gridSize, y * gridSize, gridSize, gridSize))
+            boxCollided(query.x, query.y, query.w, query.h, x * gridSize, y * gridSize, gridSize, gridSize)) {
             return true;
+          }
+        }
+      }
       return false;
     }
 
@@ -311,11 +320,14 @@ abstract class DefaultDungeon extends DungeonState {
       int endY = (int) ((y + h) / gridSize);
 
       // for each tile in its range, if it's a "wall" and the entity is currently collided with it, return true.
-      for (int sy = max(0, startY - 1); sy <= min(walkable.length - 1, endY + 1); ++sy)
-        for (int sx = max(0, startX - 1); sx <= min(walkable[sy].length - 1, endX + 1); ++sx)
+      for (int sy = max(0, startY - 1); sy <= min(walkable.length - 1, endY + 1); ++sy) {
+        for (int sx = max(0, startX - 1); sx <= min(walkable[sy].length - 1, endX + 1); ++sx) {
           if (!walkable[sy][sx] &&  
-            boxCollided(x, y, w, h, x * gridSize, y * gridSize, gridSize, gridSize))
+            boxCollided(x, y, w, h, x * gridSize, y * gridSize, gridSize, gridSize)) {
             return true;
+          }
+        }
+      }
       return false;
     }
 

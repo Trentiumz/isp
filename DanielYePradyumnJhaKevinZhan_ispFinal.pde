@@ -10,7 +10,8 @@ import processing.sound.*;
 /*
   Usage of State Pattern - each class represents a different state & different conditions change these global variables to other states
  The State Pattern uses inheritance (I used abstract classes and/or interfaces)
- Usage of knowledge about arraylists - the information was previously known, but most of this knowledge also comes from javadoc (https://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html)  
+ Usage of knowledge about arraylists - the information was previously known, but most of this knowledge also comes from javadoc (https://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html)
+ Usage of knowledge about range based loops which iterate through each element of an array/arraylist (more or less just a short form)
  */
 
 // the current state and environment
