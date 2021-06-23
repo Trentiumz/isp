@@ -96,7 +96,7 @@ class MainMenuState extends State {
     fill(0);
     textAlign(LEFT);
     textSize(16);
-    text("Exit", width-75, 20);
+    text("Exit", width-66, 17);
   }
 
   // handling mouse clicked
