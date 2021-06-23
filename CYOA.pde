@@ -228,6 +228,7 @@ class BeginCYOAState extends State {
 
 // the end screen
 class EndState extends State {
+  // images & fonts
   PImage img;
   PImage img2;
   PImage img3;
@@ -244,16 +245,16 @@ class EndState extends State {
   PFont font;
   PFont font2;
 
+  // size of the button
   PVector buttonSize = new PVector (150, 30);
 
-  int levelNumber;
-  String textForMyLevel [];
-  String buttonOneText [];
-  String buttonTwoText [];
-  int playerChoice;
+  int levelNumber; // current "level"
+  String textForMyLevel []; // text for each "level"
+  String buttonOneText []; // text for the button of each "level"
+  String buttonTwoText []; // text for the second button, if any, for each "level"
+  int playerChoice; // storing the current player's choice
 
-  String audioName = "epilogueMusic.mp3";
-
+  int curFrame; // the current frame
   void gameExit() {
     epilogueMusic.stop();
     curState = new MainMenuState();
@@ -264,6 +265,7 @@ class EndState extends State {
   }
 
   void tick() {
+    curFrame++;
   }
 
   void render() {
@@ -295,7 +297,7 @@ class EndState extends State {
     playerChoice = 0;
     textForMyLevel = new String [9];
 
-    // fill in the text needed
+    // generate in the text needed
     textForMyLevel[0] = "Blinding light fills your vision as you defeat the serpent, the final boss. You remember striking the final blow, \nwhen some sort of shockwave KO’d you. Dazed, you wake up to find yourself outside of the dungeon. \nA stone tablet lays in front of you. It pulses in a neon blue glow. You pick it up and begin reading.";
     textForMyLevel[1] = "“If you are seeing this tablet, then by now you probably have defeated the dragon, giant, and serpent. \nYou may have also uncovered the other creatures lurking around within the dungeons. You might think that \nthese beings are of evil origin, but if so, then you are mistaken. You see, all of these beings you fought, were \nactually mutations caused by Global Climate Change. You see, Global Climate Change is destroying the \nworld, and that is what created these creatures dwelling in these dungeons. The dragon mutated from a \nlizard, the giant mutated from a tree sapling, and the serpent mutated from a baby worm. They had no fault, \nthey were produced by the Global Climate Change you humans have created. It is not too late to save the \nworld from its climate perils. You need to take action to save this planet.”";
     textForMyLevel[2] = "You are shocked. You knew that the climate was feeling different. There were more wildfires, more droughts, \nmore hurricanes near the coastal regions, more tornados. But you weren’t aware that this was all caused by \nhuman actions. You realize that defeating the dungeons was just the beginning.";
@@ -305,7 +307,7 @@ class EndState extends State {
     textForMyLevel[6] = "You emerge back into the courtyard of the palace, knowing that you have an opportunity to save the world. \nThe cheers can still be heard, everyone celebrating your victory. Deep down you know that you \nmust defend the earth, our only home. And so motivated, you set off back to your home, \ndetermined to make a positive change.";
     textForMyLevel[7] = "";
 
-    // fill in the text for the buttons
+    // generate in the text for the buttons
     buttonOneText = new String [9];
     buttonOneText[0] = "Continue";
     buttonOneText[1] = "Continue";
@@ -325,24 +327,24 @@ class EndState extends State {
     buttonTwoText[5] = "Continue";
     buttonTwoText[6] = "Continue";
     buttonTwoText[7] = "The end, for now :D";
+
+    // start with a left text align
+    textAlign(LEFT);
+    curFrame = 0;
   }
 
   void draw() {
     background(#E0EEE0);
-
+    
+    // draw a "seperator" from the content text and the buttons for player choice
     strokeWeight(3);
     stroke(#000000);
     line(0, 643, 1000, 643);
 
-    strokeWeight(2);
-    stroke(0);
-    fill(#F0FFFF, 150);
-    rect(0, 644, 1000, 642);
-
+    // draw a rectangle for the left button; and if the right button has a different option, for the right button as well
     strokeWeight(3);
     stroke(#000000);
     fill(#999553);
-
     rect(width/2 - buttonSize.x - 100, height - 100, buttonSize.x, buttonSize.y);
     if (!buttonTwoText[levelNumber].equals(buttonOneText[levelNumber]))
       rect(width/2 + 100, height - 100, buttonSize.x, buttonSize.y); 
@@ -371,7 +373,7 @@ class EndState extends State {
   }
 
   // -----------------------------------------------------
-
+  // draws the text for each button in the correct spot
   void PrintMyButtonTexts() {
     textFont(font, 18);
     fill(0);
@@ -383,32 +385,37 @@ class EndState extends State {
   // -----------------------------------------------------
 
   void mousePressed() {
-    playerChoice = buttonSelection ();
+    // have a small delay before registering the click (since the user might be "spamming" while fighting the boss)
+    if (curFrame > 15) {
+      playerChoice = buttonSelection ();
+    }
   }
 
+  // returns either 1 or 2, depending on if the button is "inside" the button on the left or right
   int buttonSelection () {
     // default 
     int thingToReturn = 0;
 
+    // collision for left button
     if (mouseX >= (width/2 - buttonSize.x - 100) && mouseX <= (width/2 - 100) && mouseY >= (height - 100) && mouseY <= (height - 100 + buttonSize.y)) {
-
       if (mousePressed) {
         thingToReturn = 1;
       }
     } else if (mouseX >= (width/2 + 100) && mouseX <= (width/2 + 100 + buttonSize.x) && mouseY >= (height - 100) && mouseY <= (height - 100 + buttonSize.y)) {
-
+      // collision for right button
       if (mousePressed) {
         thingToReturn = 2;
       }
     }
 
+    // returns the stored button
     return thingToReturn;
   }
 
   // -----------------------------------------------------
 
   void LevelZero () {
-
+    // register player choice
     if (playerChoice == 1) {
       levelNumber = 1;
       playerChoice = 0;
@@ -417,15 +424,18 @@ class EndState extends State {
       playerChoice = 0;
     }
 
+    // draw background for the text
     strokeWeight(3);
     stroke(#000080);
     fill(#add8e6, 65);
     rect(35, 15, 930, 80);
 
+    // draw a corresponding image
     image(img5, 192, 164);
   }
 
   void LevelOne () {
+    // register player choice
     if (playerChoice == 1) {
       levelNumber = 2;
       playerChoice = 0;
@@ -434,17 +444,20 @@ class EndState extends State {
       playerChoice = 0;
     }
 
+    // draw background for the text
     strokeWeight(3);
     stroke(#000080);
     fill(#add8e6, 65);
     rect(35, 15, 930, 190);
 
+    // draw corresponding images for the current "level"
     image(img6, 605, 278);
 
     image(img7, 152, 270);
   }
 
   void LevelTwo () {
+    // register player choice
     if (playerChoice == 1) {
       levelNumber = 3;
       playerChoice = 0;
@@ -453,17 +466,20 @@ class EndState extends State {
       playerChoice = 0;
     }
 
+    // draws the background for the text
     strokeWeight(3);
     stroke(#000080); 
     fill(#add8e6, 65);
     rect(35, 15, 930, 75);
 
+    // draw corresponding images for the current "level"
     image(img8, 35, 140);
 
     image(img9, 587, 144);
   }
 
   void LevelThree() {
+    // register player choice
     if (playerChoice == 1) {
       levelNumber = 4;
       playerChoice = 0;
@@ -472,17 +488,19 @@ class EndState extends State {
       playerChoice = 0;
     }
 
-
+    // draw the background for the text
     strokeWeight(3);
     stroke(#000080);
     fill(#add8e6, 65);
     rect(35, 15, 930, 306);
 
+    // draw the corresponding image for the current "level"
     img.resize(488, 285); 
     image(img, 263, 338);
   }
 
   void LevelFour() {
+    // register player choice
     if (playerChoice == 1) {
       levelNumber = 5;
       playerChoice = 0;
@@ -491,18 +509,20 @@ class EndState extends State {
       playerChoice = 0;
     }
 
-
+    // draw the background for the text
     strokeWeight(3);
     stroke(#000080);
     fill(#add8e6, 65);
     rect(35, 15, 930, 219);
 
+    // draw the corresponding images for the current "level"
     image(img10, 35, 272);
 
     image(img11, 515, 291);
   }
 
   void LevelFive() {
+    // register player choice
     if (playerChoice == 1) {
       levelNumber = 6;
       playerChoice = 0;
@@ -511,12 +531,13 @@ class EndState extends State {
       playerChoice = 0;
     }
 
-
+    // draw the background for the text
     strokeWeight(3);
     stroke(#000080);
     fill(#add8e6, 65);
     rect(35, 15, 930, 262);
 
+    // draw the "avatars" for the different side characters
     img2.resize(250, 300);
     image(img2, 10, 326);
 
@@ -528,6 +549,7 @@ class EndState extends State {
   }
 
   void LevelSix() {
+    // register player choice
     if (playerChoice == 1) {
       levelNumber = 7;
       playerChoice = 0;
@@ -536,15 +558,18 @@ class EndState extends State {
       playerChoice = 0;
     }
 
+    // draw in the background for the level
     strokeWeight(3);
     stroke(#000080);
     fill(#add8e6, 65);
     rect(35, 15, 930, 95);
 
+    // draw in the image for the level
     image(img12, 102, 157);
   }
 
   void LevelSeven() {
+    // register player choice
     if (playerChoice == 1) {
       gameExit();
       playerChoice = 0;
@@ -553,20 +578,25 @@ class EndState extends State {
       playerChoice = 0;
     }
 
+    // draw background of the text
     strokeWeight(3);
     stroke(#000080);
     fill(#add8e6, 65);
     rect(35, 161, 930, 200);
 
-
+    // write in text
     textFont(font2);
     textSize(30);
     fill(0);
     text("Thank you so much for playing Climate Hunters! \nThe adventure continues in Part 2, with a new team, \nbut the same goals of reducing Global Climate Change. \n(Disclaimer, not part of the ISP lol) \nFrom the developers, thank you!", 45, 205);
+
+    // draw an image of the current frame for the "dancing pug animation"
+    image(dancingPugAnimation[curFrame % dancingPugAnimation.length], width / 2 - 100, 400);
   }
 
   // -----------------------------------------------------
 
+  // print the text corresponding to the current level
   void PrintMyLevelText() {
     textFont(font, 18);
     fill(#000080);
