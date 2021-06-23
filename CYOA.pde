@@ -335,11 +335,17 @@ class EndState extends State {
 
   void draw() {
     background(#E0EEE0);
-    
+
     // draw a "seperator" from the content text and the buttons for player choice
     strokeWeight(3);
     stroke(#000000);
     line(0, 643, 1000, 643);
+
+    // draw a rectangle as the "panel" for the player choices
+    strokeWeight(2);
+    stroke(0);
+    fill(#F0FFFF, 150);
+    rect(0, 644, 1000, 642);
 
     // draw a rectangle for the left button; and if the right button has a different option, for the right button as well
     strokeWeight(3);
